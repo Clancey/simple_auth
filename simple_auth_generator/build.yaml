@@ -1,0 +1,9 @@
+# Read about `build.yaml` at https://pub.dartlang.org/packages/build_config
+builders:
+  simple_auth_generator:
+    target: ":simple_auth_generator"
+    import: "package:simple_auth_generator/simple_auth_generator.dart"
+    builder_factories: ["simple_authGeneratorFactory"]
+    build_extensions: {".dart": [".g.dart"]}
+    auto_apply: root_package
+    build_to: source

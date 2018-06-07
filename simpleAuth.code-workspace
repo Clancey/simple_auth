@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "simple_auth",
+			"name": "simple_auth"
+		},
+		{
+			"path": "simple_auth_generator",
+			"name": "simple_auth_generator"
+		},
+        {
+            "path": "simple_auth_flutter",
+            "name": "simple_auth_flutter"
+        },
+        {
+            "path": "simple_auth_flutter_example",
+            "name": "simple_auth_flutter_example"
+        }
+	],
+	"settings": {}
+}

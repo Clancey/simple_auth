@@ -1,0 +1,1 @@
+[simple_auth](https://github.com/lejard-h/simple_auth) is an http client generator using source_gen and inspired from Retrofit.
