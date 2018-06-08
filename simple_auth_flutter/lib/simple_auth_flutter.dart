@@ -64,7 +64,7 @@ class SimpleAuthFlutter {
   static Stream<UrlChange> get onUrlChanged {
     if (_onUrlChanged == null) {
       _onUrlChanged = _eventChannel.receiveBroadcastStream().map(
-          (dynamic event) => new UrlChange(event["identifier"], event["url"], event["forceComplete"],event["description"]));
+          (dynamic event) => new UrlChange(event["identifier"], event["url"], event["forceComplete"].toString().toLowerCase() == "true",event["description"]));
     }
     return _onUrlChanged;
   }
