@@ -30,6 +30,11 @@ abstract class Authenticator {
     hasCompleted = true;
     _completer?.complete(authCode);    
   }
+  void onError(String error)
+  {
+    hasCompleted = true;
+    _completer?.completeError(new Exception(error));
+  }
 
 
 }

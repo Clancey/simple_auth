@@ -44,9 +44,19 @@ class SimpleAuthFlutter {
         return;
       }
 
+      else if(change.url == "error"){
+        authenticator.onError(change.description);
+        return;
+      }
+
       var uri = Uri.tryParse(change.url);
-      if (authenticator.checkUrl(uri))
+      if (authenticator.checkUrl(uri)){
         _channel.invokeMethod("completed", {"identifier": change.identifier});
+      }
+      else if(change.foreComplete)
+      {
+        authenticator.onError("Unable to get an AuthToken from the server");
+      }
     });
   }
 
@@ -54,7 +64,7 @@ class SimpleAuthFlutter {
   static Stream<UrlChange> get onUrlChanged {
     if (_onUrlChanged == null) {
       _onUrlChanged = _eventChannel.receiveBroadcastStream().map(
-          (dynamic event) => new UrlChange(event["identifier"], event["url"]));
+          (dynamic event) => new UrlChange(event["identifier"], event["url"], event["forceComplete"],event["description"]));
     }
     return _onUrlChanged;
   }
@@ -63,5 +73,7 @@ class SimpleAuthFlutter {
 class UrlChange {
   String url;
   String identifier;
-  UrlChange(this.identifier, this.url);
+  bool foreComplete;
+  String description;
+  UrlChange(this.identifier, this.url,this.foreComplete, this.description);
 }

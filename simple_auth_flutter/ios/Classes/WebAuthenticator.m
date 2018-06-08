@@ -39,7 +39,15 @@
     _eventSink(@{
                  @"identifier" : self.identifier,
                  @"url" : url.absoluteString,
-                 @"forceComplete" : [NSString stringWithFormat: @"%@",force]
+                 @"forceComplete" : force ? @"true" : @"false"
+                 });
+}
+-(void) failed:(NSString *)error{
+    _eventSink(@{
+                 @"identifier" : self.identifier,
+                 @"url" : @"error",
+                 @"description": error.description,
+                 @"forceComplete" : @"true"
                  });
 }
 @end
