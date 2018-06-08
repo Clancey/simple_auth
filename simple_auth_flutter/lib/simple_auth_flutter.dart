@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 
-class SimpleAuthFlutter {
+class SimpleAuthFlutter implements simpleAuth.AuthStorage{
   static const MethodChannel _channel =
       const MethodChannel('simple_auth_flutter/showAuthenticator');
   static const EventChannel _eventChannel =
@@ -34,8 +34,9 @@ class SimpleAuthFlutter {
       return;
     }
   }
-
+  static SimpleAuthFlutter _shared = new SimpleAuthFlutter();
   static void init() {
+    simpleAuth.AuthStorage.shared = _shared;
     simpleAuth.OAuthApi.sharedShowAuthenticator = showAuthenticator;
     onUrlChanged.listen((UrlChange change) {
       var authenticator = authenticators[change.identifier];
@@ -67,6 +68,24 @@ class SimpleAuthFlutter {
           (dynamic event) => new UrlChange(event["identifier"], event["url"], event["forceComplete"].toString().toLowerCase() == "true",event["description"]));
     }
     return _onUrlChanged;
+  }
+
+  @override
+  Future<String> read({String key}) async {
+    String value = await _channel.invokeMethod("getValue", {
+      "key": key,
+    });
+    return value;
+  }
+
+  @override
+  Future<void> write({String key, String value}) async {
+   String success = await _channel.invokeMethod("saveKey", {
+      "key": key,
+      "value": value
+    });
+    if(success != "success")
+      throw new Exception("Error saving data to Flutter AuthStorage");
   }
 }
 

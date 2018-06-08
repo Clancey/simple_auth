@@ -3,6 +3,7 @@
 #import "WebAuthenticatorWindow.h"
 #import <Foundation/Foundation.h>
 #import "SFSafariAuthenticator.h"
+#import "AuthStorage.h"
 
 @interface SimpleAuthFlutterPlugin ()<FlutterStreamHandler>
 @end
@@ -44,13 +45,32 @@
         NSString *identifier = call.arguments[@"identifier"];
         WebAuthenticator *auth = authenticators[identifier];
         [auth foundToken];
+        result(@"success");
         return;
     }
+    
+    if ([@"saveKey" isEqualToString:call.method]) {
+        NSDictionary *argsMap = call.arguments;
+        NSString *key = [argsMap valueForKey:@"key"];
+        NSString *value = [argsMap valueForKey:@"value"];
+        [AuthStorage.shared saveValue:value for:key];
+        result(@"success");
+        return;
+    }
+    if ([@"getValue" isEqualToString:call.method]) {
+        NSDictionary *argsMap = call.arguments;
+        NSString *key = [argsMap valueForKey:@"key"];
+        result([AuthStorage.shared getValueForKey:key]);
+        return;
+    }
+    
+    
     if ([@"getPlatformVersion" isEqualToString:call.method]) {
         result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else {
         result(FlutterMethodNotImplemented);
     }
+    
 }
 #pragma mark FlutterStreamHandler impl
 
