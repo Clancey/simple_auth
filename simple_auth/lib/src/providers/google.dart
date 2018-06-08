@@ -32,7 +32,7 @@ class GoogleApi extends OAuthApi {
 
   Future<String> getUserInfo() async {
     var request = new Request(
-        "GET", "https://www.googleapis.com/oauth2/v1/userinfo?alt=json");
+        HttpMethod.Get, "https://www.googleapis.com/oauth2/v1/userinfo?alt=json");
     var resp = await send(request);
     print(resp.body);
     return resp.body;
