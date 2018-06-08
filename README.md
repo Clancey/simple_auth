@@ -14,7 +14,7 @@ The network/api part including the generator was based off of [Chopper by Hadrie
 * ~~Dropbox~~
 * ~~Facebook~~
 * ~~Github~~
-* ~~Google~~
+* Google
 * ~~Instagram~~
 * ~~Linked In~~
 * ~~Microsoft Live Connect~~
@@ -53,6 +53,7 @@ The Generator is not required, and not complete. But will make things magical. M
 * Finish Android Authentication
 * Create basic Login screen for Basic Authentication
 * Port the rest of the providers
+* Add native flutter providers for google
 * Add AuthStorage for Flutter
 * Complete the generator
 * More things I can't remember
