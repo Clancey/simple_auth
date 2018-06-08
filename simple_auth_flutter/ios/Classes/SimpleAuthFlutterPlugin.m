@@ -12,11 +12,11 @@
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"simple_auth_flutter/showAuthenticator"
-            binaryMessenger:[registrar messenger]];
-  SimpleAuthFlutterPlugin* instance = [[SimpleAuthFlutterPlugin alloc] init];
-  [registrar addMethodCallDelegate:instance channel:channel];
+    FlutterMethodChannel* channel = [FlutterMethodChannel
+                                     methodChannelWithName:@"simple_auth_flutter/showAuthenticator"
+                                     binaryMessenger:[registrar messenger]];
+    SimpleAuthFlutterPlugin* instance = [[SimpleAuthFlutterPlugin alloc] init];
+    [registrar addMethodCallDelegate:instance channel:channel];
     NSLog(@"regisetered SimpleAuth on iOS");
     FlutterEventChannel* chargingChannel =
     [FlutterEventChannel eventChannelWithName:@"simple_auth_flutter/urlChanged"
@@ -46,11 +46,11 @@
         [auth foundToken];
         return;
     }
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else {
-    result(FlutterMethodNotImplemented);
-  }
+    if ([@"getPlatformVersion" isEqualToString:call.method]) {
+        result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+    } else {
+        result(FlutterMethodNotImplemented);
+    }
 }
 #pragma mark FlutterStreamHandler impl
 
@@ -61,7 +61,7 @@
         auth.eventSink = _eventSink;
     }
     //[self sendBatteryStateEvent];
-   
+    
     return nil;
 }
 

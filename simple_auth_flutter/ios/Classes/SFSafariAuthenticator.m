@@ -27,7 +27,7 @@
         sharedObject = [[NSMutableDictionary alloc] init];
     });
     return sharedObject;
-                  
+    
 }
 
 +(void)presentAuthenticator:(WebAuthenticator *)authenticator {
