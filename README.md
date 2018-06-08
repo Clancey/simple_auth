@@ -21,7 +21,7 @@ The network/api part including the generator was based off of [Chopper by Hadrie
 * And of course any standard OAuth2/Basic Auth server.
 
 
-#Usage
+# Usage
 ```dart
 var api = new simpleAuth.GoogleApi(
       "google", "client_id",clientSecret: "clientSecret",
@@ -34,21 +34,21 @@ var userInfo = await api.send<UserInfo>(request);
 ```
 That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds!
 
-#Flutter Setup
+# Flutter Setup
 Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically make present your login UI
 
-#Serialization
+# Serialization
 Json objects will automatically serialize if you conform to [JsonSerializable](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/jsonSerializable.dart)
 
 If you use the generator and you objects have the factory `factory JsonSerializable.fromJson(Map<String, dynamic> json)` your api calls will automatically Serialize/Deserialize
 
 Or you can pass your own [Converter](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/converter.dart) to the api and handle conversion yourself.
 
-#Generator
+# Generator
 The Generator is not required, and not complete. But will make things magical. More docs to come!
 
 
-#TODO
+# TODO
 * Add more documentation
 * Finish Android Authentication
 * Create basic Login screen for Basic Authentication
