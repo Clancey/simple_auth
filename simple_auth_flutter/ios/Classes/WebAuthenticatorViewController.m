@@ -71,7 +71,7 @@ UIActivityIndicatorView *activity;
 }
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
     if(!self.authenticator.isCompleted){
-        [self.authenticator checkUrl:request.URL];
+        [self.authenticator checkUrl:request.URL forceComplete:NO];
     }
     return true;
 }

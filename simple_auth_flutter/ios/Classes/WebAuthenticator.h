@@ -18,7 +18,7 @@
 @property BOOL isCompleted;
 @property BOOL useEmbeddedBrowser;
 @property FlutterEventSink eventSink;
--(void) checkUrl:(NSURL*)url;
+-(void)checkUrl:(NSURL *)url forceComplete:(BOOL)force;
 -(void)foundToken;
 -(void)cancel;
 -(void)failed:(NSString*)error;

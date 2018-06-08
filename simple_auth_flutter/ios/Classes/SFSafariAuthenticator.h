@@ -11,9 +11,13 @@
 #import "WebAuthenticator.h"
 #import <SafariServices/SafariServices.h>
 
-@interface SFSafariAuthenticator : NSObject
+@interface SFSafariAuthenticator : NSObject<SFSafariViewControllerDelegate>
 + (SFSafariAuthenticator *) shared;
 + (void) presentAuthenticator:(WebAuthenticator *)authenticator;
 + (void) presentAuthenticatorFromViewController:(WebAuthenticator *)authenticator viewController:(UIViewController*)viewController;
--(void) beginAuthentication:(WebAuthenticator *)authenticator viewController:(UIViewController *)viewController;
++ (bool) verifyHasScheme:(NSString *)scheme;
+- (void) dismisController;
+- (BOOL) resumeAuth:(NSURL*)url;
+- (void) beginAuthentication:(WebAuthenticator *)authenticator viewController:(UIViewController *)viewController;
++ (NSMutableDictionary*) authenticators;
 @end

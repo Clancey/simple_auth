@@ -23,24 +23,20 @@
                               binaryMessenger:[registrar messenger]];
     [chargingChannel setStreamHandler:instance];
 }
++ (BOOL)checkUrl:(NSURL *)url{
+    return [SFSafariAuthenticator.shared resumeAuth:url];
+}
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    NSLog(@"iOS recieved message!!!");
-    NSLog(call.method);
     if ([@"showAuthenticator" isEqualToString:call.method]) {
-        
-        NSLog(@"Starting Show Authenticator!!!!!!!");
         NSDictionary *argsMap = call.arguments;
-        NSLog(@"Got Args");
         WebAuthenticator *authenticator = [[WebAuthenticator alloc] initFromDictionary:argsMap];
-        NSLog(@"Authenticator created");
         authenticator.eventSink = _eventSink;
         [authenticators setObject:authenticator  forKey:authenticator.identifier];
         if(authenticator.useEmbeddedBrowser)
             [WebAuthenticatorWindow presentAuthenticator: authenticator];
         else
             [SFSafariAuthenticator presentAuthenticator:authenticator];
-        NSLog(@"Sending Success!!!!!!!");
         result(@"success");
         return;
     }

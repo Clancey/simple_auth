@@ -34,10 +34,12 @@
     self.isCompleted = YES;
     _onTokenFound();
 }
--(void)checkUrl:(NSURL *)url{
+-(void) checkUrl:(NSURL *)url forceComplete:(BOOL)force
+{
     _eventSink(@{
                  @"identifier" : self.identifier,
-                 @"url" : url.absoluteString
+                 @"url" : url.absoluteString,
+                 @"forceComplete" : [NSString stringWithFormat: @"%@",force]
                  });
 }
 @end
