@@ -1,1 +1,0 @@
-flutter build ios --release --no-codesign

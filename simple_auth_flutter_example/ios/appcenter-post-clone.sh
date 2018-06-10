@@ -11,3 +11,4 @@ export PATH=`pwd`/flutter/bin:$PATH
 flutter doctor
 
 echo "Installed flutter to `pwd`/flutter"
+flutter build ios --release --no-codesign
