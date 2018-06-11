@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # fail if any commands fails
+
+cd ..
+cd ..
+
 set -e
 # debug log
 set -x
@@ -11,5 +15,4 @@ export PATH=`pwd`/flutter/bin:$PATH
 flutter doctor
 
 echo "Installed flutter to `pwd`/flutter"
-
 flutter build android
