@@ -2,7 +2,6 @@
 # fail if any commands fails
 
 cd ..
-cd ..
 
 set -e
 # debug log
