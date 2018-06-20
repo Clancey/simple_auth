@@ -1,7 +1,5 @@
 package clancey.simpleauth.simpleauthflutter;
 
-import java.util.Dictionary;
-
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
@@ -12,8 +10,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * SimpleAuthFlutterPlugin
@@ -32,17 +28,45 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onMethodCall(MethodCall call, Result result)   {
 
     if(call.method.equals("showAuthenticator")){
-      WebAuthenticator authenticator = new WebAuthenticator(call);
-      authenticator.eventSink = _eventSink;
+      try {
+        WebAuthenticator authenticator = new WebAuthenticator(call);
+        authenticator.eventSink = _eventSink;
+        authenticators.put(authenticator.identifier,authenticator);
+        //TODO: Show authenticator
+        result.success("success");
+      }
+      catch (Exception ex)
+      {
+        result.error(ex.getMessage(), ex.getLocalizedMessage(),ex);
+      }
+      return;
+    }
+    else if(call.method.equals("completed")) {
+      String id = call.argument("identifier");
+      WebAuthenticator authenticator = authenticators.get(id);
+      authenticator.foundToken();
+      authenticators.remove(id);
       result.success("success");
       return;
-
     }
 
-    if (call.method.equals("getPlatformVersion")) {
+    else if(call.method.equals("getValue")) {
+      String key = call.argument("key");
+      result.success(AuthStorage.getValue(key));
+      return;
+    }
+    else if(call.method.equals("saveKey")) {
+      String key = call.argument("key");
+      String value = call.argument("value");
+      AuthStorage.setValue(key,value);
+      result.success("success");
+      return;
+    }
+
+    else if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     } else {
       result.notImplemented();
