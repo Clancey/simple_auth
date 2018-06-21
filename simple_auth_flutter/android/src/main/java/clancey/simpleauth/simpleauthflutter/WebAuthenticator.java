@@ -1,21 +1,21 @@
 package clancey.simpleauth.simpleauthflutter;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Dictionary;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 
+
 public class WebAuthenticator {
 
-    public WebAuthenticator(MethodCall call) throws MalformedURLException
+    public WebAuthenticator(MethodCall call) throws Exception
     {
         identifier = call.argument("identifier");
-        initialUrl = new URL(call.argument("initialUrl").toString());
-        //TODO: fix this, and uncomment
-        //redirectUrl = new URL(call.argument("redirectUrl").toString());
+        initialUrl = call.argument("initialUrl").toString();
+        redirectUrl = new URI(call.argument("redirectUrl").toString());
         title = call.argument("title");
         allowsCancel = Boolean.parseBoolean((String)call.argument("allowsCancel"));
         isCompleted = Boolean.parseBoolean((String)call.argument("isCompleted"));
@@ -24,29 +24,39 @@ public class WebAuthenticator {
 
     }
     public String identifier;
-    public URL initialUrl;
-    public URL redirectUrl;
+    public String initialUrl;
+    public URI redirectUrl;
     public String title;
     public boolean allowsCancel;
     public boolean isCompleted;
     public boolean useEmbeddedBrowser;
     public EventChannel.EventSink eventSink;
-    public void checkUrl(URL url, final boolean forceComplete)
+    public void checkUrl(final String url, final boolean forceComplete)
     {
-        final String uri = url.toString();
         eventSink.success( new HashMap<String, String>() {{
             put("identifier",identifier);
-            put("url",uri);
+            put("url",url);
             put("forceComplete", forceComplete ? "true":"false");
 
         }});
     }
+    List<CompleteNotifier> listeners = new ArrayList<CompleteNotifier>();
     public void foundToken()
     {
         isCompleted = true;
-        //TODO: proxy completed!
+        for (CompleteNotifier l : listeners)
+            l.onComplete();
     }
 
+    public void addListener(CompleteNotifier listener)
+    {
+        listeners.add(listener);
+    }
+
+    public void clearListeners()
+    {
+        listeners.clear();
+    }
     public void cancel()
     {
         eventSink.success( new HashMap<String, String>() {{
@@ -63,5 +73,12 @@ public class WebAuthenticator {
             put("description", error);
             put("forceComplete", "true");
         }});
+    }
+    public class CompleteNotifier
+    {
+        public void onComplete()
+        {
+
+        }
     }
 }

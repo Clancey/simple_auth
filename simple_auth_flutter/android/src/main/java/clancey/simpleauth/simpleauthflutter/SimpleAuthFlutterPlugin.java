@@ -1,5 +1,7 @@
 package clancey.simpleauth.simpleauthflutter;
 
+import android.content.Context;
+import android.content.Intent;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
@@ -10,6 +12,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * SimpleAuthFlutterPlugin
@@ -18,8 +21,16 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
   /**
    * Plugin registration.
    */
+  static Context context;
   public static void registerWith(Registrar registrar) {
-    AuthStorage.Context = registrar.context();
+    if(registrar.activity() != null) {
+      context = registrar.activity();
+      CustomTabsAuthenticator.Setup(registrar.activity().getApplication());
+    }
+    else
+        context = registrar.context();
+    AuthStorage.Context = context;
+
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "simple_auth_flutter/showAuthenticator");
     final EventChannel eventChannel =
             new EventChannel(registrar.messenger(), "simple_auth_flutter/urlChanged");
@@ -36,7 +47,15 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
         WebAuthenticator authenticator = new WebAuthenticator(call);
         authenticator.eventSink = _eventSink;
         authenticators.put(authenticator.identifier,authenticator);
-        //TODO: Show authenticator
+
+        if(authenticator.useEmbeddedBrowser) {
+          WebAuthenticatorActivity.presentAuthenticator(context,authenticator);
+        }
+        else
+        {
+          CustomTabsAuthenticator.presentAuthenticator(context,authenticator);
+        }
+
         result.success("success");
       }
       catch (Exception ex)
@@ -50,6 +69,7 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
       WebAuthenticator authenticator = authenticators.get(id);
       authenticator.foundToken();
       authenticators.remove(id);
+      authenticator.clearListeners();
       result.success("success");
       return;
     }

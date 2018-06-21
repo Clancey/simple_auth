@@ -32,3 +32,6 @@ android {
         disable 'InvalidPackage'
     }
 }
+dependencies {
+    compile 'com.android.support:customtabs:27.1.0'
+}
