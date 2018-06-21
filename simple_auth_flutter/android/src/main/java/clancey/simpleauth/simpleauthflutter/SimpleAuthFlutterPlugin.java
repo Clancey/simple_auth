@@ -19,6 +19,7 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
    * Plugin registration.
    */
   public static void registerWith(Registrar registrar) {
+    AuthStorage.Context = registrar.context();
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "simple_auth_flutter/showAuthenticator");
     final EventChannel eventChannel =
             new EventChannel(registrar.messenger(), "simple_auth_flutter/urlChanged");
@@ -55,13 +56,24 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
 
     else if(call.method.equals("getValue")) {
       String key = call.argument("key");
-      result.success(AuthStorage.getValue(key));
+      try{
+        result.success(AuthStorage.getValue(key));
+      }
+      catch (Exception ex)
+      {
+        result.error(ex.getMessage(), ex.getLocalizedMessage(),ex);
+      }
       return;
     }
     else if(call.method.equals("saveKey")) {
       String key = call.argument("key");
       String value = call.argument("value");
-      AuthStorage.setValue(key,value);
+      try{
+        AuthStorage.setValue(key,value);}
+      catch (Exception ex)
+      {
+        result.error(ex.getMessage(), ex.getLocalizedMessage(),ex);
+      }
       result.success("success");
       return;
     }
