@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class AuthStorage {
     public static String Alias = "simpleAuthStorage";
-    public static String FIXED_IV = "23fFSDF2safuire45reoDFSDur1eo3ihfjk34dshfi";
+    public static String FIXED_IV = "23fFSDF2safu";
     public static Context Context;
     static KeyStore _keyStore;
     static KeyStore GetKeyStore() throws Exception
@@ -38,7 +38,7 @@ public class AuthStorage {
     {
         SharedPreferences sharedPreferences = Context.getSharedPreferences(Alias, Context.MODE_PRIVATE);
         String encodedString = sharedPreferences.getString(getMD5(key), null);
-        if(encodedString.isEmpty())
+        if(encodedString == null || encodedString.isEmpty())
             return null;
         String decrypted = null;
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -57,17 +57,17 @@ public class AuthStorage {
         String encryptedString = null;
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            encryptedString = decryptStringM(value);
+            encryptedString = encryptStringM(value);
         }
         else
         {
-            encryptedString = decryptString(value);
+            encryptedString = encryptString(value);
         }
         SharedPreferences sharedPreferences = Context.getSharedPreferences(Alias, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(key,encryptedString);
-        editor.commit();
+        editor.putString(getMD5(key),encryptedString);
+        editor.apply();
 
 
     }
