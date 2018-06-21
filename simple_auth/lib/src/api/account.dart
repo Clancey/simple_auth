@@ -6,7 +6,7 @@ class Account implements JsonSerializable {
   String identifier;
   Map<String, String> userData = {};
   factory Account.fromJson(Map<String, dynamic> json) =>
-      new Account(json["identifier"], userData: json["userData"]);
+      new Account(json["identifier"], userData: new Map<String,String>.from(json["userData"]));
 
   @override
   Map<String, dynamic> toJson() => {

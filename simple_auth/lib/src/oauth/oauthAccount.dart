@@ -47,8 +47,8 @@ class OAuthAccount extends Account {
           created: DateTime.parse(json["created"]),
           expiresIn: json["expiresIn"],
           refreshToken: json["refreshToken"],
-          scope: json["scope"],
-          userData: json["userData"]);
+          scope: new List<String>.from(json["scope"]),
+          userData: new Map<String,String>.from(json["userData"]));
 
   @override
   Map<String, dynamic> toJson() => {
