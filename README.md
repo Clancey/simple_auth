@@ -13,7 +13,7 @@ Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-469
 
 ### Current Built in Providers
 
-* ~~Azure Active Directory~~
+* Azure Active Directory
 * ~~Amazon~~
 * ~~Dropbox~~
 * ~~Facebook~~
