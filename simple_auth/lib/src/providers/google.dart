@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:simple_auth/simple_auth.dart';
 import "package:http/http.dart" as http;
-import 'dart:io' show Platform;
 
 class GoogleApi extends OAuthApi {
   bool isUsingNative;
