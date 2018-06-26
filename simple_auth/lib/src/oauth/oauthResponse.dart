@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:simple_auth/simple_auth.dart';
 
 class OAuthResponse implements JsonSerializable {

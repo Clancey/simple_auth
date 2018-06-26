@@ -17,6 +17,9 @@ export 'src/oauth/oauthAccount.dart';
 export 'src/oauth/oauthResponse.dart';
 export 'src/oauth/oauthApi.dart';
 export 'src/providers/google.dart';
+export 'src/basic/basicAuthAccount.dart';
+export 'src/basic/basicAuthApi.dart';
+export 'src/basic/basicAuthAuthenticator.dart';
 
 // import 'dart:async';
 // import 'package:flutter/services.dart';

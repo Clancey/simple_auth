@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:async';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 import 'package:simple_auth_flutter/simple_auth_flutter.dart';
 
@@ -12,52 +10,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
 
   @override
   initState() {
     super.initState();
-    SimpleAuthFlutter.init();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await SimpleAuthFlutter.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted)
-      return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    SimpleAuthFlutter.init(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
+      title: 'SimpleAuth Demo',
       theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new MyHomePage(title: 'SimpleAuth Home Page'),
     );
   }
 }
@@ -83,37 +50,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  var api = new simpleAuth.GoogleApi(
+  var googleApi = new simpleAuth.GoogleApi(
       "google", "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile"
       ]);
+  var basicApi = new simpleAuth.BasicAuthApi("github-basic", "https://api.github.com/user");
 
-  void _incrementCounter() async {
-    try {
-      var a = await api.authenticate();
-      var data = await api.getUserInfo();
-      print(data);
-    }
-    catch(e)
-    {
-      print(e);
-    }
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    SimpleAuthFlutter.context = context;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -126,40 +74,73 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
-      body: new Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: ListView(
           children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
+            ListTile(
+              title: Text("Google OAuth",
+              style: Theme.of(context).textTheme.headline,
+              ),
             ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+            ListTile(
+              leading: Icon(Icons.launch),
+              title: Text('Login'),
+              onTap: () async {
+                try{
+                  var user = await googleApi.getUserInfo();
+                  showMessage("${user.name} logged in");
+                }
+                catch(e)
+                {
+                  showError(e);
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Logout'),
+              onTap: () async {
+                await googleApi.logOut();
+                showMessage("Logged out");
+              },
+            ),
+            ListTile(
+              title: Text("Github BasicAuth",
+              style: Theme.of(context).textTheme.headline,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.launch),
+              title: Text('Login'),
+              onTap: () async {
+                 try{
+                  var success = await basicApi.authenticate();
+                  showMessage("Logged in success: ${success}");
+                }
+                catch(e)
+                {
+                  showError(e);
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Logout'),
+              onTap: () async {
+                await basicApi.logOut();
+                showMessage("Logged out");
+              },
             ),
           ],
         ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+  void showError(Exception ex)
+  {
+    showMessage(ex.toString());
+  }
+  void showMessage(String text)
+  {
+    var alert = new AlertDialog(content: new Text(text),actions: <Widget>[new FlatButton(child: const Text("Ok"),onPressed:() {Navigator.pop(context);})]);
+    showDialog(context: context,builder: (BuildContext context)=> alert);
   }
 }

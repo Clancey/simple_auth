@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
+import 'package:simple_auth_flutter/BasicLoginPage.dart';
 
 class SimpleAuthFlutter implements simpleAuth.AuthStorage{
   static const MethodChannel _channel =
@@ -34,10 +37,17 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage{
       return;
     }
   }
+   static Future showBasicAuthenticator(
+      simpleAuth.BasicAuthAuthenticator authenticator) async {
+        showDialog(context: context,builder: (BuildContext context) => new BasicLoginPage(authenticator));
+  }
   static SimpleAuthFlutter _shared = new SimpleAuthFlutter();
-  static void init() {
+  static BuildContext context;
+  static void init(BuildContext context) {
+    SimpleAuthFlutter.context = context;
     simpleAuth.AuthStorage.shared = _shared;
     simpleAuth.OAuthApi.sharedShowAuthenticator = showAuthenticator;
+    simpleAuth.BasicAuthApi.sharedShowAuthenticator = showBasicAuthenticator;
     onUrlChanged.listen((UrlChange change) {
       var authenticator = authenticators[change.identifier];
       if (change.url == "canceled") {

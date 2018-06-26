@@ -5,7 +5,7 @@ import "dart:convert" as Convert;
 
 abstract class AuthenticatedApi extends Api {
   AuthStorage _authStorage;
-  AuthenticatedApi(identifier,
+  AuthenticatedApi(String identifier,
       {http.Client client,
       Converter converter,
       AuthStorage authStorage}) : super(identifier:identifier,client:client,converter:converter) {

@@ -81,10 +81,4 @@ class AzureADAuthenticator extends OAuthAuthenticator {
     }
     return map;
   }
-
-  @override
-  Future resetAuthenticator() {
-    // TODO: implement resetAuthenticator
-    return super.resetAuthenticator();
-  }
 }

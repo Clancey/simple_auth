@@ -2,7 +2,7 @@ import "dart:async";
 
 import "package:simple_auth/simple_auth.dart";
 import "package:http/http.dart" as http;
-import "dart:convert";
+import "dart:convert" as convert;
 
 typedef void ShowAuthenticator(WebAuthenticator authenticator);
 
@@ -115,7 +115,7 @@ class OAuthApi extends AuthenticatedApi {
           "Content-Type": "application/x-www-form-urlencoded"
         },
         body: postData);
-    var map = json.decode(resp.body);
+    var map = convert.json.decode(resp.body);
     var result = OAuthResponse.fromJson(map);
     var account = OAuthAccount(identifier,
         created: DateTime.now().toUtc(),
@@ -133,8 +133,7 @@ class OAuthApi extends AuthenticatedApi {
   getAccountFromMap<T extends Account>(Map<String, dynamic> data) =>
       OAuthAccount.fromJson(data);
   @override
-  Future<bool> refreshAccount(Account _account) async {
-    // TODO: implement refreshAccount
+  Future<bool> refreshAccount(Account _account) async { 
     try {
       var account = _account as OAuthAccount;
       if (account == null) throw new Exception("Invalid Account");
@@ -146,7 +145,7 @@ class OAuthApi extends AuthenticatedApi {
             "Content-Type": "application/x-www-form-urlencoded"
           },
           body: postData);
-      var map = json.decode(resp.body);
+      var map = convert.json.decode(resp.body);
       var result = OAuthResponse.fromJson(map);
       if (result?.error?.isNotEmpty ?? false) {
         if ((account.refreshToken?.isEmpty ?? true) ||

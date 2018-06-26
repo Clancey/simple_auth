@@ -18,7 +18,6 @@ class Api {
         _converter = converter;
 
   Future logOut() async {
-    //TODO: Reset data;
   }
 
   Future onAccountUpdated(Account account) async {}
