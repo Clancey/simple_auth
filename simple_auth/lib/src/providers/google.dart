@@ -22,6 +22,11 @@ class GoogleApi extends OAuthApi {
     this.tokenUrl = "https://accounts.google.com/o/oauth2/token";
     this.authorizationUrl = "https://accounts.google.com/o/oauth2/auth";
     this.redirectUrl = redirectUrl;
+    this.scopes = scopes ??
+        [
+          "https://www.googleapis.com/auth/userinfo.email",
+          "https://www.googleapis.com/auth/userinfo.profile"
+        ];
   }
 
   static String _cleanseClientId(String clientid) =>

@@ -82,6 +82,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
 
+  final simpleAuth.InstagramApi instagramApi =
+      new simpleAuth.InstagramApi("instagram", "clientId", "clientSecret");
+
+  final simpleAuth.LinkedInApi linkedInApi =
+      new simpleAuth.LinkedInApi("linkedin", "clientId", "clientSecret");
+
+  final simpleAuth.MicrosoftLiveConnectApi microsoftLiveApi =
+      new simpleAuth.MicrosoftLiveConnectApi(
+          "microsoftconnect", "clientId", "clientSecret");
+
   @override
   Widget build(BuildContext context) {
     SimpleAuthFlutter.context = context;
@@ -248,6 +258,66 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () async {
               await basicApi.logOut();
               showMessage("Logged out");
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Instagram OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(instagramApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(instagramApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "LinkedIn OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(linkedInApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(linkedInApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Microsoft Live OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(microsoftLiveApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(microsoftLiveApi);
             },
           ),
         ],
