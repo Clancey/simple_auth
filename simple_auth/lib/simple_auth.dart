@@ -19,6 +19,7 @@ export 'src/oauth/oauthApi.dart';
 export 'src/basic/basicAuthAccount.dart';
 export 'src/basic/basicAuthApi.dart';
 export 'src/basic/basicAuthAuthenticator.dart';
+export 'src/apikey/apiKeyApi.dart';
 
 //Providers
 export 'src/providers/amazon.dart';
