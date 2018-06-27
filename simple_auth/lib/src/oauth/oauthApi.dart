@@ -133,7 +133,7 @@ class OAuthApi extends AuthenticatedApi {
   getAccountFromMap<T extends Account>(Map<String, dynamic> data) =>
       OAuthAccount.fromJson(data);
   @override
-  Future<bool> refreshAccount(Account _account) async { 
+  Future<bool> refreshAccount(Account _account) async {
     try {
       var account = _account as OAuthAccount;
       if (account == null) throw new Exception("Invalid Account");

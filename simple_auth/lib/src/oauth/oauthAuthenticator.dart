@@ -1,3 +1,4 @@
+import 'dart:async';
 import "package:simple_auth/simple_auth.dart";
 
 class OAuthAuthenticator extends WebAuthenticator {
@@ -11,4 +12,10 @@ class OAuthAuthenticator extends WebAuthenticator {
     this.identifier = identifier;
   }
   OAuthAuthenticator.empty();
+  @override
+    Future<Map<String,dynamic>> getTokenPostData(String clientSecret) async {
+    var map = await super.getInitialUrlQueryParameters();
+    map["redirect_uri"] = redirectUrl;
+    return map;
+    }
 }

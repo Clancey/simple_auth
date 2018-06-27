@@ -7,6 +7,7 @@ class Api {
   final String identifier;
   String baseUrl;
   String defaultMediaType = "application/json";
+  String useragent;
   final http.Client httpClient;
   Converter _converter;
   Map<String, String> defaultHeaders;
@@ -42,6 +43,12 @@ class Api {
 
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
+    if(useragent?.isNotEmpty ?? false)
+    { 
+       Map<String, String> map = new Map.from(request.headers);
+      map["User-Agent"] = useragent;
+      req = request.replace(headers: map);
+    }
     // for (final i in _requestInterceptors) {
     //   if (i is RequestInterceptor) {
     //     req = await i.onRequest(req);

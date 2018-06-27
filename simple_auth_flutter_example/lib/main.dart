@@ -47,14 +47,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var googleApi = new simpleAuth.GoogleApi("google",
+  static String azureClientId = "";
+  static String azureTennant = "";
+  final simpleAuth.AzureADApi azureApi = new simpleAuth.AzureADApi(
+      "azure",
+      azureClientId,
+      "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
+      "https://login.microsoftonline.com/$azureTennant/oauth2/token",
+      "https://management.azure.com/");
+
+  final simpleAuth.AmazonApi amazonApi = new simpleAuth.AmazonApi(
+      "amazon",
+      "amzn1.application-oa2-client.848f75b20206455097cde6b63ca53dec",
+      "759db00c1a71fe308d55ce42387c510af8337a5b3aa402a835b77dc552766c3a",
+      scopes: ["clouddrive:read", "clouddrive:write"]);
+
+  final simpleAuth.DropboxApi dropboxApi = new simpleAuth.DropboxApi(
+      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg");
+
+  final simpleAuth.FacebookApi facebookApi =
+      new simpleAuth.FacebookApi("facebook", "clientId", "clientSecret");
+
+  final simpleAuth.GithubApi githubApi =
+      new simpleAuth.GithubApi("github", "clientId", "clientSecret");
+
+  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile"
       ]);
-  var basicApi = new simpleAuth.BasicAuthApi(
+
+  final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
 
   @override
@@ -76,6 +101,26 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           ListTile(
             title: Text(
+              "AzureAD OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(azureApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(azureApi);
+            },
+          ),
+          ListTile(
+            title: Text(
               "Google OAuth",
               style: Theme.of(context).textTheme.headline,
             ),
@@ -95,9 +140,88 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             leading: Icon(Icons.delete),
             title: Text('Logout'),
-            onTap: () async {
-              await googleApi.logOut();
-              showMessage("Logged out");
+            onTap: () {
+              logout(githubApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Amazon OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(amazonApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(amazonApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Dropbox OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(dropboxApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(dropboxApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Facebook OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(facebookApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(facebookApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Github OAuth",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () {
+              login(githubApi);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(githubApi);
             },
           ),
           ListTile(
@@ -144,5 +268,19 @@ class _MyHomePageState extends State<MyHomePage> {
           })
     ]);
     showDialog(context: context, builder: (BuildContext context) => alert);
+  }
+
+  void login(simpleAuth.AuthenticatedApi api) async {
+    try {
+      var success = await api.authenticate();
+      showMessage("Logged in success: $success");
+    } catch (e) {
+      showError(e);
+    }
+  }
+
+  void logout(simpleAuth.AuthenticatedApi api) async {
+    await api.logOut();
+    showMessage("Logged out");
   }
 }

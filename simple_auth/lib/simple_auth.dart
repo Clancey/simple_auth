@@ -16,7 +16,14 @@ export 'src/oauth/oauthAuthenticator.dart';
 export 'src/oauth/oauthAccount.dart';
 export 'src/oauth/oauthResponse.dart';
 export 'src/oauth/oauthApi.dart';
-export 'src/providers/google.dart';
 export 'src/basic/basicAuthAccount.dart';
 export 'src/basic/basicAuthApi.dart';
 export 'src/basic/basicAuthAuthenticator.dart';
+
+//Providers
+export 'src/providers/amazon.dart';
+export 'src/providers/azureAD.dart';
+export 'src/providers/dropbox.dart';
+export 'src/providers/facebook.dart';
+export 'src/providers/github.dart';
+export 'src/providers/google.dart';

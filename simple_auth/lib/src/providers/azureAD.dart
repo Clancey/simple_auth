@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:simple_auth/simple_auth.dart';
 import "package:http/http.dart" as http;
 
@@ -55,8 +54,8 @@ class AzureADAuthenticator extends OAuthAuthenticator {
       String tokenUrl,
       String baseUrl,
       String redirectUrl,
-      resource,
-      useClientSecret)
+      this.resource,
+      this.useClientSecret)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl,
             redirectUrl) {
     useEmbeddedBrowser = useClientSecret;
