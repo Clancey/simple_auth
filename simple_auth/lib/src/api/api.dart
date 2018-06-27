@@ -10,19 +10,13 @@ class Api {
   final http.Client httpClient;
   Converter _converter;
   Map<String, String> defaultHeaders;
-  Api(
-      {this.identifier,
-      http.Client client,
-      Converter converter})
+  Api({this.identifier, http.Client client, Converter converter})
       : httpClient = client ?? new http.Client(),
         _converter = converter;
 
-  Future logOut() async {
-  }
+  Future logOut() async {}
 
   Future onAccountUpdated(Account account) async {}
-
-  
 
   Future<Request> encodeRequest(Request request) async {
     final converted = await _converter?.encode(request) ?? request;
@@ -98,16 +92,15 @@ class Api {
 
     return res;
   }
+
   Future<bool> ping() => pingUrl(baseUrl);
-  Future<bool> pingUrl(String url)async {
-    try{
+  Future<bool> pingUrl(String url) async {
+    try {
       final Uri uri = Uri.parse(url);
       var request = new http.Request("GET", uri);
       await httpClient.send(request);
       return true;
-    }
-    catch(e)
-    {
+    } catch (e) {
       return false;
     }
   }

@@ -10,7 +10,8 @@ class OAuthResponse implements JsonSerializable {
   String errorDescription;
 
   OAuthResponse(this.tokenType, this.expiresIn, this.refreshToken,
-      this.accessToken, this.idToken,{this.error,this.errorDescription});
+      this.accessToken, this.idToken,
+      {this.error, this.errorDescription});
 
   @override
   Map<String, dynamic> toJson() => {
@@ -19,8 +20,9 @@ class OAuthResponse implements JsonSerializable {
         "refresh_token": refreshToken,
         "access_token": accessToken,
         "id_token": idToken,
-        error?.isEmpty ?? true ? null : "error":error,
-        errorDescription?.isEmpty ?? true ? null : "error_description":errorDescription,
+        error?.isEmpty ?? true ? null : "error": error,
+        errorDescription?.isEmpty ?? true ? null : "error_description":
+            errorDescription,
       };
 
   factory OAuthResponse.fromJson(Map<String, dynamic> json) => OAuthResponse(

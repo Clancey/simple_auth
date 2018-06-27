@@ -9,18 +9,20 @@ class BasicLoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => new _LoginPageState();
 }
+
 class _LoginPageState extends State<BasicLoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
         radius: 48.0,
-        child: (BasicLoginPage.defaultLogo?.isEmpty ?? true) ? Icon(Icons.supervised_user_circle) : Image.asset(BasicLoginPage.defaultLogo),
+        child: (BasicLoginPage.defaultLogo?.isEmpty ?? true)
+            ? Icon(Icons.supervised_user_circle)
+            : Image.asset(BasicLoginPage.defaultLogo),
       ),
     );
 
@@ -55,16 +57,22 @@ class _LoginPageState extends State<BasicLoginPage> {
         child: MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: () async{
-            try{
-              bool success = await widget.authenticator.verifyCredentials(emailController.text, passwordController.text);
-              if(success)
-                Navigator.pop(context);
-            }
-            catch(ex)
-            {
-              var alert = new AlertDialog(content: new Text(ex),actions: <Widget>[new FlatButton(child: const Text("Ok"),onPressed:() {Navigator.pop(context);})]);
-              showDialog(context: context,builder: (BuildContext context)=> alert);
+          onPressed: () async {
+            try {
+              bool success = await widget.authenticator.verifyCredentials(
+                  emailController.text, passwordController.text);
+              if (success) Navigator.pop(context);
+            } catch (ex) {
+              var alert =
+                  new AlertDialog(content: new Text(ex), actions: <Widget>[
+                new FlatButton(
+                    child: const Text("Ok"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    })
+              ]);
+              showDialog(
+                  context: context, builder: (BuildContext context) => alert);
             }
           },
           color: Colors.lightBlueAccent,
@@ -74,17 +82,19 @@ class _LoginPageState extends State<BasicLoginPage> {
     );
 
     return Scaffold(
-      appBar: new AppBar (
+      appBar: new AppBar(
         title: Text(widget.authenticator.title),
-        actions: widget.authenticator.allowsCancel ?  <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.cancel),
-            onPressed: (){
-              widget.authenticator.cancel();
-              Navigator.pop(context);
-            },
-          )
-        ] : null,
+        actions: widget.authenticator.allowsCancel
+            ? <Widget>[
+                new IconButton(
+                  icon: new Icon(Icons.cancel),
+                  onPressed: () {
+                    widget.authenticator.cancel();
+                    Navigator.pop(context);
+                  },
+                )
+              ]
+            : null,
       ),
       backgroundColor: Colors.white,
       body: Center(
@@ -104,9 +114,10 @@ class _LoginPageState extends State<BasicLoginPage> {
       ),
     );
   }
+
   @override
-    void dispose() {
-      widget.authenticator.cancel();
-      super.dispose();
-    }
+  void dispose() {
+    widget.authenticator.cancel();
+    super.dispose();
+  }
 }

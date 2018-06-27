@@ -13,7 +13,10 @@ class Request {
   final Map<String, String> headers;
 
   Request(this.method, this.url,
-      {this.body, this.parameters: const {}, this.headers: const {}, this.authenticated = true});
+      {this.body,
+      this.parameters: const {},
+      this.headers: const {},
+      this.authenticated = true});
 
   String _getMethod(String method) {
     switch (method) {
@@ -44,7 +47,7 @@ class Request {
 
   http.BaseRequest toHttpRequest(String baseUrl) {
     var pathUrl = Uri.tryParse(url);
-    if(pathUrl?.scheme?.isEmpty ?? true){
+    if (pathUrl?.scheme?.isEmpty ?? true) {
       pathUrl = Uri.parse("$baseUrl/${url}");
     }
     final uri = pathUrl.replace(

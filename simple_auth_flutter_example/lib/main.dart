@@ -10,7 +10,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   initState() {
     super.initState();
@@ -28,8 +27,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -50,14 +47,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var googleApi = new simpleAuth.GoogleApi(
-      "google", "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
+  var googleApi = new simpleAuth.GoogleApi("google",
+      "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
+      clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile"
       ]);
-  var basicApi = new simpleAuth.BasicAuthApi("github-basic", "https://api.github.com/user");
-
+  var basicApi = new simpleAuth.BasicAuthApi(
+      "github-basic", "https://api.github.com/user");
 
   @override
   Widget build(BuildContext context) {
@@ -75,72 +73,76 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text(widget.title),
       ),
       body: ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text("Google OAuth",
+        children: <Widget>[
+          ListTile(
+            title: Text(
+              "Google OAuth",
               style: Theme.of(context).textTheme.headline,
-              ),
             ),
-            ListTile(
-              leading: Icon(Icons.launch),
-              title: Text('Login'),
-              onTap: () async {
-                try{
-                  var user = await googleApi.getUserInfo();
-                  showMessage("${user.name} logged in");
-                }
-                catch(e)
-                {
-                  showError(e);
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Logout'),
-              onTap: () async {
-                await googleApi.logOut();
-                showMessage("Logged out");
-              },
-            ),
-            ListTile(
-              title: Text("Github BasicAuth",
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () async {
+              try {
+                var user = await googleApi.getUserInfo();
+                showMessage("${user.name} logged in");
+              } catch (e) {
+                showError(e);
+              }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () async {
+              await googleApi.logOut();
+              showMessage("Logged out");
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Github BasicAuth",
               style: Theme.of(context).textTheme.headline,
-              ),
             ),
-            ListTile(
-              leading: Icon(Icons.launch),
-              title: Text('Login'),
-              onTap: () async {
-                 try{
-                  var success = await basicApi.authenticate();
-                  showMessage("Logged in success: ${success}");
-                }
-                catch(e)
-                {
-                  showError(e);
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Logout'),
-              onTap: () async {
-                await basicApi.logOut();
-                showMessage("Logged out");
-              },
-            ),
-          ],
-        ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () async {
+              try {
+                var success = await basicApi.authenticate();
+                showMessage("Logged in success: $success");
+              } catch (e) {
+                showError(e);
+              }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () async {
+              await basicApi.logOut();
+              showMessage("Logged out");
+            },
+          ),
+        ],
+      ),
     );
   }
-  void showError(Exception ex)
-  {
+
+  void showError(Exception ex) {
     showMessage(ex.toString());
   }
-  void showMessage(String text)
-  {
-    var alert = new AlertDialog(content: new Text(text),actions: <Widget>[new FlatButton(child: const Text("Ok"),onPressed:() {Navigator.pop(context);})]);
-    showDialog(context: context,builder: (BuildContext context)=> alert);
+
+  void showMessage(String text) {
+    var alert = new AlertDialog(content: new Text(text), actions: <Widget>[
+      new FlatButton(
+          child: const Text("Ok"),
+          onPressed: () {
+            Navigator.pop(context);
+          })
+    ]);
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
 }

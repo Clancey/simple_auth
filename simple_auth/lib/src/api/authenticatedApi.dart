@@ -6,9 +6,8 @@ import "dart:convert" as Convert;
 abstract class AuthenticatedApi extends Api {
   AuthStorage _authStorage;
   AuthenticatedApi(String identifier,
-      {http.Client client,
-      Converter converter,
-      AuthStorage authStorage}) : super(identifier:identifier,client:client,converter:converter) {
+      {http.Client client, Converter converter, AuthStorage authStorage})
+      : super(identifier: identifier, client: client, converter: converter) {
     _authStorage = authStorage ?? AuthStorage.shared;
   }
 
@@ -16,19 +15,15 @@ abstract class AuthenticatedApi extends Api {
 
   Future<Account> currentAuthCall;
   Future<Account> authenticate() async {
-    if (currentAuthCall == null)
-      currentAuthCall = performAuthenticate();
-      try{
-        var account = await currentAuthCall;
-        currentAuthCall = null;
-        return account;
-      }
-      catch(Exception)
-      {
-        currentAuthCall = null;
-        throw Exception;
-      }
-      
+    if (currentAuthCall == null) currentAuthCall = performAuthenticate();
+    try {
+      var account = await currentAuthCall;
+      currentAuthCall = null;
+      return account;
+    } catch (Exception) {
+      currentAuthCall = null;
+      throw Exception;
+    }
   }
 
   Future<Account> performAuthenticate();
@@ -37,7 +32,7 @@ abstract class AuthenticatedApi extends Api {
   @override
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
-    if (req.authenticated){ 
+    if (req.authenticated) {
       await verifyCredentials();
       req = await authenticateRequest(request);
     }
@@ -66,7 +61,7 @@ abstract class AuthenticatedApi extends Api {
   }
 
   Future<T> getAccount<T extends Account>() async {
-    var json = await _authStorage.read(key: identifier); 
+    var json = await _authStorage.read(key: identifier);
     if (json == null) return null;
     try {
       var data = Convert.jsonDecode(json);
@@ -77,5 +72,6 @@ abstract class AuthenticatedApi extends Api {
     }
   }
 
-  getAccountFromMap<T extends Account>(Map<String,dynamic> data) => Account.fromJson(data);
+  getAccountFromMap<T extends Account>(Map<String, dynamic> data) =>
+      Account.fromJson(data);
 }

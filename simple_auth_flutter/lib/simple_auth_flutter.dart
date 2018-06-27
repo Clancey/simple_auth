@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 import 'package:simple_auth_flutter/BasicLoginPage.dart';
 
-class SimpleAuthFlutter implements simpleAuth.AuthStorage{
+class SimpleAuthFlutter implements simpleAuth.AuthStorage {
   static const MethodChannel _channel =
       const MethodChannel('simple_auth_flutter/showAuthenticator');
   static const EventChannel _eventChannel =
@@ -29,7 +29,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage{
       "identifier": authenticator.identifier,
       "title": authenticator.title,
       "allowsCancel": authenticator.allowsCancel.toString(),
-      "redirectUrl" : authenticator.redirectUrl,
+      "redirectUrl": authenticator.redirectUrl,
       "useEmbeddedBrowser": authenticator.useEmbeddedBrowser.toString()
     });
     if (url == "cancel") {
@@ -37,10 +37,14 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage{
       return;
     }
   }
-   static Future showBasicAuthenticator(
+
+  static Future showBasicAuthenticator(
       simpleAuth.BasicAuthAuthenticator authenticator) async {
-        showDialog(context: context,builder: (BuildContext context) => new BasicLoginPage(authenticator));
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => new BasicLoginPage(authenticator));
   }
+
   static SimpleAuthFlutter _shared = new SimpleAuthFlutter();
   static BuildContext context;
   static void init(BuildContext context) {
@@ -53,19 +57,15 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage{
       if (change.url == "canceled") {
         authenticator.cancel();
         return;
-      }
-
-      else if(change.url == "error"){
+      } else if (change.url == "error") {
         authenticator.onError(change.description);
         return;
       }
 
       var uri = Uri.tryParse(change.url);
-      if (authenticator.checkUrl(uri)){
+      if (authenticator.checkUrl(uri)) {
         _channel.invokeMethod("completed", {"identifier": change.identifier});
-      }
-      else if(change.foreComplete)
-      {
+      } else if (change.foreComplete) {
         authenticator.onError("Unable to get an AuthToken from the server");
       }
     });
@@ -75,7 +75,11 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage{
   static Stream<UrlChange> get onUrlChanged {
     if (_onUrlChanged == null) {
       _onUrlChanged = _eventChannel.receiveBroadcastStream().map(
-          (dynamic event) => new UrlChange(event["identifier"], event["url"], event["forceComplete"].toString().toLowerCase() == "true",event["description"]));
+          (dynamic event) => new UrlChange(
+              event["identifier"],
+              event["url"],
+              event["forceComplete"].toString().toLowerCase() == "true",
+              event["description"]));
     }
     return _onUrlChanged;
   }
@@ -90,11 +94,9 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage{
 
   @override
   Future<void> write({String key, String value}) async {
-   String success = await _channel.invokeMethod("saveKey", {
-      "key": key,
-      "value": value
-    });
-    if(success != "success")
+    String success =
+        await _channel.invokeMethod("saveKey", {"key": key, "value": value});
+    if (success != "success")
       throw new Exception("Error saving data to Flutter AuthStorage");
   }
 }
@@ -104,5 +106,5 @@ class UrlChange {
   String identifier;
   bool foreComplete;
   String description;
-  UrlChange(this.identifier, this.url,this.foreComplete, this.description);
+  UrlChange(this.identifier, this.url, this.foreComplete, this.description);
 }

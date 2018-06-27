@@ -11,38 +11,35 @@ class BasicAuthApi extends AuthenticatedApi {
   ShowBasicAuthenticator showAuthenticator;
 
   BasicAuthApi(String identifier, this.loginUrl,
-      {
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      {http.Client client, Converter converter, AuthStorage authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
     currentAuthenticator = BasicAuthAuthenticator(client, loginUrl);
   }
 
-
-  BasicAuthAccount get currentBasicAccount => currentAccount as BasicAuthAccount;
+  BasicAuthAccount get currentBasicAccount =>
+      currentAccount as BasicAuthAccount;
 
   @override
-  Future<Request> authenticateRequest(Request request) async{
+  Future<Request> authenticateRequest(Request request) async {
     Map<String, String> map = new Map.from(request.headers);
     map["Authorization"] = "Basic ${currentBasicAccount.key}";
     return request.replace(headers: map);
   }
-  
+
   BasicAuthAuthenticator getAuthenticator() => currentAuthenticator;
+
   @override
   Future<Account> performAuthenticate() async {
-    BasicAuthAccount account = currentBasicAccount ?? await getAccount<BasicAuthAccount>();
-    if(account?.isValid() ?? false)
-    {
+    BasicAuthAccount account =
+        currentBasicAccount ?? await getAccount<BasicAuthAccount>();
+    if (account?.isValid() ?? false) {
       return currentAccount = account;
     }
     BasicAuthAuthenticator authenticator = getAuthenticator();
     await authenticator.resetAuthenticator();
 
-
-    if(showAuthenticator != null)
+    if (showAuthenticator != null)
       showAuthenticator(authenticator);
     else if (sharedShowAuthenticator != null)
       sharedShowAuthenticator(authenticator);
@@ -53,10 +50,10 @@ class BasicAuthApi extends AuthenticatedApi {
     if (token?.isEmpty ?? true) {
       throw new Exception("Null Token");
     }
-    account = new BasicAuthAccount(identifier,key: token);
+    account = new BasicAuthAccount(identifier, key: token);
     saveAccount(account);
     currentAccount = account;
-    return account;   
+    return account;
   }
 
   @override

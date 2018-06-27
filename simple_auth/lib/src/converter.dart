@@ -19,7 +19,7 @@ class BodyConverterCodec extends Converter {
   final Codec codec;
 
   const BodyConverterCodec(this.codec) : super();
-  
+
   Future<Request> encode(Request request) async {
     if (request.body == null) {
       return request;
@@ -38,7 +38,7 @@ class BodyConverterCodec extends Converter {
 @immutable
 class JsonConverter extends BodyConverterCodec {
   const JsonConverter() : super(json);
-  
+
   @override
   Future<Request> encode(Request request) {
     var body = request.body;

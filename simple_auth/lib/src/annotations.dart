@@ -7,7 +7,8 @@ class OAuthApiDeclaration {
   final String name;
   final String clientId;
   final String clientSecret;
-  const OAuthApiDeclaration(this.name,this.clientId,this.clientSecret, {this.baseUrl: "/"});
+  const OAuthApiDeclaration(this.name, this.clientId, this.clientSecret,
+      {this.baseUrl: "/"});
 }
 
 @immutable

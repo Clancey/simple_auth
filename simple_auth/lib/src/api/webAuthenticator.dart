@@ -10,7 +10,7 @@ abstract class WebAuthenticator extends Authenticator {
   bool useEmbeddedBrowser = false;
   set redirectUrl(String value) {
     this._redirectUrl = value;
-    if(value?.isNotEmpty ?? false)
+    if (value?.isNotEmpty ?? false)
       _redirectUri = Uri.parse(value);
     else
       _redirectUri = null;
@@ -22,12 +22,9 @@ abstract class WebAuthenticator extends Authenticator {
 
   bool checkUrl(Uri url) {
     try {
-      if (url?.host != _redirectUri.host)
-        return false;
-      if (url?.query?.isEmpty ?? true)
-        return false;
-      if (!url.queryParameters.containsKey(authCodeKey))
-        return false;
+      if (url?.host != _redirectUri.host) return false;
+      if (url?.query?.isEmpty ?? true) return false;
+      if (!url.queryParameters.containsKey(authCodeKey)) return false;
       var code = url.queryParameters[authCodeKey];
       foundAuthCode(code);
       return true;

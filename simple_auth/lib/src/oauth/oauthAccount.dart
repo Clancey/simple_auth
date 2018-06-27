@@ -4,15 +4,13 @@ class OAuthAccount extends Account {
   OAuthAccount(String identifier,
       {this.idToken,
       this.token,
-        this.tokenType,
+      this.tokenType,
       this.refreshToken,
       this.expiresIn,
       this.created,
       this.scope,
-        Map<String, String> userData = const {}})
-      : super(identifier, userData: userData){
-
-  }
+      Map<String, String> userData = const {}})
+      : super(identifier, userData: userData) {}
 
   String tokenType = "Bearer";
   String idToken;
@@ -46,18 +44,18 @@ class OAuthAccount extends Account {
           expiresIn: json["expiresIn"],
           refreshToken: json["refreshToken"],
           scope: new List<String>.from(json["scope"]),
-          userData: new Map<String,String>.from(json["userData"]));
+          userData: new Map<String, String>.from(json["userData"]));
 
   @override
   Map<String, dynamic> toJson() => {
         "identifier": identifier,
         "userData": userData,
         "idToken": idToken,
-        "token":token,
-        "created":created.toIso8601String(),
-        "expiresIn":expiresIn,
-        "refreshToken":refreshToken,
-        "scope":scope,
-        "tokenType":tokenType ?? "Bearer"
+        "token": token,
+        "created": created.toIso8601String(),
+        "expiresIn": expiresIn,
+        "refreshToken": refreshToken,
+        "scope": scope,
+        "tokenType": tokenType ?? "Bearer"
       };
 }
