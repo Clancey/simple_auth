@@ -1,14 +1,33 @@
 import 'package:meta/meta.dart';
 import 'request.dart';
 
+
 @immutable
-class OAuthApiDeclaration {
-  final String baseUrl;
-  final String name;
+class GoogleApiKeyApiDeclaration extends ApiDeclaration {
+  final String apiKey;
   final String clientId;
   final String clientSecret;
-  const OAuthApiDeclaration(this.name, this.clientId, this.clientSecret,
-      {this.baseUrl: "/"});
+  final List<String> scopes;
+  const GoogleApiKeyApiDeclaration(String name, this.apiKey, this.clientId,
+      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes}) : super(name,baseUrl:baseUrl);
+}
+
+@immutable
+class GoogleApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final List<String> scopes;
+  const GoogleApiDeclaration(String name, this.clientId,
+      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes}) : super(name,baseUrl:baseUrl);
+}
+
+@immutable
+class OAuthApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final List<String> scopes;
+  const OAuthApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes}) : super(name,baseUrl: baseUrl);
 }
 
 @immutable
@@ -46,38 +65,39 @@ class Method {
   final String method;
   final String url;
   final Map<String, String> headers;
+  final bool authenticated;
 
-  const Method(this.method, {this.url: "/", this.headers: const {}});
+  const Method(this.method, {this.url: "/", this.headers: const {}, this.authenticated = true});
 }
 
 @immutable
 class Get extends Method {
-  const Get({String url: "/", Map<String, String> headers: const {}})
-      : super(HttpMethod.Get, url: url, headers: headers);
+  const Get({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
+      : super(HttpMethod.Get, url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Post extends Method {
-  const Post({String url: "/", Map<String, String> headers: const {}})
-      : super(HttpMethod.Post, url: url, headers: headers);
+  const Post({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
+      : super(HttpMethod.Post, url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Delete extends Method {
-  const Delete({String url: "/", Map<String, String> headers: const {}})
-      : super(HttpMethod.Delete, url: url, headers: headers);
+  const Delete({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
+      : super(HttpMethod.Delete, url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Put extends Method {
-  const Put({String url: "/", Map<String, String> headers: const {}})
-      : super(HttpMethod.Put, url: url, headers: headers);
+  const Put({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
+      : super(HttpMethod.Put, url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Patch extends Method {
-  const Patch({String url: "/", Map<String, String> headers: const {}})
-      : super(HttpMethod.Patch, url: url, headers: headers);
+  const Patch({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
+      : super(HttpMethod.Patch, url: url, headers: headers, authenticated: authenticated);
 }
 
 /* @immutable

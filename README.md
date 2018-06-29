@@ -41,6 +41,50 @@ That's it! If the user is not logged in, they will automatically be prompted. If
 # Flutter Setup
 Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically make present your login UI
 
+
+# Android Manifest
+Android requires you to add the callback scheme:
+```xml
+<activity android:name="clancey.simpleauth.simpleauthflutter.SimpleAuthCallbackActivity" >
+    <intent-filter android:label="simple_auth">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="com.googleusercontent.apps.992461286651-k3tsbcreniknqptanrugsetiimt0lkvo" />
+    </intent-filter>
+</activity>
+```
+
+# iOS
+To use the Native Safari Authenticator, you are required to add the following snippet in your AppDelegate.
+
+```
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
+    return [SimpleAuthFlutterPlugin checkUrl:url];
+}
+
+```
+
+You are also required to add the following to add a CFBundleURLSchemes to your info.plist 
+
+For Google: com.googleusercontent.apps.YOUR_CLIENT_ID
+
+```
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.YOURCLIENTID</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>googleLogin</string>
+		</dict>
+	</array>
+	
+```
+
+
 # Serialization
 Json objects will automatically serialize if you conform to [JsonSerializable](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/jsonSerializable.dart)
 
