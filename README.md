@@ -39,7 +39,7 @@ var userInfo = await api.send<UserInfo>(request);
 That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds! Expired tokens even automatically refresh.
 
 # Flutter Setup
-Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically make present your login UI
+Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically present your login UI
 
 
 # Android Manifest
