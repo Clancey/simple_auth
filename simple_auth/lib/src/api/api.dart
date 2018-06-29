@@ -9,19 +9,22 @@ class Api {
   String defaultMediaType = "application/json";
   String useragent;
   final http.Client httpClient;
-  Converter _converter;
+  Converter converter;
+  final JsonConverter jsonConverter = new JsonConverter();
   Map<String, String> defaultHeaders;
   Api({this.identifier, http.Client client, Converter converter})
       : httpClient = client ?? new http.Client(),
-        _converter = converter;
+        converter = converter;
 
   Future logOut() async {}
 
   Future onAccountUpdated(Account account) async {}
 
   Future<Request> encodeRequest(Request request) async {
-    final converted = await _converter?.encode(request) ?? request;
-
+    var converted = await converter?.encode(request);
+    if (converted == null && request.body is JsonSerializable) {
+      converted = await jsonConverter.encode(request);
+    }
     if (converted == null) {
       throw new Exception(
           "No converter found for type ${request.body?.runtimeType}");
@@ -32,7 +35,7 @@ class Api {
 
   Future<Response<Value>> decodeResponse<Value>(
       Response<String> response, Type responseType) async {
-    final converted = await _converter?.decode(response, responseType);
+    final converted = await converter?.decode(response, responseType) ?? response;
 
     if (converted == null) {
       throw new Exception("No converter found for type $Value");
@@ -43,9 +46,8 @@ class Api {
 
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
-    if(useragent?.isNotEmpty ?? false)
-    { 
-       Map<String, String> map = new Map.from(request.headers);
+    if (useragent?.isNotEmpty ?? false) {
+      Map<String, String> map = new Map.from(request.headers);
       map["User-Agent"] = useragent;
       req = request.replace(headers: map);
     }

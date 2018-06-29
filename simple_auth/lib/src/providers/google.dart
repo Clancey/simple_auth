@@ -78,6 +78,45 @@ class GoogleAuthenticator extends OAuthAuthenticator {
   }
 }
 
+class GoogleApiKeyApi extends GoogleApi {
+  AuthLocation authLocation;
+  String apiKey;
+  String authKey;
+  GoogleApiKeyApi(String identifier, this.apiKey, String clientId,
+      {this.authKey = "key",
+      this.authLocation = AuthLocation.query,
+      String clientSecret = "native",
+      String redirectUrl = "http://localhost",
+      List<String> scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            client: client,
+            scopes: scopes,
+            converter: converter,
+            authStorage: authStorage) {}
+  @override
+  Future<Request> interceptRequest(Request request) async {
+    Request req = request;
+    if (authLocation == AuthLocation.header) {
+      Map<String, String> map = new Map.from(request.headers);
+      map[authKey] = apiKey;
+      req = request.replace(headers: map);
+    } else {
+      Map<String, dynamic> map = new Map.from(request.parameters);
+      map[authKey] = apiKey;
+      req = request.replace(parameters: map);
+    }
+    if (req.authenticated) {
+      await verifyCredentials();
+      req = await authenticateRequest(request);
+    }
+    return super.interceptRequest(req);
+  }
+}
+
 class GoogleUser implements JsonSerializable {
   String id;
   String email;

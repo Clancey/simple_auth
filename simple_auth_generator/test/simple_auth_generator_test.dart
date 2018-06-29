@@ -90,7 +90,7 @@ void main() {
 //    expect(result, "test");
 //  });
   test('run generator', () async {
-    var result = await runForElementNamed('MyServiceDefinition');
+    var result = await runForElementNamed('YouTubeApiDefinition');
 
     expect(result, "test");
   });

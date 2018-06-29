@@ -2,7 +2,6 @@ import "dart:async";
 
 import "package:simple_auth/simple_auth.dart";
 import "package:http/http.dart" as http;
-import "dart:convert" as convert;
 
 class OAuthApiKeyApi extends OAuthApi {
   AuthLocation authLocation;
@@ -21,17 +20,21 @@ class OAuthApiKeyApi extends OAuthApi {
             converter: converter,
             authStorage: authStorage) {}
   @override
-  Future<Request> authenticateRequest(Request request) async {
+  Future<Request> interceptRequest(Request request) async {
     Request req = request;
     if (authLocation == AuthLocation.header) {
       Map<String, String> map = new Map.from(request.headers);
       map[authKey] = apiKey;
       req = request.replace(headers: map);
     } else {
-      Map<String, String> map = new Map.from(request.parameters);
+      Map<String, dynamic> map = new Map.from(request.parameters);
       map[authKey] = apiKey;
       req = request.replace(parameters: map);
     }
-    return await super.authenticateRequest(req);
+    if (req.authenticated) {
+      await verifyCredentials();
+      req = await authenticateRequest(request);
+    }
+    return super.interceptRequest(req);
   }
 }

@@ -8,17 +8,22 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  simple_auth:
+  simple_auth_flutter:
 
 dev_dependencies:
+  simple_auth_generator: 
+  build_runner: ^0.8.0
   flutter_test:
     sdk: flutter
-  simple_auth:
 
 dependency_overrides:
   simple_auth:
     path: ../simple_auth
   simple_auth_flutter:
     path: ../simple_auth_flutter
+  simple_auth_generator:
+    path: ../simple_auth_generator
 
 
 # For information on the generic Dart part of this file, see the

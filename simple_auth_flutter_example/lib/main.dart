@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 import 'package:simple_auth_flutter/simple_auth_flutter.dart';
+import 'package:simple_auth_flutter_example/youtubeApi.dart';
 
 void main() => runApp(new MyApp());
 
@@ -91,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final simpleAuth.MicrosoftLiveConnectApi microsoftLiveApi =
       new simpleAuth.MicrosoftLiveConnectApi(
           "microsoftconnect", "clientId", "clientSecret");
-
+  final youtubeApi = new YoutubeApi("Youtube");
   @override
   Widget build(BuildContext context) {
     SimpleAuthFlutter.context = context;
@@ -142,6 +143,44 @@ class _MyHomePageState extends State<MyHomePage> {
               try {
                 var user = await googleApi.getUserInfo();
                 showMessage("${user.name} logged in");
+              } catch (e) {
+                showError(e);
+              }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () {
+              logout(githubApi);
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Youtube",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () async {
+              try {
+                var user = await youtubeApi.getUserInfo();
+                showMessage("${user.name} logged in");
+              } catch (e) {
+                showError(e);
+              }
+            },
+          ), 
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Search for "Flutter"'),
+            onTap: () async {
+              try {
+                var user = await youtubeApi.search("flutter");
+                print(user.body);
+                showMessage(user.body);
               } catch (e) {
                 showError(e);
               }

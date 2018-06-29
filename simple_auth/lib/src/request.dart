@@ -43,15 +43,17 @@ class Request {
       new Request(method ?? this.method, url ?? this.url,
           body: body ?? this.body,
           parameters: parameters ?? this.parameters,
-          headers: headers ?? this.headers);
+          headers: headers ?? this.headers, authenticated: this.authenticated);
 
   http.BaseRequest toHttpRequest(String baseUrl) {
     var pathUrl = Uri.tryParse(url);
     if (pathUrl?.scheme?.isEmpty ?? true) {
       pathUrl = Uri.parse("$baseUrl/${url}");
     }
+    var cleanedParams = parameters;
+    parameters.keys.where((key) => parameters[key] == null).toList().forEach(cleanedParams.remove);
     final uri = pathUrl.replace(
-        queryParameters: parameters.map((k, v) => new MapEntry(k, "$v")));
+        queryParameters: cleanedParams.map((k, v) => new MapEntry(k, "$v")));
     final baseRequest = new http.Request(_getMethod(method), uri);
     baseRequest.headers.addAll(headers);
     if (body != null) {
