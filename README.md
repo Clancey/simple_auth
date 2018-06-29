@@ -119,10 +119,6 @@ The Generator is not required, and not complete. But will make things magical. M
 
 # TODO
 * Add more documentation
-* Finish Android Authentication
-* Create basic Login screen for Basic Authentication
-* Port the rest of the providers
 * Add native flutter providers for google
-* Add AuthStorage for Flutter
 * Complete the generator
 * More things I can't remember
