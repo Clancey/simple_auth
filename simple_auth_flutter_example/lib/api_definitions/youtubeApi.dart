@@ -18,3 +18,4 @@ abstract class YouTubeApiDefinition {
   @Get(url: "search", authenticated: false)
   Future<Response<String>> search(@Query() String q,[@Query() int maxResults = 25, @Query() String part = "snippet" ]);
 }
+

@@ -39,3 +39,9 @@ abstract class YouTubeApiDefinition {
   @Get(url: "search")
   Future<Response<String>> search(@Query() String q,[@Query() int maxResults = 25, @Query() String part = "snippet" ]);
 }
+
+
+@AzureADApiDeclaration("AzureAdTestApi","resource","client_id",azureTennant: "azureTennant",clientSecret: "client_secret")
+abstract class AzureADDefinition {
+
+}

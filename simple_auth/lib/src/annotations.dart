@@ -3,22 +3,37 @@ import 'request.dart';
 
 
 @immutable
+class AzureADApiDeclaration extends ApiDeclaration {
+  final String authorizationUrl;
+  final String tokenUrl;
+  final String azureTennant;
+  final String resource;
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  const AzureADApiDeclaration(String name, this.clientId,this.resource,
+      {this.clientSecret = "native" ,String baseUrl: "/", this.redirectUrl = "http://localhost",this.authorizationUrl ,this.tokenUrl, this.azureTennant}) : super(name,baseUrl:baseUrl);
+}
+
+@immutable
 class GoogleApiKeyApiDeclaration extends ApiDeclaration {
   final String apiKey;
   final String clientId;
   final String clientSecret;
+  final String redirectUrl;
   final List<String> scopes;
   const GoogleApiKeyApiDeclaration(String name, this.apiKey, this.clientId,
-      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes}) : super(name,baseUrl:baseUrl);
+      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"}) : super(name,baseUrl:baseUrl);
 }
 
 @immutable
 class GoogleApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
+  final String redirectUrl;
   final List<String> scopes;
   const GoogleApiDeclaration(String name, this.clientId,
-      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes}) : super(name,baseUrl:baseUrl);
+      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"}) : super(name,baseUrl:baseUrl);
 }
 
 @immutable

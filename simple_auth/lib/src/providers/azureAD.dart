@@ -6,7 +6,7 @@ class AzureADApi extends OAuthApi {
   bool useClientSecret;
   String resource;
   AzureADApi(String identifier, String clientId, String authorizationUrl,
-      String tokenUrl, resource,
+      String tokenUrl, this.resource,
       {String clientSecret = "native",
       String redirectUrl = "http://localhost",
       List<String> scopes,

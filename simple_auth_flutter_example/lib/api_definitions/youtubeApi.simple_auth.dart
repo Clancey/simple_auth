@@ -8,9 +8,9 @@ part of 'youtubeApi.dart';
 
 class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
   YoutubeApi(String identifier,
-      [String apiKey = 'AIzaSyA6pSGpSe7dmcKGq87lcAcRl03h2CKSN7c',
-      String clientId =
+      [String apiKey =
           '419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com',
+      String clientId = 'AIzaSyA6pSGpSe7dmcKGq87lcAcRl03h2CKSN7c',
       String clientSecret = 'UwQ8aUXKDpqPzH0gpJnSij3i',
       String redirectUrl = 'http://localhost',
       List<String> scopes,
@@ -33,7 +33,7 @@ class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
         ];
   }
 
-  Future<Response<String>> search(String q, [int maxResults = 25, String part = "snippet"]) {
+  Future<Response<String>> search(String q, [int maxResults, String part]) {
     final url = 'search';
     final params = {'q': q, 'maxResults': maxResults, 'part': part};
     final request =

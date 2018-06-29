@@ -126,33 +126,33 @@ class SimpleAuthGenerator
           });
         }))
         ..implements.add(new Reference(friendlyName));
-        if(jsonSearializables.length > 0)
+      if (jsonSearializables.length > 0)
         c.methods.add(new Method((b) {
-                final List<Code> body = [
-                  new Code(
-                      "var converted = await converter?.decode(response, responseType);"),
-                  new Code("if(converted != null) return converted;"),
-                ];
-                body.addAll(jsonSearializables.map((j) {
-                  return _generateJsonDeserialization(j);
-                }));
-                final errorMessage = r"'No converter found for type $Value'";
-                body.add(new Code("throw new Exception($errorMessage);"));
-                b.annotations.add(refer("override"));
-                b.modifier = MethodModifier.async;
-                b.name = "decodeResponse<Value>";
-                b.returns = new Reference("Future<Response<Value>>");
-                b.requiredParameters.addAll([
-                  new Parameter((p) => p
-                    ..name = 'response'
-                    ..type = new Reference("Response<String>")),
-                  new Parameter((p) => p
-                    ..name = 'responseType'
-                    ..type = new Reference("Type")),
-                ]);
-                b.body = new Block.of(body);
-              }));
-        return c;
+          final List<Code> body = [
+            new Code(
+                "var converted = await converter?.decode(response, responseType);"),
+            new Code("if(converted != null) return converted;"),
+          ];
+          body.addAll(jsonSearializables.map((j) {
+            return _generateJsonDeserialization(j);
+          }));
+          final errorMessage = r"'No converter found for type $Value'";
+          body.add(new Code("throw new Exception($errorMessage);"));
+          b.annotations.add(refer("override"));
+          b.modifier = MethodModifier.async;
+          b.name = "decodeResponse<Value>";
+          b.returns = new Reference("Future<Response<Value>>");
+          b.requiredParameters.addAll([
+            new Parameter((p) => p
+              ..name = 'response'
+              ..type = new Reference("Response<String>")),
+            new Parameter((p) => p
+              ..name = 'responseType'
+              ..type = new Reference("Type")),
+          ]);
+          b.body = new Block.of(body);
+        }));
+      return c;
     });
 
     final emitter = new DartEmitter();
@@ -164,6 +164,8 @@ class SimpleAuthGenerator
   String _getBaseClass(ConstantReader annotation) {
     final type = annotation.objectValue.type.name;
     switch (type) {
+      case "AzureADApiDeclaration":
+        return "${simple_auth.AzureADApi}"; 
       case "GoogleApiDeclaration":
         return "${simple_auth.GoogleApi}";
       case "GoogleApiKeyApiDeclaration":
@@ -185,8 +187,7 @@ class SimpleAuthGenerator
     final scopes = annotation.peek("scopes")?.listValue;
     final baseUrl = annotation.peek("baseUrl").stringValue;
     String body = "";
-    if(baseUrl != "/")
-    {
+    if (baseUrl != "/") {
       body = "this.baseUrl = '${baseUrl}'; ";
     }
     if (scopes != null && scopes.length > 0) {
@@ -199,11 +200,11 @@ class SimpleAuthGenerator
       body += " this.scopes = scopes ?? [${scopeString}];";
     }
     switch (type) {
-      case "GoogleApiDeclaration":
+      case "AzureADApiDeclaration":
         {
-          final clientId = annotation.peek("clientId").stringValue;
-          final clientSecret = annotation.peek("clientSecret").stringValue;
-          final redirectUrl = annotation.peek("redirectUrl").stringValue;
+          final azureTennant = annotation.peek("azureTennant")?.stringValue;
+          final authorizationUrl = annotation.peek("authorizationUrl")?.stringValue ?? "https://login.microsoftonline.com/$azureTennant/oauth2/authorize";
+          final tokenUrl = annotation.peek("tokenUrl")?.stringValue ??  "https://login.microsoftonline.com/$azureTennant/oauth2/token";
 
           return new Constructor(
             (b) => b
@@ -213,9 +214,45 @@ class SimpleAuthGenerator
                   ..type = new Reference("${String}")),
               ])
               ..optionalParameters.addAll([
-                _createStringParameterWithDefault("clientId", clientId),
-                _createStringParameterWithDefault("clientSecret", clientSecret),
-                _createStringParameterWithDefault("redirectUrl", redirectUrl),
+                _createStringParameterFromAnnotation("clientId", annotation),
+                _createStringParameterWithDefault("authorizationUrl", authorizationUrl),
+                _createStringParameterWithDefault("tokenUrl", tokenUrl),
+                _createStringParameterFromAnnotation("resource", annotation),
+                _createStringParameterFromAnnotation("clientSecret", annotation),
+                _createStringParameterFromAnnotation("redirectUrl", annotation),
+                new Parameter((b) => b
+                  ..name = 'scopes'
+                  ..type = new Reference("List<String>")),
+                new Parameter((b) => b
+                  ..name = 'client'
+                  ..type = new Reference("http.Client")),
+                new Parameter((b) => b
+                  ..name = 'converter'
+                  ..type = new Reference("${simple_auth.Converter}")),
+                new Parameter((b) => b
+                  ..name = 'authStorage'
+                  ..type = new Reference("${simple_auth.AuthStorage}")),
+              ])
+              ..initializers.addAll([
+                const Code(
+                    'super(identifier, clientId,authorizationUrl,tokenUrl,resource, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+              ])
+              ..body = new Code(body),
+          );
+        }
+      case "GoogleApiDeclaration":
+        {
+          return new Constructor(
+            (b) => b
+              ..requiredParameters.addAll([
+                new Parameter((b) => b
+                  ..name = 'identifier'
+                  ..type = new Reference("${String}")),
+              ])
+              ..optionalParameters.addAll([
+                _createStringParameterFromAnnotation("clientId", annotation),
+                _createStringParameterFromAnnotation("clientSecret", annotation),
+                _createStringParameterFromAnnotation("redirectUrl", annotation),
                 new Parameter((b) => b
                   ..name = 'scopes'
                   ..type = new Reference("List<String>")),
@@ -249,7 +286,8 @@ class SimpleAuthGenerator
               ..optionalParameters.addAll([
                 _createStringParameterFromAnnotation("apiKey", annotation),
                 _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterFromAnnotation("clientSecret", annotation),
+                _createStringParameterFromAnnotation(
+                    "clientSecret", annotation),
                 _createStringParameterFromAnnotation("redirectUrl", annotation),
                 new Parameter((b) => b
                   ..name = 'scopes'
@@ -273,7 +311,6 @@ class SimpleAuthGenerator
         }
       case "OAuthApiDeclaration":
         {
-         
           return new Constructor(
             (b) => b
               ..requiredParameters.addAll([
@@ -282,11 +319,13 @@ class SimpleAuthGenerator
                   ..type = new Reference("${String}")),
               ])
               ..optionalParameters.addAll([
-                _createStringParameterFromAnnotation("clientId",annotation),
-                _createStringParameterFromAnnotation("clientSecret",annotation),
-                _createStringParameterFromAnnotation("tokenUrl",annotation),
-                _createStringParameterFromAnnotation("authorizationUrl",annotation),
-                _createStringParameterFromAnnotation("redirectUrl",annotation),
+                _createStringParameterFromAnnotation("clientId", annotation),
+                _createStringParameterFromAnnotation(
+                    "clientSecret", annotation),
+                _createStringParameterFromAnnotation("tokenUrl", annotation),
+                _createStringParameterFromAnnotation(
+                    "authorizationUrl", annotation),
+                _createStringParameterFromAnnotation("redirectUrl", annotation),
                 new Parameter((b) => b
                   ..name = 'scopes'
                   ..type = new Reference("${List}")),
@@ -442,7 +481,8 @@ class SimpleAuthGenerator
     if (useHeaders) {
       namedParams["headers"] = refer(_headersVar);
     }
-    namedParams["authenticated"] = literal(method.peek("authenticated").boolValue);
+    namedParams["authenticated"] =
+        literal(method.peek("authenticated").boolValue);
     return refer("Request").newInstance(params, namedParams);
   }
 

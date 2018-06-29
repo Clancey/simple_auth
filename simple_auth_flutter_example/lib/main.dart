@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 import 'package:simple_auth_flutter/simple_auth_flutter.dart';
-import 'package:simple_auth_flutter_example/youtubeApi.dart';
+import 'package:simple_auth_flutter_example/api_definitions/youtubeApi.dart';
 
 void main() => runApp(new MyApp());
 
