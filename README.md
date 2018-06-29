@@ -14,14 +14,14 @@ Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-469
 ### Current Built in Providers
 
 * Azure Active Directory
-* ~~Amazon~~
-* ~~Dropbox~~
-* ~~Facebook~~
-* ~~Github~~
+* Amazon
+* Dropbox
+* Facebook
+* Github
 * Google
-* ~~Instagram~~
-* ~~Linked In~~
-* ~~Microsoft Live Connect~~
+* Instagram
+* Linked In
+* Microsoft Live Connect
 * And of course any standard OAuth2/Basic Auth server.
 
 
