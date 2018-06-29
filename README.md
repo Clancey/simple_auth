@@ -36,7 +36,7 @@ var api = new simpleAuth.GoogleApi(
 var request = new Request(HttpMethod.Get, "https://www.googleapis.com/oauth2/v1/userinfo?alt=json");
 var userInfo = await api.send<UserInfo>(request);
 ```
-That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds!
+That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds! Expired tokens even automatically refresh.
 
 # Flutter Setup
 Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically make present your login UI
@@ -121,4 +121,5 @@ The Generator is not required, and not complete. But will make things magical. M
 * Add more documentation
 * Add native flutter providers for google
 * Complete the generator
+* Finish adding all API's to the generator
 * More things I can't remember
