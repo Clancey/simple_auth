@@ -39,6 +39,21 @@ class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
     final params = {'q': q, 'maxResults': maxResults, 'part': part};
     final request =
         new Request('GET', url, parameters: params, authenticated: false);
-    return send<String>(request, responseType: String);
+    return send<YoutubeSearchListResult>(request,
+        responseType: YoutubeSearchListResult);
+  }
+
+  @override
+  Future<Response<Value>> decodeResponse<Value>(
+      Response<String> response, Type responseType) async {
+    var converted = await converter?.decode(response, responseType);
+    if (converted != null) return converted;
+    if (responseType == YoutubeSearchListResult) {
+      final d = await jsonConverter.decode(response, responseType);
+      final body =
+          new YoutubeSearchListResult.fromJson(d.body as Map<String, dynamic>);
+      return new Response(d.base, body as Value);
+    }
+    throw new Exception('No converter found for type $Value');
   }
 }
