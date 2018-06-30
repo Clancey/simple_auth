@@ -31,7 +31,8 @@ class BodyConverterCodec extends Converter {
     if (response.base.body == null) {
       return response;
     }
-    return response.replace(body: codec.decode(response.base.body));
+    final decoded = codec.decode(response.base.body);
+    return new Response(response.base, decoded);
   }
 }
 

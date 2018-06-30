@@ -11,6 +11,7 @@
       <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter_example-old/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter_example-old/build" />
+      <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter_example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter_example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter_example/build" />
       <excludeFolder url="file://$MODULE_DIR$/simple_auth_flutter_example/ios/.symlinks/plugins/simple_auth_flutter/.pub" />

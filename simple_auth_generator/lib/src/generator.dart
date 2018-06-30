@@ -80,9 +80,14 @@ class SimpleAuthGenerator
 
             b.optionalParameters.addAll(m.parameters
                 .where((p) => p.isOptionalPositional)
-                .map((p) => new Parameter((pb) => pb
-                  ..name = p.name
-                  ..type = new Reference(p.type.displayName))));
+                .map((p) => new Parameter((pb) {
+                      pb
+                        ..name = p.name
+                        ..type = new Reference(p.type.displayName);
+                      if (p.defaultValueCode != null)
+                        pb.defaultTo = new Code(p.defaultValueCode);
+                      return pb;
+                    })));
 
             b.optionalParameters.addAll(m.parameters
                 .where((p) => p.isNamed)
@@ -165,7 +170,7 @@ class SimpleAuthGenerator
     final type = annotation.objectValue.type.name;
     switch (type) {
       case "AzureADApiDeclaration":
-        return "${simple_auth.AzureADApi}"; 
+        return "${simple_auth.AzureADApi}";
       case "GoogleApiDeclaration":
         return "${simple_auth.GoogleApi}";
       case "GoogleApiKeyApiDeclaration":
@@ -179,7 +184,7 @@ class SimpleAuthGenerator
 
   Code _generateJsonDeserialization(ClassElement element) {
     return new Code(
-        "if(responseType == ${element.name}){ final d = await jsonConverter.decode(response,responseType); final body = new ${element.name}.fromJson(d.body as Map<String, dynamic>);d.replace(body: body);}");
+        "if(responseType == ${element.name}){ final d = await jsonConverter.decode(response,responseType); final body = new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
   }
 
   Constructor _getConstructor(ConstantReader annotation) {
@@ -203,8 +208,12 @@ class SimpleAuthGenerator
       case "AzureADApiDeclaration":
         {
           final azureTennant = annotation.peek("azureTennant")?.stringValue;
-          final authorizationUrl = annotation.peek("authorizationUrl")?.stringValue ?? "https://login.microsoftonline.com/$azureTennant/oauth2/authorize";
-          final tokenUrl = annotation.peek("tokenUrl")?.stringValue ??  "https://login.microsoftonline.com/$azureTennant/oauth2/token";
+          final authorizationUrl = annotation
+                  .peek("authorizationUrl")
+                  ?.stringValue ??
+              "https://login.microsoftonline.com/$azureTennant/oauth2/authorize";
+          final tokenUrl = annotation.peek("tokenUrl")?.stringValue ??
+              "https://login.microsoftonline.com/$azureTennant/oauth2/token";
 
           return new Constructor(
             (b) => b
@@ -215,10 +224,12 @@ class SimpleAuthGenerator
               ])
               ..optionalParameters.addAll([
                 _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterWithDefault("authorizationUrl", authorizationUrl),
+                _createStringParameterWithDefault(
+                    "authorizationUrl", authorizationUrl),
                 _createStringParameterWithDefault("tokenUrl", tokenUrl),
                 _createStringParameterFromAnnotation("resource", annotation),
-                _createStringParameterFromAnnotation("clientSecret", annotation),
+                _createStringParameterFromAnnotation(
+                    "clientSecret", annotation),
                 _createStringParameterFromAnnotation("redirectUrl", annotation),
                 new Parameter((b) => b
                   ..name = 'scopes'
@@ -251,7 +262,8 @@ class SimpleAuthGenerator
               ])
               ..optionalParameters.addAll([
                 _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterFromAnnotation("clientSecret", annotation),
+                _createStringParameterFromAnnotation(
+                    "clientSecret", annotation),
                 _createStringParameterFromAnnotation("redirectUrl", annotation),
                 new Parameter((b) => b
                   ..name = 'scopes'
@@ -375,7 +387,12 @@ class SimpleAuthGenerator
         ..defaultTo = new Code("'${value}'"));
   Parameter _createStringParameterFromAnnotation(
       String name, ConstantReader annotation) {
-    final value = annotation.peek(name).stringValue;
+    final peekValue = annotation.peek(name);
+    if (peekValue == null) {
+      print(name);
+      throw name;
+    }
+    final value = peekValue.stringValue;
     return new Parameter((b) => b
       ..name = name
       ..type = new Reference("${String}")

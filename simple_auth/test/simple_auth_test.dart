@@ -62,6 +62,6 @@ class ModelConverter extends JsonConverter {
     {
       body = new Resource2.fromJson(body as Map<String, dynamic>);
     }
-    return response.replace(body: body);
+    return new Response(response.base, body);
   }
 }

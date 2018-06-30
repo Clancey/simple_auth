@@ -5,8 +5,8 @@ import "package:http/http.dart" as http;
 part 'youtubeApi.simple_auth.dart';
 
 @GoogleApiKeyApiDeclaration("YoutubeApi",
-    "419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com",
     "AIzaSyA6pSGpSe7dmcKGq87lcAcRl03h2CKSN7c",
+    "419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com",
     clientSecret: "UwQ8aUXKDpqPzH0gpJnSij3i",
     baseUrl: "https://www.googleapis.com/youtube/v3",
     scopes: [

@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
               try {
                 var user = await youtubeApi.search("flutter");
                 print(user.body);
-                showMessage(user.body);
+                showMessage(user.body.items.length.toString());
               } catch (e) {
                 showError(e);
               }
@@ -363,8 +363,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-  void showError(Exception ex) {
+  
+  void showError(dynamic ex) {
     showMessage(ex.toString());
   }
 
