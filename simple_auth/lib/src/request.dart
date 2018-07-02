@@ -36,12 +36,21 @@ class Request {
   Request replace(
           {HttpMethod method,
           String url,
-          dynamic body,
           Map<String, dynamic> parameters,
           Map<String, String> headers,
           Encoding encoding}) =>
       new Request(method ?? this.method, url ?? this.url,
-          body: body ?? this.body,
+          parameters: parameters ?? this.parameters,
+          headers: headers ?? this.headers, authenticated: this.authenticated);
+  Request replaceBody(
+          dynamic body,
+          {HttpMethod method,
+          String url,
+          Map<String, dynamic> parameters,
+          Map<String, String> headers,
+          Encoding encoding}) =>
+      new Request(method ?? this.method, url ?? this.url,
+          body: body,
           parameters: parameters ?? this.parameters,
           headers: headers ?? this.headers, authenticated: this.authenticated);
 

@@ -24,7 +24,7 @@ class BodyConverterCodec extends Converter {
     if (request.body == null) {
       return request;
     }
-    return request.replace(body: codec.encode(request.body));
+    return request.replaceBody(codec.encode(request.body));
   }
 
   Future<Response> decode(Response response, Type responseType) async {
@@ -46,6 +46,6 @@ class JsonConverter extends BodyConverterCodec {
     if (request.body is JsonSerializable) {
       body = (request.body as JsonSerializable).toJson();
     }
-    return super.encode(request.replace(body: body));
+    return super.encode(request.replaceBody(body));
   }
 }
