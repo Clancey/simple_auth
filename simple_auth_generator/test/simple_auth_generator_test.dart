@@ -7,7 +7,6 @@ import 'package:path/path.dart' as p;
 import 'package:source_gen/source_gen.dart';
 import 'dart:io';
 
-
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/dart/sdk/sdk.dart' show FolderBasedDartSdk;
 import 'package:analyzer/src/generated/engine.dart';
@@ -50,10 +49,11 @@ void main() {
       ..analyzeFunctionBodies = false
       ..strongMode = true
       ..previewDart2 = true;
-    var pubPackageMapProvider =new PubPackageMapProvider(PhysicalResourceProvider.INSTANCE, sdk);
+    var pubPackageMapProvider =
+        new PubPackageMapProvider(PhysicalResourceProvider.INSTANCE, sdk);
     var packageMapInfo = pubPackageMapProvider.computePackageMap(
         PhysicalResourceProvider.INSTANCE.getResource(getPackagePath())
-        as Folder);
+            as Folder);
 
     AnalysisEngine.instance.processRequiredPlugins();
     var context = AnalysisEngine.instance.createAnalysisContext()
@@ -61,7 +61,8 @@ void main() {
       ..sourceFactory = new SourceFactory([
         new DartUriResolver(sdk),
         new ResourceUriResolver(PhysicalResourceProvider.INSTANCE),
-        new PackageMapUriResolver(PhysicalResourceProvider.INSTANCE, packageMapInfo.packageMap)
+        new PackageMapUriResolver(
+            PhysicalResourceProvider.INSTANCE, packageMapInfo.packageMap)
       ]);
 
     var fileUri =
@@ -89,9 +90,175 @@ void main() {
 //
 //    expect(result, "test");
 //  });
-  test('run generator', () async {
-    var result = await runForElementNamed('AzureADDefinition');
 
-    expect(result, "test");
+  test('run generator for MyService', () async {
+    var result = await runForElementNamed('MyServiceDefinition');
+    expect(result, ApiGenerationResults.myServiceResult);
   });
+
+  test('run generator for GoogleTestDefinition', () async {
+    var result = await runForElementNamed('GoogleTestDefinition');
+    expect(result, ApiGenerationResults.googleTestDefinitionResult);
+  });
+
+  test('run generator for YouTube', () async {
+    var result = await runForElementNamed('YouTubeApiDefinition');
+    expect(result, ApiGenerationResults.youtubeApiResult);
+  });
+
+  test('run generator for AzureADDefinition', () async {
+    var result = await runForElementNamed('AzureADDefinition');
+    expect(result, ApiGenerationResults.azureADDefinitionResult);
+  });
+  
+}
+
+class ApiGenerationResults {
+  static String youtubeApiResult =
+      '''class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
+  YoutubeApi(String identifier,
+      {String apiKey:
+          '419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com',
+      String clientId: 'AIzaSyCxoYMmVpDwj7KXI3tRjWkVGsgg7JR5zAw',
+      String clientSecret: 'UwQ8aUXKDpqPzH0gpJnSij3i',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, apiKey, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {
+    this.baseUrl = 'https://www.googleapis.com/youtube/v3';
+    this.scopes = scopes ??
+        [
+          'https://www.googleapis.com/auth/youtube.readonly',
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile'
+        ];
+  }
+
+  Future<Response<String>> search(String q,
+      [int maxResults = 25, String part = "snippet"]) {
+    final url = 'search';
+    final params = {'q': q, 'maxResults': maxResults, 'part': part};
+    final request =
+        new Request('GET', url, parameters: params, authenticated: true);
+    return send<String>(request, responseType: String);
+  }
+}
+''';
+  static String googleTestDefinitionResult = '''class GoogleTestApi extends GoogleApi implements GoogleTestDefinition {
+  GoogleTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {
+    this.scopes = scopes ?? ['TestScope', 'Scope2'];
+  }
+
+  Future<Response<GoogleUser>> getCurrentUserInfo() {
+    final url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json';
+    final request = new Request('GET', url, authenticated: true);
+    return send<GoogleUser>(request, responseType: GoogleUser);
+  }
+
+  @override
+  Future<Response<Value>> decodeResponse<Value>(
+      Response<String> response, Type responseType) async {
+    var converted = await converter?.decode(response, responseType);
+    if (converted != null) return converted;
+    if (responseType == GoogleUser) {
+      final d = await jsonConverter.decode(response, responseType);
+      final body = new GoogleUser.fromJson(d.body as Map<String, dynamic>);
+      return new Response(d.base, body as Value);
+    }
+    throw new Exception('No converter found for type \$Value');
+  }
+}
+''';
+  static String myServiceResult =
+      '''class MyService extends Api implements MyServiceDefinition {
+  MyService([http.Client client, Converter converter, AuthStorage authStorage])
+      : super(identifier: identifier, client: client, converter: converter);
+
+  Future<Response<JsonSerializableObject>> getJsonSerializableObject(
+      String id) {
+    final url = '/';
+    final params = {'id': id};
+    final headers = {'foo': 'bar'};
+    final request = new Request('GET', url,
+        parameters: params, headers: headers, authenticated: true);
+    return send<JsonSerializableObject>(request,
+        responseType: JsonSerializableObject);
+  }
+
+  Future<Response> getResource(String id) {
+    final url = '/\$id';
+    final request = new Request('GET', url, authenticated: true);
+    return send(request);
+  }
+
+  Future<Response<Map>> getMapResource(String id) {
+    final url = '/';
+    final params = {'id': id};
+    final headers = {'foo': 'bar'};
+    final request = new Request('GET', url,
+        parameters: params, headers: headers, authenticated: true);
+    return send<Map>(request, responseType: Map);
+  }
+
+  @override
+  Future<Response<Value>> decodeResponse<Value>(
+      Response<String> response, Type responseType) async {
+    var converted = await converter?.decode(response, responseType);
+    if (converted != null) return converted;
+    if (responseType == JsonSerializableObject) {
+      final d = await jsonConverter.decode(response, responseType);
+      final body =
+          new JsonSerializableObject.fromJson(d.body as Map<String, dynamic>);
+      return new Response(d.base, body as Value);
+    }
+    throw new Exception('No converter found for type \$Value');
+  }
+}
+''';
+
+static String azureADDefinitionResult = '''class AzureAdTestApi extends AzureADApi implements AzureADDefinition {
+  AzureAdTestApi(String identifier,
+      {String clientId: 'resource',
+      String authorizationUrl:
+          'https://login.microsoftonline.com/azureTennant/oauth2/authorize',
+      String tokenUrl:
+          'https://login.microsoftonline.com/azureTennant/oauth2/token',
+      String resource: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId, authorizationUrl, tokenUrl, resource,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
 }

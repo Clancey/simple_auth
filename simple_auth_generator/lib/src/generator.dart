@@ -60,7 +60,7 @@ class SimpleAuthGenerator
           final headers = _generateHeaders(m, method);
           final url = _generateUrl(method, paths);
           final responseType = _getResponseType(m.returnType);
-          if (responseType.element is ClassElement) {
+          if (responseType?.element is ClassElement) {
             var ce = responseType.element as ClassElement;
             var json = ce.getNamedConstructor("fromJson");
             var firstParam = json?.parameters?.first?.type?.toString();
