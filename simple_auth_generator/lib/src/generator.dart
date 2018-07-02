@@ -231,19 +231,7 @@ class SimpleAuthGenerator
                 _createStringParameterFromAnnotation(
                     "clientSecret", annotation),
                 _createStringParameterFromAnnotation("redirectUrl", annotation),
-                new Parameter((b) => b
-                  ..name = 'scopes'
-                  ..type = new Reference("List<String>")),
-                new Parameter((b) => b
-                  ..name = 'client'
-                  ..type = new Reference("http.Client")),
-                new Parameter((b) => b
-                  ..name = 'converter'
-                  ..type = new Reference("${simple_auth.Converter}")),
-                new Parameter((b) => b
-                  ..name = 'authStorage'
-                  ..type = new Reference("${simple_auth.AuthStorage}")),
-              ])
+              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
               ..initializers.addAll([
                 const Code(
                     'super(identifier, clientId,authorizationUrl,tokenUrl,resource, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -264,20 +252,8 @@ class SimpleAuthGenerator
                 _createStringParameterFromAnnotation("clientId", annotation),
                 _createStringParameterFromAnnotation(
                     "clientSecret", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation),
-                new Parameter((b) => b
-                  ..name = 'scopes'
-                  ..type = new Reference("List<String>")),
-                new Parameter((b) => b
-                  ..name = 'client'
-                  ..type = new Reference("http.Client")),
-                new Parameter((b) => b
-                  ..name = 'converter'
-                  ..type = new Reference("${simple_auth.Converter}")),
-                new Parameter((b) => b
-                  ..name = 'authStorage'
-                  ..type = new Reference("${simple_auth.AuthStorage}")),
-              ])
+                _createStringParameterFromAnnotation("redirectUrl", annotation)
+              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
               ..initializers.addAll([
                 const Code(
                     'super(identifier, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -300,20 +276,8 @@ class SimpleAuthGenerator
                 _createStringParameterFromAnnotation("clientId", annotation),
                 _createStringParameterFromAnnotation(
                     "clientSecret", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation),
-                new Parameter((b) => b
-                  ..name = 'scopes'
-                  ..type = new Reference("List<String>")),
-                new Parameter((b) => b
-                  ..name = 'client'
-                  ..type = new Reference("http.Client")),
-                new Parameter((b) => b
-                  ..name = 'converter'
-                  ..type = new Reference("${simple_auth.Converter}")),
-                new Parameter((b) => b
-                  ..name = 'authStorage'
-                  ..type = new Reference("${simple_auth.AuthStorage}")),
-              ])
+                _createStringParameterFromAnnotation("redirectUrl", annotation)
+              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
               ..initializers.addAll([
                 const Code(
                     'super(identifier,apiKey, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -337,20 +301,8 @@ class SimpleAuthGenerator
                 _createStringParameterFromAnnotation("tokenUrl", annotation),
                 _createStringParameterFromAnnotation(
                     "authorizationUrl", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation),
-                new Parameter((b) => b
-                  ..name = 'scopes'
-                  ..type = new Reference("${List}")),
-                new Parameter((b) => b
-                  ..name = 'client'
-                  ..type = new Reference("http.Client")),
-                new Parameter((b) => b
-                  ..name = 'converter'
-                  ..type = new Reference("${simple_auth.Converter}")),
-                new Parameter((b) => b
-                  ..name = 'authStorage'
-                  ..type = new Reference("${simple_auth.AuthStorage}")),
-              ])
+                _createStringParameterFromAnnotation("redirectUrl", annotation)
+              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
               ..initializers.addAll([
                 const Code(
                     'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -361,17 +313,7 @@ class SimpleAuthGenerator
       default:
         return new Constructor(
           (b) => b
-            ..optionalParameters.addAll([
-              new Parameter((b) => b
-                ..name = 'identifier'
-                ..type = new Reference("${String}")),
-              new Parameter((b) => b
-                ..name = 'client'
-                ..type = new Reference("http.Client")),
-              new Parameter((b) => b
-                ..name = 'converter'
-                ..type = new Reference("${simple_auth.Converter}")),
-            ])
+            ..optionalParameters.addAll(_createBaseParameters(['client', 'converter', 'authStorage']))
             ..initializers.addAll([
               const Code(
                   'super(identifier: identifier, client: client, converter: converter)'),
@@ -384,6 +326,7 @@ class SimpleAuthGenerator
       new Parameter((b) => b
         ..name = name
         ..type = new Reference("${String}")
+        ..named = true
         ..defaultTo = new Code("'${value}'"));
   Parameter _createStringParameterFromAnnotation(
       String name, ConstantReader annotation) {
@@ -396,7 +339,45 @@ class SimpleAuthGenerator
     return new Parameter((b) => b
       ..name = name
       ..type = new Reference("${String}")
-      ..defaultTo = new Code("'${value}'"));
+      ..defaultTo = new Code("'${value}'")
+      ..named = true);
+  }
+
+  List<Parameter> _createBaseParameters(List<String> parameterNames) {
+    
+    var parameters = new List<Parameter>();
+    for (String p in parameterNames) {
+      switch (p) {
+        case 'scopes':
+          parameters.add(new Parameter((b) => b
+                  ..name = 'scopes'
+                  ..type = new Reference("${List}")
+                  ..named = true));
+          break;
+        case 'identifier':
+            parameters.add(new Parameter((b) => b
+                ..name = 'identifier'
+                ..type = new Reference("${String}")));
+          break;
+        case 'client':
+          parameters.add(new Parameter((b) => b
+                ..name = 'client'
+                ..type = new Reference("http.Client")));
+          break;
+        case 'converter':
+          parameters.add(new Parameter((b) => b
+                ..name = 'converter'
+                ..type = new Reference("${simple_auth.Converter}")));
+          break;
+        case 'authStorage':
+        parameters.add(new Parameter((b) => b
+                ..name = 'authStorage'
+                ..type = new Reference("${simple_auth.AuthStorage}")));
+          break;
+        default:
+      }       
+    }
+    return parameters;
   }
 
   Map<String, ConstantReader> _getAnnotation(MethodElement m, Type type) {
