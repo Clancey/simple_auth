@@ -2,16 +2,20 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 import 'package:simple_auth/simple_auth.dart';
+// import 'package:http/http.dart' as http;
 
 void main() {
   test('adds one to input values', () async {
 
-    var convert = new ModelConverter();
-    var json = await convert.encode(new Request("get", "foo",body: new Resource2("id2", "foo from resource 2")));
-    var resource1 = await convert.decode(new Response<Resource2>(null,null), Resource2);
-    var resource = await convert.decode(new Response<Resource>(null,null), Resource);
-    var json2 = await convert.encode(new Request("get", "foo",body: new Resource("id1", "foo from duck typing")));
-    print(json);
+    // var convert = new ModelConverter();
+    // final respStart =  new Resource("id2", "foo from resource 2");
+    // var json = await convert.encode(new Request("get", "foo",body:respStart));
+    // var response = new Response(new http.Response(json.body, 200),null);
+    // var resource = await convert.decode(response, Resource);
+    // expect(resource.body, respStart);
+    // var resource2 = await convert.decode(response, Resource2);
+    // var json2 = await convert.encode(new Request("get", "foo",body: resource2));
+    // expect(json, json2);
     // final calculator = new Calculator();
     // expect(calculator.addOne(2), 3);
     // expect(calculator.addOne(-7), -6);
