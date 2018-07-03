@@ -46,16 +46,22 @@ abstract class AzureADDefinition {
 
 }
 
-
-
 @ApiKeyDeclaration("MyApiKeyDefinitionApi","fdsfdskjfdskljflds","key", ApiKeyDeclaration.AuthKeyLocationQuery)
 abstract class MyApiKeyDefinition {
 
 }
 
-
-
 @BasicAuthDeclaration("MyBasicAuthApi","http://example.com/login")
 abstract class MyBasicAuthApiDefinition {
 
 }
+
+@OAuthApiKeyApiDeclaration("OAuthApiKeyApi","apiKey","key", OAuthApiKeyApiDeclaration.AuthKeyLocationHeader , "client_id","clientSecret","TokenUrl","AuthUrl")
+abstract class MyOAuthApiKeyApiDefinition {
+}
+
+@OAuthApiDeclaration("OAuthApiKeyApi", "client_id","clientSecret","TokenUrl","AuthUrl")
+abstract class MyOAuthApiDefinition {
+}
+
+

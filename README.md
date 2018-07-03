@@ -110,7 +110,7 @@ dev_dependencies:
   build_runner: ^0.8.0
 ```
 
-The Generator is not required, and not complete. But will make things magical.
+The Generator is not required, however it will make things magical.
 
 ```dart
 @GoogleApiDeclaration("GoogleTestApi","client_id",clientSecret: "client_secret", scopes: ["TestScope", "Scope2"])

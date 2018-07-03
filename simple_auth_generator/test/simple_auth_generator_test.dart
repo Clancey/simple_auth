@@ -93,6 +93,10 @@ void main() {
     var result = await runForElementNamed('MyBasicAuthApiDefinition');
     expect(result, ApiGenerationResults.myBasicAuthApiDefinitionResult);
   });
+  test('run generator for MyOAuthApiDefinition', () async {
+    var result = await runForElementNamed('MyOAuthApiDefinition');
+    expect(result, ApiGenerationResults.myOAuthApiDefinition);
+  });
   test('run generator for MyService', () async {
     var result = await runForElementNamed('MyServiceDefinition');
     expect(result, ApiGenerationResults.myServiceResult);
@@ -287,6 +291,26 @@ class ApiGenerationResults {
       AuthStorage authStorage})
       : super(identifier, loginUrl,
             client: client, converter: converter, authStorage: authStorage) {}
+}
+''';
+
+static String myOAuthApiDefinition = '''class OAuthApiKeyApi extends OAuthApi implements MyOAuthApiDefinition {
+  OAuthApiKeyApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'clientSecret',
+      String tokenUrl: 'TokenUrl',
+      String authorizationUrl: 'AuthUrl',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
 }
 ''';
 }

@@ -32,26 +32,34 @@ class BasicAuthDeclaration extends ApiDeclaration {
 }
 
 @immutable
-class OAuthApiDeclaration extends ApiDeclaration {
+class OAuthApiKeyApiDeclaration extends ApiDeclaration {
+  static const String AuthKeyLocationHeader = "AuthLocation.header";
+  static const String AuthKeyLocationQuery = "AuthLocation.query";
   final String authLocation;
   final String apiKey;
   final String authKey;
   final String clientId;
   final String clientSecret;
+  final String tokenUrl;
+  final String authorizationUrl;
+  final String redirectUrl;
   final List<String> scopes;
-  const OAuthApiDeclaration(String name, this.apiKey, this.authKey,
-      this.authLocation, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes})
+  const OAuthApiKeyApiDeclaration(String name, this.apiKey, this.authKey,
+      this.authLocation, this.clientId, this.clientSecret, this.tokenUrl, this.authorizationUrl,
+      {String baseUrl: "/",this.redirectUrl = "http://localhost" ,this.scopes})
       : super(name, baseUrl: baseUrl);
 }
 
 @immutable
-class OAuthApiKeyApiDeclaration extends ApiDeclaration {
+class OAuthApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
+  final String tokenUrl;
+  final String authorizationUrl;
+  final String redirectUrl;
   final List<String> scopes;
-  const OAuthApiKeyApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes})
+  const OAuthApiDeclaration(String name, this.clientId, this.clientSecret, this.tokenUrl, this.authorizationUrl,
+      {this.redirectUrl = "http://localhost", String baseUrl: "/", this.scopes})
       : super(name, baseUrl: baseUrl);
 }
 

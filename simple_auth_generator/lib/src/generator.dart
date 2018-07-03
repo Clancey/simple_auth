@@ -646,6 +646,7 @@ class BuiltInAnnotations {
   static const String googleApiDeclaration = 'GoogleApiDeclaration';
   static const String googleApiKeyApiDeclaration = 'GoogleApiKeyApiDeclaration';
   static const String oAuthApiDeclaration = 'OAuthApiDeclaration';
+  static const String oAuthApiKeyApiDeclaration = 'OAuthApiKeyApiDeclaration';
   static const String apiKeyDeclaration = 'ApiKeyDeclaration';
   static const String basicAuthDeclaration = "BasicAuthDeclaration";
 }

@@ -7,3 +7,4 @@ part 'azureAdTestApi.simple_auth.dart';
 abstract class AzureADDefinition {
 
 }
+
