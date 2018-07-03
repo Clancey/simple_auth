@@ -45,3 +45,17 @@ abstract class YouTubeApiDefinition {
 abstract class AzureADDefinition {
 
 }
+
+
+
+@ApiKeyDeclaration("MyApiKeyDefinitionApi","fdsfdskjfdskljflds","key", ApiKeyDeclaration.AuthKeyLocationQuery)
+abstract class MyApiKeyDefinition {
+
+}
+
+
+
+@BasicAuthDeclaration("MyBasicAuthApi","http://example.com/login")
+abstract class MyBasicAuthApiDefinition {
+
+}

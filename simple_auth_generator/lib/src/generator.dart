@@ -76,6 +76,7 @@ class SimpleAuthGenerator
                 .where((p) => p.isNotOptional)
                 .map((p) => new Parameter((pb) => pb
                   ..name = p.name
+                  ..named = true
                   ..type = new Reference(p.type.displayName))));
 
             b.optionalParameters.addAll(m.parameters
@@ -169,6 +170,10 @@ class SimpleAuthGenerator
   String _getBaseClass(ConstantReader annotation) {
     final type = annotation.objectValue.type.name;
     switch (type) {
+      case BuiltInAnnotations.apiKeyDeclaration:
+        return "${simple_auth.ApiKeyApi}"; 
+      case BuiltInAnnotations.basicAuthDeclaration:
+        return "${simple_auth.BasicAuthApi}"; 
       case BuiltInAnnotations.azureADApiDeclaration:
         return "${simple_auth.AzureADApi}";
       case BuiltInAnnotations.googleApiDeclaration:
@@ -205,6 +210,44 @@ class SimpleAuthGenerator
       body += " this.scopes = scopes ?? [${scopeString}];";
     }
     switch (type) {
+      case BuiltInAnnotations.apiKeyDeclaration:
+        {
+          return new Constructor(
+            (b) => b
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.apiKey,
+                BuiltInParameters.authKey,
+                BuiltInParameters.authLocation,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
+              ..initializers.addAll([
+                const Code(
+                    'super(apiKey,authKey,authLocation, client: client, converter: converter,authStorage:authStorage)'),
+              ])
+              ..body = new Code(body),
+          );
+        }
+        case BuiltInAnnotations.basicAuthDeclaration:
+        {
+          return new Constructor(
+            (b) => b
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.loginUrl,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
+              ..initializers.addAll([
+                const Code(
+                    'super(identifier, loginUrl, client: client, converter: converter,authStorage:authStorage)'),
+              ])
+              ..body = new Code(body),
+          );
+        }
       case BuiltInAnnotations.azureADApiDeclaration:
         {
           return new Constructor(
@@ -329,7 +372,7 @@ class SimpleAuthGenerator
     return new Parameter((b) => b
       ..name = name
       ..type = new Reference("${String}")
-      ..defaultTo = new Code("'${value}'")
+      ..defaultTo = new Code("${literal(value)}")
       ..named = true);
   }
 
@@ -347,6 +390,25 @@ class SimpleAuthGenerator
         case BuiltInParameters.apiKey:
           parameters.add(_createStringParameterFromAnnotation(
               BuiltInParameters.apiKey, annotation));
+          break;
+        case BuiltInParameters.authKey:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.authKey, annotation));
+          break;
+        case BuiltInParameters.authLocation:
+        final name = BuiltInParameters.authLocation;
+        final peekValue = annotation.peek(name);
+          if (peekValue == null) {
+            print(name);
+            throw name;
+          }
+          final value = peekValue.stringValue;
+          if (value == null) return null;
+           parameters.add( new Parameter((b) => b
+            ..name = name
+            ..type = new Reference("${simple_auth.AuthLocation}")
+            ..defaultTo = new Code("${value}")
+            ..named = true));
           break;
         case BuiltInParameters.clientId:
           parameters.add(_createStringParameterFromAnnotation(
@@ -371,6 +433,10 @@ class SimpleAuthGenerator
         case BuiltInParameters.azureTennant:
           parameters.add(_createStringParameterFromAnnotation(
               BuiltInParameters.azureTennant, annotation));
+          break;
+        case BuiltInParameters.loginUrl:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.loginUrl, annotation));
           break;
         case BuiltInParameters.scopes:
           parameters.add(new Parameter((b) => b
@@ -570,6 +636,9 @@ class BuiltInParameters {
   static const String apiKey = 'apiKey';
   static const String resource = 'resource';
   static const String azureTennant = 'azureTennant';
+  static const String authKey ='authKey';
+  static const String authLocation = 'authLocation';
+  static const String loginUrl = 'loginUrl';
 }
 
 class BuiltInAnnotations {
@@ -577,4 +646,6 @@ class BuiltInAnnotations {
   static const String googleApiDeclaration = 'GoogleApiDeclaration';
   static const String googleApiKeyApiDeclaration = 'GoogleApiKeyApiDeclaration';
   static const String oAuthApiDeclaration = 'OAuthApiDeclaration';
+  static const String apiKeyDeclaration = 'ApiKeyDeclaration';
+  static const String basicAuthDeclaration = "BasicAuthDeclaration";
 }

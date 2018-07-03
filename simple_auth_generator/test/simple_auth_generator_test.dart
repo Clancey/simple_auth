@@ -85,12 +85,14 @@ void main() {
     return output;
   }
 
-//  test('run jsonResolver', () async {
-//    var result = await runForElementNamed('JsonSerializableObject');
-//
-//    expect(result, "test");
-//  });
-
+  test('run generator for ApiKeyApi', () async {
+    var result = await runForElementNamed('MyApiKeyDefinition');
+    expect(result, ApiGenerationResults.myApiKeyDefinitionResult);
+  });
+  test('run generator for BasicAuthApi', () async {
+    var result = await runForElementNamed('MyBasicAuthApiDefinition');
+    expect(result, ApiGenerationResults.myBasicAuthApiDefinitionResult);
+  });
   test('run generator for MyService', () async {
     var result = await runForElementNamed('MyServiceDefinition');
     expect(result, ApiGenerationResults.myServiceResult);
@@ -110,7 +112,6 @@ void main() {
     var result = await runForElementNamed('AzureADDefinition');
     expect(result, ApiGenerationResults.azureADDefinitionResult);
   });
-  
 }
 
 class ApiGenerationResults {
@@ -152,7 +153,8 @@ class ApiGenerationResults {
   }
 }
 ''';
-  static String googleTestDefinitionResult = '''class GoogleTestApi extends GoogleApi implements GoogleTestDefinition {
+  static String googleTestDefinitionResult =
+      '''class GoogleTestApi extends GoogleApi implements GoogleTestDefinition {
   GoogleTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
@@ -238,7 +240,8 @@ class ApiGenerationResults {
 }
 ''';
 
-static String azureADDefinitionResult = '''class AzureAdTestApi extends AzureADApi implements AzureADDefinition {
+  static String azureADDefinitionResult =
+      '''class AzureAdTestApi extends AzureADApi implements AzureADDefinition {
   AzureAdTestApi(String identifier,
       {String clientId: 'resource',
       String authorizationUrl:
@@ -259,6 +262,31 @@ static String azureADDefinitionResult = '''class AzureAdTestApi extends AzureADA
             client: client,
             converter: converter,
             authStorage: authStorage) {}
+}
+''';
+
+  static String myApiKeyDefinitionResult =
+      '''class MyApiKeyDefinitionApi extends ApiKeyApi implements MyApiKeyDefinition {
+  MyApiKeyDefinitionApi(
+      {String apiKey: 'fdsfdskjfdskljflds',
+      String authKey: 'key',
+      AuthLocation authLocation: AuthLocation.query,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(apiKey, authKey, authLocation,
+            client: client, converter: converter, authStorage: authStorage) {}
+}
+''';
+
+  static String myBasicAuthApiDefinitionResult = '''class MyBasicAuthApi extends BasicAuthApi implements MyBasicAuthApiDefinition {
+  MyBasicAuthApi(String identifier,
+      {String loginUrl: 'http://example.com/login',
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, loginUrl,
+            client: client, converter: converter, authStorage: authStorage) {}
 }
 ''';
 }

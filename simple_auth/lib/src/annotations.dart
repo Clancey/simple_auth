@@ -11,7 +11,9 @@ class ApiDeclaration {
 
 @immutable
 class ApiKeyDeclaration extends ApiDeclaration {
-  final AuthLocation authLocation;
+  static const String AuthKeyLocationHeader = "AuthLocation.header";
+  static const String AuthKeyLocationQuery = "AuthLocation.query";
+  final String authLocation;
   final String apiKey;
   final String authKey;
   const ApiKeyDeclaration(
@@ -21,8 +23,17 @@ class ApiKeyDeclaration extends ApiDeclaration {
 }
 
 @immutable
+class BasicAuthDeclaration extends ApiDeclaration {
+  final String loginUrl;
+  const BasicAuthDeclaration(
+      String name, this.loginUrl,
+      {String baseUrl: "/"})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
 class OAuthApiDeclaration extends ApiDeclaration {
-  final AuthLocation authLocation;
+  final String authLocation;
   final String apiKey;
   final String authKey;
   final String clientId;
