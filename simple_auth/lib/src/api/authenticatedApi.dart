@@ -14,6 +14,7 @@ abstract class AuthenticatedApi extends Api {
   Account currentAccount;
 
   Future<Account> _currentAuthCall;
+
   ///Call this method to get the Authenticated user.
   Future<Account> authenticate() async {
     if (_currentAuthCall == null) _currentAuthCall = performAuthenticate();
@@ -27,7 +28,7 @@ abstract class AuthenticatedApi extends Api {
     }
   }
 
-  ///Should not be called manually. Call authenticate() instead.
+  ///This method is for subclasses only. Call [authenticate()] instead.
   Future<Account> performAuthenticate();
   Future refreshAccount(Account account);
 
@@ -44,7 +45,7 @@ abstract class AuthenticatedApi extends Api {
   ///Called internally to apply the credentials to a request
   Future<Request> authenticateRequest(Request request);
 
-  ///Called to determin if the current credentials are valid.
+  ///Called to determine if the current credentials are valid.
   Future<bool> verifyCredentials() async {
     if (currentAccount?.isValid() ?? false) return true;
     var account = await authenticate();
