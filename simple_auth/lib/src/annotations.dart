@@ -1,6 +1,48 @@
 import 'package:meta/meta.dart';
+import 'package:simple_auth/simple_auth.dart';
 import 'request.dart';
 
+@immutable
+class ApiDeclaration {
+  final String baseUrl;
+  final String name;
+  const ApiDeclaration(this.name, {this.baseUrl: "/"});
+}
+
+@immutable
+class ApiKeyDeclaration extends ApiDeclaration {
+  final AuthLocation authLocation;
+  final String apiKey;
+  final String authKey;
+  const ApiKeyDeclaration(
+      String name, this.apiKey, this.authKey, this.authLocation,
+      {String baseUrl: "/"})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class OAuthApiDeclaration extends ApiDeclaration {
+  final AuthLocation authLocation;
+  final String apiKey;
+  final String authKey;
+  final String clientId;
+  final String clientSecret;
+  final List<String> scopes;
+  const OAuthApiDeclaration(String name, this.apiKey, this.authKey,
+      this.authLocation, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class OAuthApiKeyApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final List<String> scopes;
+  const OAuthApiKeyApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes})
+      : super(name, baseUrl: baseUrl);
+}
 
 @immutable
 class AzureADApiDeclaration extends ApiDeclaration {
@@ -11,8 +53,18 @@ class AzureADApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  const AzureADApiDeclaration(String name, this.clientId,this.resource,
-      {this.clientSecret = "native" ,String baseUrl: "/", this.redirectUrl = "http://localhost",this.authorizationUrl ,this.tokenUrl, this.azureTennant}) : super(name,baseUrl:baseUrl);
+  const AzureADApiDeclaration(String name, this.clientId, this.resource,
+      {this.clientSecret = "native",
+      String baseUrl: "/",
+      this.redirectUrl = "http://localhost",
+      String authorizationUrl,
+      String tokenUrl,
+      this.azureTennant="\$azureTennant"})
+      : authorizationUrl = authorizationUrl ??
+            "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
+        tokenUrl = tokenUrl ??
+            "https://login.microsoftonline.com/$azureTennant/oauth2/token",
+        super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -23,7 +75,11 @@ class GoogleApiKeyApiDeclaration extends ApiDeclaration {
   final String redirectUrl;
   final List<String> scopes;
   const GoogleApiKeyApiDeclaration(String name, this.apiKey, this.clientId,
-      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"}) : super(name,baseUrl:baseUrl);
+      {this.clientSecret = "native",
+      String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -33,23 +89,11 @@ class GoogleApiDeclaration extends ApiDeclaration {
   final String redirectUrl;
   final List<String> scopes;
   const GoogleApiDeclaration(String name, this.clientId,
-      {this.clientSecret = "native" ,String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"}) : super(name,baseUrl:baseUrl);
-}
-
-@immutable
-class OAuthApiDeclaration extends ApiDeclaration {
-  final String clientId;
-  final String clientSecret;
-  final List<String> scopes;
-  const OAuthApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes}) : super(name,baseUrl: baseUrl);
-}
-
-@immutable
-class ApiDeclaration {
-  final String baseUrl;
-  final String name;
-  const ApiDeclaration(this.name, {this.baseUrl: "/"});
+      {this.clientSecret = "native",
+      String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -82,37 +126,58 @@ class Method {
   final Map<String, String> headers;
   final bool authenticated;
 
-  const Method(this.method, {this.url: "/", this.headers: const {}, this.authenticated = true});
+  const Method(this.method,
+      {this.url: "/", this.headers: const {}, this.authenticated = true});
 }
 
 @immutable
 class Get extends Method {
-  const Get({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
-      : super(HttpMethod.Get, url: url, headers: headers, authenticated: authenticated);
+  const Get(
+      {String url: "/",
+      Map<String, String> headers: const {},
+      bool authenticated = true})
+      : super(HttpMethod.Get,
+            url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Post extends Method {
-  const Post({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
-      : super(HttpMethod.Post, url: url, headers: headers, authenticated: authenticated);
+  const Post(
+      {String url: "/",
+      Map<String, String> headers: const {},
+      bool authenticated = true})
+      : super(HttpMethod.Post,
+            url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Delete extends Method {
-  const Delete({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
-      : super(HttpMethod.Delete, url: url, headers: headers, authenticated: authenticated);
+  const Delete(
+      {String url: "/",
+      Map<String, String> headers: const {},
+      bool authenticated = true})
+      : super(HttpMethod.Delete,
+            url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Put extends Method {
-  const Put({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
-      : super(HttpMethod.Put, url: url, headers: headers, authenticated: authenticated);
+  const Put(
+      {String url: "/",
+      Map<String, String> headers: const {},
+      bool authenticated = true})
+      : super(HttpMethod.Put,
+            url: url, headers: headers, authenticated: authenticated);
 }
 
 @immutable
 class Patch extends Method {
-  const Patch({String url: "/", Map<String, String> headers: const {}, bool authenticated = true})
-      : super(HttpMethod.Patch, url: url, headers: headers, authenticated: authenticated);
+  const Patch(
+      {String url: "/",
+      Map<String, String> headers: const {},
+      bool authenticated = true})
+      : super(HttpMethod.Patch,
+            url: url, headers: headers, authenticated: authenticated);
 }
 
 /* @immutable

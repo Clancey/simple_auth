@@ -169,13 +169,13 @@ class SimpleAuthGenerator
   String _getBaseClass(ConstantReader annotation) {
     final type = annotation.objectValue.type.name;
     switch (type) {
-      case "AzureADApiDeclaration":
+      case BuiltInAnnotations.azureADApiDeclaration:
         return "${simple_auth.AzureADApi}";
-      case "GoogleApiDeclaration":
+      case BuiltInAnnotations.googleApiDeclaration:
         return "${simple_auth.GoogleApi}";
-      case "GoogleApiKeyApiDeclaration":
+      case BuiltInAnnotations.googleApiKeyApiDeclaration:
         return "${simple_auth.GoogleApiKeyApi}";
-      case "OAuthApiDeclaration":
+      case BuiltInAnnotations.oAuthApiDeclaration:
         return "${simple_auth.OAuthApi}";
       default:
         return "${simple_auth.Api}";
@@ -205,33 +205,24 @@ class SimpleAuthGenerator
       body += " this.scopes = scopes ?? [${scopeString}];";
     }
     switch (type) {
-      case "AzureADApiDeclaration":
+      case BuiltInAnnotations.azureADApiDeclaration:
         {
-          final azureTennant = annotation.peek("azureTennant")?.stringValue;
-          final authorizationUrl = annotation
-                  .peek("authorizationUrl")
-                  ?.stringValue ??
-              "https://login.microsoftonline.com/$azureTennant/oauth2/authorize";
-          final tokenUrl = annotation.peek("tokenUrl")?.stringValue ??
-              "https://login.microsoftonline.com/$azureTennant/oauth2/token";
-
           return new Constructor(
             (b) => b
-              ..requiredParameters.addAll([
-                new Parameter((b) => b
-                  ..name = 'identifier'
-                  ..type = new Reference("${String}")),
-              ])
-              ..optionalParameters.addAll([
-                _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterWithDefault(
-                    "authorizationUrl", authorizationUrl),
-                _createStringParameterWithDefault("tokenUrl", tokenUrl),
-                _createStringParameterFromAnnotation("resource", annotation),
-                _createStringParameterFromAnnotation(
-                    "clientSecret", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation),
-              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.clientId,
+                BuiltInParameters.authorizationUrl,
+                BuiltInParameters.tokenUrl,
+                BuiltInParameters.resource,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.redirectUrl,
+                BuiltInParameters.scopes,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
               ..initializers.addAll([
                 const Code(
                     'super(identifier, clientId,authorizationUrl,tokenUrl,resource, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -239,21 +230,21 @@ class SimpleAuthGenerator
               ..body = new Code(body),
           );
         }
-      case "GoogleApiDeclaration":
+      case BuiltInAnnotations.googleApiDeclaration:
         {
           return new Constructor(
             (b) => b
-              ..requiredParameters.addAll([
-                new Parameter((b) => b
-                  ..name = 'identifier'
-                  ..type = new Reference("${String}")),
-              ])
-              ..optionalParameters.addAll([
-                _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterFromAnnotation(
-                    "clientSecret", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation)
-              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.clientId,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.redirectUrl,
+                BuiltInParameters.scopes,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
               ..initializers.addAll([
                 const Code(
                     'super(identifier, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -262,22 +253,22 @@ class SimpleAuthGenerator
           );
         }
 
-      case "GoogleApiKeyApiDeclaration":
+      case BuiltInAnnotations.googleApiKeyApiDeclaration:
         {
           return new Constructor(
             (b) => b
-              ..requiredParameters.addAll([
-                new Parameter((b) => b
-                  ..name = 'identifier'
-                  ..type = new Reference("${String}")),
-              ])
-              ..optionalParameters.addAll([
-                _createStringParameterFromAnnotation("apiKey", annotation),
-                _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterFromAnnotation(
-                    "clientSecret", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation)
-              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.apiKey,
+                BuiltInParameters.clientId,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.redirectUrl,
+                BuiltInParameters.scopes,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
               ..initializers.addAll([
                 const Code(
                     'super(identifier,apiKey, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
@@ -285,35 +276,35 @@ class SimpleAuthGenerator
               ..body = new Code(body),
           );
         }
-      case "OAuthApiDeclaration":
+      case BuiltInAnnotations.oAuthApiDeclaration:
         {
           return new Constructor(
             (b) => b
-              ..requiredParameters.addAll([
-                new Parameter((b) => b
-                  ..name = 'identifier'
-                  ..type = new Reference("${String}")),
-              ])
-              ..optionalParameters.addAll([
-                _createStringParameterFromAnnotation("clientId", annotation),
-                _createStringParameterFromAnnotation(
-                    "clientSecret", annotation),
-                _createStringParameterFromAnnotation("tokenUrl", annotation),
-                _createStringParameterFromAnnotation(
-                    "authorizationUrl", annotation),
-                _createStringParameterFromAnnotation("redirectUrl", annotation)
-              ]..addAll(_createBaseParameters(['scopes', 'client', 'converter', 'authStorage'])))
-              ..initializers.addAll([
-                const Code(
-                    'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)'),
-              ])
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.clientId,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.tokenUrl,
+                BuiltInParameters.authorizationUrl,
+                BuiltInParameters.redirectUrl,
+                BuiltInParameters.scopes,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
+              ..initializers.addAll([_generateOAuthSuper()])
               ..body = new Code(body),
           );
         }
       default:
         return new Constructor(
           (b) => b
-            ..optionalParameters.addAll(_createBaseParameters(['client', 'converter', 'authStorage']))
+            ..optionalParameters.addAll(_createParameters(annotation, [
+              BuiltInParameters.client,
+              BuiltInParameters.converter,
+              BuiltInParameters.authStorage
+            ]))
             ..initializers.addAll([
               const Code(
                   'super(identifier: identifier, client: client, converter: converter)'),
@@ -322,12 +313,10 @@ class SimpleAuthGenerator
     }
   }
 
-  Parameter _createStringParameterWithDefault(String name, String value) =>
-      new Parameter((b) => b
-        ..name = name
-        ..type = new Reference("${String}")
-        ..named = true
-        ..defaultTo = new Code("'${value}'"));
+  Code _generateOAuthSuper() => const Code(
+      'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)');
+
+
   Parameter _createStringParameterFromAnnotation(
       String name, ConstantReader annotation) {
     final peekValue = annotation.peek(name);
@@ -336,6 +325,7 @@ class SimpleAuthGenerator
       throw name;
     }
     final value = peekValue.stringValue;
+    if (value == null) return null;
     return new Parameter((b) => b
       ..name = name
       ..type = new Reference("${String}")
@@ -343,39 +333,83 @@ class SimpleAuthGenerator
       ..named = true);
   }
 
-  List<Parameter> _createBaseParameters(List<String> parameterNames) {
-    
+  List<Parameter> _createParameters(
+      ConstantReader annotation, List<String> parameterNames) {
     var parameters = new List<Parameter>();
-    for (String p in parameterNames) {
-      switch (p) {
-        case 'scopes':
+    for (String pstring in parameterNames) {
+      switch (pstring) {
+        case BuiltInParameters.identifier:
           parameters.add(new Parameter((b) => b
-                  ..name = 'scopes'
-                  ..type = new Reference("${List}")
-                  ..named = true));
+            ..name = BuiltInParameters.identifier
+            ..named = true
+            ..type = new Reference("${String}")));
           break;
-        case 'identifier':
-            parameters.add(new Parameter((b) => b
-                ..name = 'identifier'
-                ..type = new Reference("${String}")));
+        case BuiltInParameters.apiKey:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.apiKey, annotation));
           break;
-        case 'client':
+        case BuiltInParameters.clientId:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.clientId, annotation));
+          break;
+        case BuiltInParameters.clientSecret:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.clientSecret, annotation));
+          break;
+        case BuiltInParameters.tokenUrl:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.tokenUrl, annotation));
+          break;
+        case BuiltInParameters.authorizationUrl:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.authorizationUrl, annotation));
+          break;
+        case BuiltInParameters.redirectUrl:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.redirectUrl, annotation));
+          break;
+        case BuiltInParameters.azureTennant:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.azureTennant, annotation));
+          break;
+        case BuiltInParameters.scopes:
           parameters.add(new Parameter((b) => b
-                ..name = 'client'
-                ..type = new Reference("http.Client")));
+            ..name = BuiltInParameters.scopes
+            ..named
+            ..type = new Reference("${List}")
+            ..named = true));
           break;
-        case 'converter':
+        case BuiltInParameters.identifier:
           parameters.add(new Parameter((b) => b
-                ..name = 'converter'
-                ..type = new Reference("${simple_auth.Converter}")));
+            ..name = BuiltInParameters.identifier
+            ..named
+            ..type = new Reference("${String}")));
           break;
-        case 'authStorage':
-        parameters.add(new Parameter((b) => b
-                ..name = 'authStorage'
-                ..type = new Reference("${simple_auth.AuthStorage}")));
+        case BuiltInParameters.resource:
+          parameters.add(_createStringParameterFromAnnotation(
+              BuiltInParameters.resource, annotation));
+          break;
+        case BuiltInParameters.client:
+          parameters.add(new Parameter((b) => b
+            ..name = BuiltInParameters.client
+            ..named
+            ..type = new Reference("http.Client")));
+          break;
+        case BuiltInParameters.converter:
+          parameters.add(new Parameter((b) => b
+            ..name = BuiltInParameters.converter
+            ..named
+            ..type = new Reference("${simple_auth.Converter}")));
+          break;
+        case BuiltInParameters.authStorage:
+          parameters.add(new Parameter((b) => b
+            ..name = BuiltInParameters.authStorage
+            ..named
+            ..type = new Reference("${simple_auth.AuthStorage}")));
           break;
         default:
-      }       
+          throw pstring;
+      }
     }
     return parameters;
   }
@@ -521,3 +555,26 @@ class SimpleAuthGenerator
 Builder simple_authGeneratorFactoryBuilder({String header}) =>
     new PartBuilder([new SimpleAuthGenerator()],
         header: header, generatedExtension: ".simple_auth.dart");
+
+class BuiltInParameters {
+  static const String scopes = 'scopes';
+  static const String identifier = 'identifier';
+  static const String client = 'client';
+  static const String converter = 'converter';
+  static const String authStorage = 'authStorage';
+  static const String clientId = 'clientId';
+  static const String clientSecret = 'clientSecret';
+  static const String tokenUrl = 'tokenUrl';
+  static const String authorizationUrl = 'authorizationUrl';
+  static const String redirectUrl = 'redirectUrl';
+  static const String apiKey = 'apiKey';
+  static const String resource = 'resource';
+  static const String azureTennant = 'azureTennant';
+}
+
+class BuiltInAnnotations {
+  static const String azureADApiDeclaration = 'AzureADApiDeclaration';
+  static const String googleApiDeclaration = 'GoogleApiDeclaration';
+  static const String googleApiKeyApiDeclaration = 'GoogleApiKeyApiDeclaration';
+  static const String oAuthApiDeclaration = 'OAuthApiDeclaration';
+}
