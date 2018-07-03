@@ -2,25 +2,19 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 import 'package:simple_auth/simple_auth.dart';
-// import 'package:http/http.dart' as http;
+ import 'package:http/http.dart' as http;
+
 
 void main() {
-  test('adds one to input values', () async {
+  test('serializes object lists to json and deserializes to json ', () async {
 
-    // var convert = new ModelConverter();
-    // final respStart =  new Resource("id2", "foo from resource 2");
-    // var json = await convert.encode(new Request("get", "foo",body:respStart));
-    // var response = new Response(new http.Response(json.body, 200),null);
-    // var resource = await convert.decode(response, Resource);
-    // expect(resource.body, respStart);
-    // var resource2 = await convert.decode(response, Resource2);
-    // var json2 = await convert.encode(new Request("get", "foo",body: resource2));
-    // expect(json, json2);
-    // final calculator = new Calculator();
-    // expect(calculator.addOne(2), 3);
-    // expect(calculator.addOne(-7), -6);
-    // expect(calculator.addOne(0), 1);
-    // expect(() => calculator.addOne(null), throwsNoSuchMethodError);
+     var convert = new ModelConverter();
+     final respStart =  new Resource("id2", "foo from resource 2");
+     final respStart2 =  new Resource("id2", "foo from resource 1");
+     var json = await convert.encode(new Request("get", "foo",body:new List.from([respStart,respStart2])));
+     var decoded = await convert.decode(new Response(new http.Response(json.body, 200), null), Resource, true);
+     var newJson = await convert.encode(new Request("get", "foo",body:decoded.body));
+     expect(json.body, newJson.body);
   });
 }
 class Resource2 implements JsonSerializable {
@@ -56,11 +50,15 @@ class Resource {
 class ModelConverter extends JsonConverter {
 
   @override
-  Future<Response> decode(Response response, Type responseType) async {
-    final d = await super.decode(response, responseType);
+  Future<Response> decode(Response response, Type responseType, bool responseIsList) async {
+    final d = await super.decode(response, responseType,responseIsList);
     var body = d.body;
+    
     if (responseType == Resource) {
-      body = new Resource.fromJson(body as Map<String, dynamic>);
+        body = responseIsList && body is List
+          ? new List.from((body as List).map((f) =>
+              new Resource.fromJson(f as Map<String, dynamic>)))
+          : new Resource.fromJson(d.body as Map<String, dynamic>);
     }
     else if(responseType == Resource2)
     {
