@@ -32,7 +32,7 @@ class BasicAuthApi extends AuthenticatedApi {
   @override
   Future<Account> performAuthenticate() async {
     BasicAuthAccount account =
-        currentBasicAccount ?? await getAccount<BasicAuthAccount>();
+        currentBasicAccount ?? await loadAccountFromCache<BasicAuthAccount>();
     if (account?.isValid() ?? false) {
       return currentAccount = account;
     }
@@ -51,7 +51,7 @@ class BasicAuthApi extends AuthenticatedApi {
       throw new Exception("Null Token");
     }
     account = new BasicAuthAccount(identifier, key: token);
-    saveAccount(account);
+    saveAccountToCache(account);
     currentAccount = account;
     return account;
   }

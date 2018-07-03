@@ -13,19 +13,21 @@ abstract class AuthenticatedApi extends Api {
 
   Account currentAccount;
 
-  Future<Account> currentAuthCall;
+  Future<Account> _currentAuthCall;
+  ///Call this method to get the Authenticated user.
   Future<Account> authenticate() async {
-    if (currentAuthCall == null) currentAuthCall = performAuthenticate();
+    if (_currentAuthCall == null) _currentAuthCall = performAuthenticate();
     try {
-      var account = await currentAuthCall;
-      currentAuthCall = null;
+      var account = await _currentAuthCall;
+      _currentAuthCall = null;
       return account;
     } catch (Exception) {
-      currentAuthCall = null;
+      _currentAuthCall = null;
       throw Exception;
     }
   }
 
+  ///Should not be called manually. Call authenticate() instead.
   Future<Account> performAuthenticate();
   Future refreshAccount(Account account);
 
@@ -39,14 +41,17 @@ abstract class AuthenticatedApi extends Api {
     return super.interceptRequest(req);
   }
 
+  ///Called internally to apply the credentials to a request
   Future<Request> authenticateRequest(Request request);
 
+  ///Called to determin if the current credentials are valid.
   Future<bool> verifyCredentials() async {
     if (currentAccount?.isValid() ?? false) return true;
     var account = await authenticate();
     return account != null;
   }
 
+  ///Log the user out
   @override
   Future logOut() async {
     await _authStorage.write(key: identifier, value: "");
@@ -54,13 +59,15 @@ abstract class AuthenticatedApi extends Api {
     currentAccount = null;
   }
 
-  Future saveAccount(Account account) async {
+  ///This should not be called, it is used to cache the account locally
+  Future saveAccountToCache(Account account) async {
     var data = account.toJson();
     var json = Convert.jsonEncode(data);
     await _authStorage.write(key: identifier, value: json);
   }
 
-  Future<T> getAccount<T extends Account>() async {
+  ///This should not be called, it is used to cache the account locally
+  Future<T> loadAccountFromCache<T extends Account>() async {
     var json = await _authStorage.read(key: identifier);
     if (json == null) return null;
     try {

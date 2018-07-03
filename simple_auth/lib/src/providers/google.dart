@@ -37,7 +37,8 @@ class GoogleApi extends OAuthApi {
   Authenticator getAuthenticator() => GoogleAuthenticator(identifier, clientId,
       clientSecret, tokenUrl, authorizationUrl, redirectUrl, scopes);
 
-  Future<GoogleUser> getUserInfo() async {
+  /// Makes an API call to google to get the users profile.
+  Future<GoogleUser> getUserProfile() async {
     var request = new Request(HttpMethod.Get,
         "https://www.googleapis.com/oauth2/v1/userinfo?alt=json");
     var resp = await send(request);

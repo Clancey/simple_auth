@@ -18,8 +18,7 @@ class Api {
 
   Future logOut() async {}
 
-  Future onAccountUpdated(Account account) async {}
-
+  ///Used to encode the body of the request before sending it.
   Future<Request> encodeRequest(Request request) async {
     var converted = await converter?.encode(request);
     if (converted == null && request.body is JsonSerializable) {
@@ -33,9 +32,11 @@ class Api {
     return converted;
   }
 
+  ///Used to decode the response body before returning from an API call
   Future<Response<Value>> decodeResponse<Value>(
       Response<String> response, Type responseType) async {
-    final converted = await converter?.decode(response, responseType) ?? response;
+    final converted =
+        await converter?.decode(response, responseType) ?? response;
 
     if (converted == null) {
       throw new Exception("No converter found for type $Value");
@@ -44,6 +45,7 @@ class Api {
     return converted as Response<Value>;
   }
 
+  ///Called before a request is sent across the wire.
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
     if (useragent?.isNotEmpty ?? false) {
@@ -61,6 +63,7 @@ class Api {
     return req;
   }
 
+  ///Called before the response is returned to the user
   Future<Response> interceptResponse(Response response) async {
     Response res = response;
     // for (final i in _responseInterceptors) {

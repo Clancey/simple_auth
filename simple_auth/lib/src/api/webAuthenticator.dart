@@ -20,6 +20,7 @@ abstract class WebAuthenticator extends Authenticator {
   String authCodeKey = "code";
   List<String> scope = List<String>();
 
+  /// This will check if the current URL has authentication tokens.
   bool checkUrl(Uri url) {
     try {
       if (url?.host != _redirectUri.host) return false;
@@ -34,12 +35,14 @@ abstract class WebAuthenticator extends Authenticator {
     }
   }
 
+  ///Gets the URL that will be used for user login.
   Future<Uri> getInitialUrl() async {
     var uri = Uri.parse(baseUrl);
     var parameters = await getInitialUrlQueryParameters();
     return addParameters(uri, parameters);
   }
 
+  ///Gets the URL Parameters that will be used for the login page.
   Future<Map<String, dynamic>> getInitialUrlQueryParameters() async {
     var data = {
       "client_id": clientId,
@@ -53,6 +56,7 @@ abstract class WebAuthenticator extends Authenticator {
     return data;
   }
 
+  ///Gets the data that will be posted to swap the auth code for an auth token
   Future<Map<String, dynamic>> getTokenPostData(String clientSecret) async {
     var data = {
       "grant_type": "authorization_code",

@@ -141,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Login'),
             onTap: () async {
               try {
-                var user = await googleApi.getUserInfo();
+                var user = await googleApi.getUserProfile();
                 showMessage("${user.name} logged in");
               } catch (e) {
                 showError(e);
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Login'),
             onTap: () async {
               try {
-                var user = await youtubeApi.getUserInfo();
+                var user = await youtubeApi.getUserProfile();
                 showMessage("${user.name} logged in");
               } catch (e) {
                 showError(e);

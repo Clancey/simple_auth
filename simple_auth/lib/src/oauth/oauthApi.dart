@@ -59,7 +59,7 @@ class OAuthApi extends AuthenticatedApi {
       throw Exception("Scopes are required");
     }
     OAuthAccount account =
-        currentOauthAccount ?? await getAccount<OAuthAccount>();
+        currentOauthAccount ?? await loadAccountFromCache<OAuthAccount>();
     if (account != null &&
         (account.refreshToken.isNotEmpty || account.expiresIn <= 0)) {
       var valid = account.isValid();
@@ -69,10 +69,10 @@ class OAuthApi extends AuthenticatedApi {
           return account;
         }
         if (await refreshAccount(account))
-          account = currentOauthAccount ?? getAccount<OAuthAccount>();
+          account = currentOauthAccount ?? loadAccountFromCache<OAuthAccount>();
       }
       if (account.isValid()) {
-        saveAccount(account);
+        saveAccountToCache(account);
         currentAccount = account;
         return account;
       }
@@ -92,7 +92,7 @@ class OAuthApi extends AuthenticatedApi {
       throw new Exception("Null Token");
     }
     account = await getAccountFromAuthCode(_authenticator);
-    saveAccount(account);
+    saveAccountToCache(account);
     currentAccount = account;
     return account;
   }
@@ -153,7 +153,7 @@ class OAuthApi extends AuthenticatedApi {
             (result.errorDescription?.contains("revoked") ?? false)) {
           account.token = "";
           account.refreshToken = "";
-          saveAccount(account);
+          saveAccountToCache(account);
           return await performAuthenticate() != null;
         } else
           throw new Exception("${result.error} : ${result.errorDescription}");
@@ -165,7 +165,7 @@ class OAuthApi extends AuthenticatedApi {
       account.expiresIn = result.expiresIn;
       account.created = DateTime.now().toUtc();
       currentAccount = account;
-      saveAccount(account);
+      saveAccountToCache(account);
       return true;
     } catch (exception) {}
     return false;
