@@ -60,8 +60,9 @@ class SimpleAuthGenerator
           final headers = _generateHeaders(m, method);
           final url = _generateUrl(method, paths);
           final responseType = _getResponseType(m.returnType);
-          if (responseType?.element is ClassElement) {
-            var ce = responseType.element as ClassElement;
+          final baseResponsetype = _getResponseType(m.returnType, stripList: true) ?? responseType;
+          if (baseResponsetype?.element is ClassElement) {
+            var ce = baseResponsetype.element as ClassElement;
             var json = ce.getNamedConstructor("fromJson");
             var firstParam = json?.parameters?.first?.type?.toString();
             if (json != null &&
@@ -118,8 +119,12 @@ class SimpleAuthGenerator
             final typeArguments = [];
             if (responseType != null) {
               namedArguments["responseType"] =
-                  refer(responseType.displayName).code;
+                  refer(baseResponsetype.displayName).code;
               typeArguments.add(refer(responseType.displayName));
+              if(baseResponsetype.displayName != responseType.displayName)
+              {
+                namedArguments["responseIsList"] = literal(true);
+              }
             }
             blocks.add(refer("send")
                 .call([refer(_requestVar)], namedArguments, typeArguments)
@@ -136,7 +141,7 @@ class SimpleAuthGenerator
         c.methods.add(new Method((b) {
           final List<Code> body = [
             new Code(
-                "var converted = await converter?.decode(response, responseType);"),
+                "var converted = await converter?.decode(response, responseType,responseIsList);"),
             new Code("if(converted != null) return converted;"),
           ];
           body.addAll(jsonSearializables.map((j) {
@@ -155,6 +160,9 @@ class SimpleAuthGenerator
             new Parameter((p) => p
               ..name = 'responseType'
               ..type = new Reference("Type")),
+            new Parameter((p) => p
+              ..name = 'responseIsList'
+              ..type = new Reference("bool")),
           ]);
           b.body = new Block.of(body);
         }));
@@ -163,7 +171,7 @@ class SimpleAuthGenerator
 
     final emitter = new DartEmitter();
 
-    //final unformattedCode = classBuilder.accept(emitter).toString();
+    final unformattedCode = classBuilder.accept(emitter).toString();
     return new DartFormatter().format('${classBuilder.accept(emitter)}');
   }
 
@@ -191,7 +199,7 @@ class SimpleAuthGenerator
 
   Code _generateJsonDeserialization(ClassElement element) {
     return new Code(
-        "if(responseType == ${element.name}){ final d = await jsonConverter.decode(response,responseType); final body = new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
+        "if(responseType == ${element.name}){ final d = await jsonConverter.decode(response,responseType,responseIsList); final body = responseIsList && d.body is List ?  new List.from((d.body as List).map((f) => new ${element.name}.fromJson(f as Map<String, dynamic>))) :  new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
   }
 
   Constructor _getConstructor(ConstantReader annotation) {
@@ -376,7 +384,7 @@ class SimpleAuthGenerator
             ]))
             ..initializers.addAll([
               const Code(
-                  'super(identifier: identifier, client: client, converter: converter)'),
+                  'super(client: client, converter: converter)'),
             ]),
         );
     }
@@ -559,17 +567,17 @@ class SimpleAuthGenerator
         : null;
   }
 
-  DartType _getResponseType(DartType type) {
+  DartType _getResponseType(DartType type, {bool stripList = false}) {
     final generic = _genericOf(type);
-    if (generic == null ||
+    if (generic == null || (!stripList && (
         _typeChecker(Map).isExactlyType(type) ||
-        _typeChecker(List).isExactlyType(type)) {
+        _typeChecker(List).isExactlyType(type)))) {
       return type;
     }
     if (generic.isDynamic) {
       return null;
     }
-    return _getResponseType(generic);
+    return _getResponseType(generic, stripList: stripList);
   }
 
   Expression _generateUrl(
@@ -668,6 +676,7 @@ class BuiltInParameters {
 }
 
 class BuiltInAnnotations {
+  static const String amazonApiDeclaration = 'AmazonApiDeclaration';
   static const String azureADApiDeclaration = 'AzureADApiDeclaration';
   static const String googleApiDeclaration = 'GoogleApiDeclaration';
   static const String googleApiKeyApiDeclaration = 'GoogleApiKeyApiDeclaration';

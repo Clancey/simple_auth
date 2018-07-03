@@ -8,15 +8,15 @@ part of 'youtubeApi.dart';
 
 class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
   YoutubeApi(String identifier,
-      [String apiKey = 'AIzaSyA6pSGpSe7dmcKGq87lcAcRl03h2CKSN7c',
-      String clientId =
+      {String apiKey: 'AIzaSyA6pSGpSe7dmcKGq87lcAcRl03h2CKSN7c',
+      String clientId:
           '419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com',
-      String clientSecret = 'UwQ8aUXKDpqPzH0gpJnSij3i',
-      String redirectUrl = 'http://localhost',
-      List<String> scopes,
+      String clientSecret: 'UwQ8aUXKDpqPzH0gpJnSij3i',
+      String redirectUrl: 'http://localhost',
+      List scopes,
       http.Client client,
       Converter converter,
-      AuthStorage authStorage])
+      AuthStorage authStorage})
       : super(identifier, apiKey, clientId,
             clientSecret: clientSecret,
             redirectUrl: redirectUrl,
@@ -45,13 +45,18 @@ class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
 
   @override
   Future<Response<Value>> decodeResponse<Value>(
-      Response<String> response, Type responseType) async {
-    var converted = await converter?.decode(response, responseType);
+      Response<String> response, Type responseType, bool responseIsList) async {
+    var converted =
+        await converter?.decode(response, responseType, responseIsList);
     if (converted != null) return converted;
     if (responseType == YoutubeSearchListResult) {
-      final d = await jsonConverter.decode(response, responseType);
-      final body =
-          new YoutubeSearchListResult.fromJson(d.body as Map<String, dynamic>);
+      final d =
+          await jsonConverter.decode(response, responseType, responseIsList);
+      final body = responseIsList && d.body is List
+          ? new List.from((d.body as List).map((f) =>
+              new YoutubeSearchListResult.fromJson(f as Map<String, dynamic>)))
+          : new YoutubeSearchListResult.fromJson(
+              d.body as Map<String, dynamic>);
       return new Response(d.base, body as Value);
     }
     throw new Exception('No converter found for type $Value');

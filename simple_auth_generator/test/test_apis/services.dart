@@ -8,6 +8,10 @@ abstract class JsonSerializableObject {
 
 @ApiDeclaration("MyService", baseUrl: "/resources")
 abstract class MyServiceDefinition {
+
+  @Get(url: "/", headers: const {"foo": "bar"})
+  Future<Response<List<GoogleUser>>> getList(@Query() String id);
+  
   @Get(url: "/", headers: const {"foo": "bar"})
   Future<Response<JsonSerializableObject>> getJsonSerializableObject(@Query() String id);
 
