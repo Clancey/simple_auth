@@ -182,6 +182,8 @@ class SimpleAuthGenerator
         return "${simple_auth.GoogleApiKeyApi}";
       case BuiltInAnnotations.oAuthApiDeclaration:
         return "${simple_auth.OAuthApi}";
+      case BuiltInAnnotations.oAuthApiKeyApiDeclaration:
+        return "${simple_auth.OAuthApiKeyApi}";
       default:
         return "${simple_auth.Api}";
     }
@@ -316,6 +318,30 @@ class SimpleAuthGenerator
                 const Code(
                     'super(identifier,apiKey, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
+              ..body = new Code(body),
+          );
+        }
+      case BuiltInAnnotations.oAuthApiKeyApiDeclaration:
+        {
+          return new Constructor(
+            (b) => b
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.apiKey,
+                BuiltInParameters.authKey,
+                BuiltInParameters.authLocation,
+                BuiltInParameters.clientId,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.tokenUrl,
+                BuiltInParameters.authorizationUrl,
+                BuiltInParameters.redirectUrl,
+                BuiltInParameters.scopes,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
+              ..initializers.addAll([new Code('super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')])
               ..body = new Code(body),
           );
         }

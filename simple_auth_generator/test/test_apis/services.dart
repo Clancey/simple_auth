@@ -56,11 +56,11 @@ abstract class MyBasicAuthApiDefinition {
 
 }
 
-@OAuthApiKeyApiDeclaration("OAuthApiKeyApi","apiKey","key", OAuthApiKeyApiDeclaration.AuthKeyLocationHeader , "client_id","clientSecret","TokenUrl","AuthUrl")
+@OAuthApiKeyApiDeclaration("MyOAuthApiKeyApi","apiKey","key", OAuthApiKeyApiDeclaration.AuthKeyLocationHeader , "client_id","clientSecret","TokenUrl","AuthUrl")
 abstract class MyOAuthApiKeyApiDefinition {
 }
 
-@OAuthApiDeclaration("OAuthApiKeyApi", "client_id","clientSecret","TokenUrl","AuthUrl")
+@OAuthApiDeclaration("MyOAuthApi", "client_id","clientSecret","TokenUrl","AuthUrl")
 abstract class MyOAuthApiDefinition {
 }
 

@@ -16,6 +16,7 @@ export 'src/oauth/oauthAuthenticator.dart';
 export 'src/oauth/oauthAccount.dart';
 export 'src/oauth/oauthResponse.dart';
 export 'src/oauth/oauthApi.dart';
+export 'src/oauth/oauthApiKeyApi.dart';
 export 'src/basic/basicAuthAccount.dart';
 export 'src/basic/basicAuthApi.dart';
 export 'src/basic/basicAuthAuthenticator.dart';

@@ -97,6 +97,10 @@ void main() {
     var result = await runForElementNamed('MyOAuthApiDefinition');
     expect(result, ApiGenerationResults.myOAuthApiDefinition);
   });
+  test('run generator for MyOAuthApiKeyApiDefinition', () async {
+    var result = await runForElementNamed('MyOAuthApiKeyApiDefinition');
+    expect(result, ApiGenerationResults.myOAuthApiKeyApiDefinitionResults);
+  });
   test('run generator for MyService', () async {
     var result = await runForElementNamed('MyServiceDefinition');
     expect(result, ApiGenerationResults.myServiceResult);
@@ -294,8 +298,8 @@ class ApiGenerationResults {
 }
 ''';
 
-static String myOAuthApiDefinition = '''class OAuthApiKeyApi extends OAuthApi implements MyOAuthApiDefinition {
-  OAuthApiKeyApi(String identifier,
+static String myOAuthApiDefinition = '''class MyOAuthApi extends OAuthApi implements MyOAuthApiDefinition {
+  MyOAuthApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'clientSecret',
       String tokenUrl: 'TokenUrl',
@@ -306,6 +310,31 @@ static String myOAuthApiDefinition = '''class OAuthApiKeyApi extends OAuthApi im
       Converter converter,
       AuthStorage authStorage})
       : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+
+static String myOAuthApiKeyApiDefinitionResults = '''class MyOAuthApiKeyApi extends OAuthApiKeyApi
+    implements MyOAuthApiKeyApiDefinition {
+  MyOAuthApiKeyApi(String identifier,
+      {String apiKey: 'apiKey',
+      String authKey: 'key',
+      AuthLocation authLocation: AuthLocation.header,
+      String clientId: 'client_id',
+      String clientSecret: 'clientSecret',
+      String tokenUrl: 'TokenUrl',
+      String authorizationUrl: 'AuthUrl',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, apiKey, authKey, authLocation, clientId, clientSecret,
+            tokenUrl, authorizationUrl,
             redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
