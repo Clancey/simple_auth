@@ -11,7 +11,7 @@ abstract class MyServiceDefinition {
 
   @Get(url: "/", headers: const {"foo": "bar"})
   Future<Response<List<GoogleUser>>> getList(@Query() String id);
-  
+
   @Get(url: "/", headers: const {"foo": "bar"})
   Future<Response<JsonSerializableObject>> getJsonSerializableObject(@Query() String id);
 
@@ -44,9 +44,40 @@ abstract class YouTubeApiDefinition {
   Future<Response<String>> search(@Query() String q,[@Query() int maxResults = 25, @Query() String part = "snippet" ]);
 }
 
+@AmazonApiDeclaration("AmazonTestApi","client_id","client_secret")
+abstract class AmazonDefinition {
+
+}
 
 @AzureADApiDeclaration("AzureAdTestApi","resource","client_id",azureTennant: "azureTennant",clientSecret: "client_secret")
 abstract class AzureADDefinition {
+
+}
+
+@DropboxApiDeclaration("DropboxTestApi","client_id","client_secret")
+abstract class DropboxDefinition {
+
+}
+
+
+@FacebookApiDeclaration("FacebookTestApi","client_id","client_secret")
+abstract class FacebookDefinition {
+
+}
+@GithubApiDeclaration("GithubTestApi","client_id","client_secret")
+abstract class GithubDefinition {
+
+}
+@InstagramApiDeclaration("InstagramTestApi","client_id","client_secret")
+abstract class InstagramDefinition {
+
+}
+@MicrosoftLiveDeclaration("MicrosoftLiveTestApi","client_id","client_secret")
+abstract class MicrosoftLiveDefinition {
+
+}
+@LinkedInApiDeclaration("LinkedInTestApi","client_id","client_secret")
+abstract class LinkedInDefinition {
 
 }
 

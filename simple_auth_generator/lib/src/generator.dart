@@ -60,7 +60,8 @@ class SimpleAuthGenerator
           final headers = _generateHeaders(m, method);
           final url = _generateUrl(method, paths);
           final responseType = _getResponseType(m.returnType);
-          final baseResponsetype = _getResponseType(m.returnType, stripList: true) ?? responseType;
+          final baseResponsetype =
+              _getResponseType(m.returnType, stripList: true) ?? responseType;
           if (baseResponsetype?.element is ClassElement) {
             var ce = baseResponsetype.element as ClassElement;
             var json = ce.getNamedConstructor("fromJson");
@@ -121,8 +122,7 @@ class SimpleAuthGenerator
               namedArguments["responseType"] =
                   refer(baseResponsetype.displayName).code;
               typeArguments.add(refer(responseType.displayName));
-              if(baseResponsetype.displayName != responseType.displayName)
-              {
+              if (baseResponsetype.displayName != responseType.displayName) {
                 namedArguments["responseIsList"] = literal(true);
               }
             }
@@ -171,7 +171,7 @@ class SimpleAuthGenerator
 
     final emitter = new DartEmitter();
 
-    final unformattedCode = classBuilder.accept(emitter).toString();
+    //final unformattedCode = classBuilder.accept(emitter).toString();
     return new DartFormatter().format('${classBuilder.accept(emitter)}');
   }
 
@@ -179,15 +179,29 @@ class SimpleAuthGenerator
     final type = annotation.objectValue.type.name;
     switch (type) {
       case BuiltInAnnotations.apiKeyDeclaration:
-        return "${simple_auth.ApiKeyApi}"; 
+        return "${simple_auth.ApiKeyApi}";
       case BuiltInAnnotations.basicAuthDeclaration:
-        return "${simple_auth.BasicAuthApi}"; 
+        return "${simple_auth.BasicAuthApi}";
+      case BuiltInAnnotations.amazonApiDeclaration:
+        return "${simple_auth.AmazonApi}";
       case BuiltInAnnotations.azureADApiDeclaration:
         return "${simple_auth.AzureADApi}";
+      case BuiltInAnnotations.dropboxApiDeclaration:
+        return "${simple_auth.DropboxApi}";
+      case BuiltInAnnotations.facebookApiDeclaration:
+        return "${simple_auth.FacebookApi}";
+      case BuiltInAnnotations.githubApiDeclaration:
+        return "${simple_auth.GithubApi}";
       case BuiltInAnnotations.googleApiDeclaration:
         return "${simple_auth.GoogleApi}";
       case BuiltInAnnotations.googleApiKeyApiDeclaration:
         return "${simple_auth.GoogleApiKeyApi}";
+      case BuiltInAnnotations.instagramApiDeclaration:
+        return "${simple_auth.InstagramApi}";
+      case BuiltInAnnotations.linkedInApiDeclaration:
+        return "${simple_auth.LinkedInApi}";
+      case BuiltInAnnotations.microsoftLiveDeclaration:
+        return "${simple_auth.MicrosoftLiveConnectApi}";
       case BuiltInAnnotations.oAuthApiDeclaration:
         return "${simple_auth.OAuthApi}";
       case BuiltInAnnotations.oAuthApiKeyApiDeclaration:
@@ -239,7 +253,7 @@ class SimpleAuthGenerator
               ..body = new Code(body),
           );
         }
-        case BuiltInAnnotations.basicAuthDeclaration:
+      case BuiltInAnnotations.basicAuthDeclaration:
         {
           return new Constructor(
             (b) => b
@@ -283,6 +297,13 @@ class SimpleAuthGenerator
               ..body = new Code(body),
           );
         }
+      case BuiltInAnnotations.amazonApiDeclaration:
+      case BuiltInAnnotations.dropboxApiDeclaration:
+      case BuiltInAnnotations.facebookApiDeclaration:
+      case BuiltInAnnotations.githubApiDeclaration:
+      case BuiltInAnnotations.instagramApiDeclaration:
+      case BuiltInAnnotations.linkedInApiDeclaration:
+      case BuiltInAnnotations.microsoftLiveDeclaration:
       case BuiltInAnnotations.googleApiDeclaration:
         {
           return new Constructor(
@@ -349,7 +370,10 @@ class SimpleAuthGenerator
                 BuiltInParameters.converter,
                 BuiltInParameters.authStorage
               ]))
-              ..initializers.addAll([new Code('super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')])
+              ..initializers.addAll([
+                new Code(
+                    'super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')
+              ])
               ..body = new Code(body),
           );
         }
@@ -383,8 +407,7 @@ class SimpleAuthGenerator
               BuiltInParameters.authStorage
             ]))
             ..initializers.addAll([
-              const Code(
-                  'super(client: client, converter: converter)'),
+              const Code('super(client: client, converter: converter)'),
             ]),
         );
     }
@@ -392,7 +415,6 @@ class SimpleAuthGenerator
 
   Code _generateOAuthSuper() => const Code(
       'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)');
-
 
   Parameter _createStringParameterFromAnnotation(
       String name, ConstantReader annotation) {
@@ -430,15 +452,15 @@ class SimpleAuthGenerator
               BuiltInParameters.authKey, annotation));
           break;
         case BuiltInParameters.authLocation:
-        final name = BuiltInParameters.authLocation;
-        final peekValue = annotation.peek(name);
+          final name = BuiltInParameters.authLocation;
+          final peekValue = annotation.peek(name);
           if (peekValue == null) {
             print(name);
             throw name;
           }
           final value = peekValue.stringValue;
           if (value == null) return null;
-           parameters.add( new Parameter((b) => b
+          parameters.add(new Parameter((b) => b
             ..name = name
             ..type = new Reference("${simple_auth.AuthLocation}")
             ..defaultTo = new Code("${value}")
@@ -569,9 +591,10 @@ class SimpleAuthGenerator
 
   DartType _getResponseType(DartType type, {bool stripList = false}) {
     final generic = _genericOf(type);
-    if (generic == null || (!stripList && (
-        _typeChecker(Map).isExactlyType(type) ||
-        _typeChecker(List).isExactlyType(type)))) {
+    if (generic == null ||
+        (!stripList &&
+            (_typeChecker(Map).isExactlyType(type) ||
+                _typeChecker(List).isExactlyType(type)))) {
       return type;
     }
     if (generic.isDynamic) {
@@ -670,7 +693,7 @@ class BuiltInParameters {
   static const String apiKey = 'apiKey';
   static const String resource = 'resource';
   static const String azureTennant = 'azureTennant';
-  static const String authKey ='authKey';
+  static const String authKey = 'authKey';
   static const String authLocation = 'authLocation';
   static const String loginUrl = 'loginUrl';
 }
@@ -678,8 +701,14 @@ class BuiltInParameters {
 class BuiltInAnnotations {
   static const String amazonApiDeclaration = 'AmazonApiDeclaration';
   static const String azureADApiDeclaration = 'AzureADApiDeclaration';
+  static const String dropboxApiDeclaration = 'DropboxApiDeclaration';
+  static const String facebookApiDeclaration = 'FacebookApiDeclaration';
+  static const String githubApiDeclaration = 'GithubApiDeclaration';
   static const String googleApiDeclaration = 'GoogleApiDeclaration';
   static const String googleApiKeyApiDeclaration = 'GoogleApiKeyApiDeclaration';
+  static const String instagramApiDeclaration = 'InstagramApiDeclaration';
+  static const String linkedInApiDeclaration = 'LinkedInApiDeclaration';
+  static const String microsoftLiveDeclaration = 'MicrosoftLiveDeclaration';
   static const String oAuthApiDeclaration = 'OAuthApiDeclaration';
   static const String oAuthApiKeyApiDeclaration = 'OAuthApiKeyApiDeclaration';
   static const String apiKeyDeclaration = 'ApiKeyDeclaration';

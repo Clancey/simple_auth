@@ -18,6 +18,8 @@ import 'package:analyzer/file_system/file_system.dart' hide File;
 
 import 'dart:mirrors';
 
+import 'test_apis/services.dart';
+
 final _formatter = new dart_style.DartFormatter();
 
 CompilationUnit _compilationUnit;
@@ -86,40 +88,69 @@ void main() {
   }
 
   test('run generator for MyService', () async {
-    var result = await runForElementNamed('MyServiceDefinition');
+    var result = await runForElementNamed('$MyServiceDefinition');
     expect(result, ApiGenerationResults.myServiceResult);
   });
 
   test('run generator for ApiKeyApi', () async {
-    var result = await runForElementNamed('MyApiKeyDefinition');
+    var result = await runForElementNamed('$MyApiKeyDefinition');
     expect(result, ApiGenerationResults.myApiKeyDefinitionResult);
   });
   test('run generator for BasicAuthApi', () async {
-    var result = await runForElementNamed('MyBasicAuthApiDefinition');
+    var result = await runForElementNamed('$MyBasicAuthApiDefinition');
     expect(result, ApiGenerationResults.myBasicAuthApiDefinitionResult);
   });
   test('run generator for MyOAuthApiDefinition', () async {
-    var result = await runForElementNamed('MyOAuthApiDefinition');
+    var result = await runForElementNamed('$MyOAuthApiDefinition');
     expect(result, ApiGenerationResults.myOAuthApiDefinition);
   });
   test('run generator for MyOAuthApiKeyApiDefinition', () async {
-    var result = await runForElementNamed('MyOAuthApiKeyApiDefinition');
+    var result = await runForElementNamed('$MyOAuthApiKeyApiDefinition');
     expect(result, ApiGenerationResults.myOAuthApiKeyApiDefinitionResults);
   });
 
   test('run generator for GoogleTestDefinition', () async {
-    var result = await runForElementNamed('GoogleTestDefinition');
+    var result = await runForElementNamed('$GoogleTestDefinition');
     expect(result, ApiGenerationResults.googleTestDefinitionResult);
   });
 
   test('run generator for YouTube', () async {
-    var result = await runForElementNamed('YouTubeApiDefinition');
+    var result = await runForElementNamed('$YouTubeApiDefinition');
     expect(result, ApiGenerationResults.youtubeApiResult);
   });
 
   test('run generator for AzureADDefinition', () async {
-    var result = await runForElementNamed('AzureADDefinition');
+    var result = await runForElementNamed('$AzureADDefinition');
     expect(result, ApiGenerationResults.azureADDefinitionResult);
+  });
+
+  test('run generator for $AmazonDefinition', () async {
+    var result = await runForElementNamed('$AmazonDefinition');
+    expect(result, ApiGenerationResults.amazonDefinitionResult);
+  });
+  test('run generator for $DropboxDefinition', () async {
+    var result = await runForElementNamed('$DropboxDefinition');
+    expect(result, ApiGenerationResults.dropboxDefinitionResult);
+  });
+  test('run generator for $FacebookDefinition', () async {
+    var result = await runForElementNamed('$FacebookDefinition');
+    expect(result, ApiGenerationResults.facebookDefinitionResult);
+  });
+  test('run generator for $GithubDefinition', () async {
+    var result = await runForElementNamed('$GithubDefinition');
+    expect(result, ApiGenerationResults.githubDefinitionResult);
+  });
+  test('run generator for $InstagramDefinition', () async {
+    var result = await runForElementNamed('$InstagramDefinition');
+    expect(result, ApiGenerationResults.instagramDefinitionResult);
+  });
+  test('run generator for $LinkedInDefinition', () async {
+    var result = await runForElementNamed('$LinkedInDefinition');
+    expect(result, ApiGenerationResults.linkedInDefinitionResult);
+  });
+  test('run generator for $MicrosoftLiveDefinition', () async {
+    var result = await runForElementNamed('$MicrosoftLiveDefinition');
+    expect(result, ApiGenerationResults.microsoftDefinitionResult);
   });
 }
 
@@ -316,7 +347,8 @@ class ApiGenerationResults {
 }
 ''';
 
-  static String myBasicAuthApiDefinitionResult = '''class MyBasicAuthApi extends BasicAuthApi implements MyBasicAuthApiDefinition {
+  static String myBasicAuthApiDefinitionResult =
+      '''class MyBasicAuthApi extends BasicAuthApi implements MyBasicAuthApiDefinition {
   MyBasicAuthApi(String identifier,
       {String loginUrl: 'http://example.com/login',
       http.Client client,
@@ -327,7 +359,8 @@ class ApiGenerationResults {
 }
 ''';
 
-static String myOAuthApiDefinition = '''class MyOAuthApi extends OAuthApi implements MyOAuthApiDefinition {
+  static String myOAuthApiDefinition =
+      '''class MyOAuthApi extends OAuthApi implements MyOAuthApiDefinition {
   MyOAuthApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'clientSecret',
@@ -347,7 +380,8 @@ static String myOAuthApiDefinition = '''class MyOAuthApi extends OAuthApi implem
 }
 ''';
 
-static String myOAuthApiKeyApiDefinitionResults = '''class MyOAuthApiKeyApi extends OAuthApiKeyApi
+  static String myOAuthApiKeyApiDefinitionResults =
+      '''class MyOAuthApiKeyApi extends OAuthApiKeyApi
     implements MyOAuthApiKeyApiDefinition {
   MyOAuthApiKeyApi(String identifier,
       {String apiKey: 'apiKey',
@@ -364,6 +398,133 @@ static String myOAuthApiKeyApiDefinitionResults = '''class MyOAuthApiKeyApi exte
       AuthStorage authStorage})
       : super(identifier, apiKey, authKey, authLocation, clientId, clientSecret,
             tokenUrl, authorizationUrl,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String amazonDefinitionResult = '''class AmazonTestApi extends AmazonApi implements AmazonDefinition {
+  AmazonTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String dropboxDefinitionResult = '''class DropboxTestApi extends DropboxApi implements DropboxDefinition {
+  DropboxTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String facebookDefinitionResult = '''class FacebookTestApi extends FacebookApi implements FacebookDefinition {
+  FacebookTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String githubDefinitionResult = '''class GithubTestApi extends GithubApi implements GithubDefinition {
+  GithubTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String instagramDefinitionResult = '''class InstagramTestApi extends InstagramApi implements InstagramDefinition {
+  InstagramTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String linkedInDefinitionResult = '''class LinkedInTestApi extends LinkedInApi implements LinkedInDefinition {
+  LinkedInTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
+            scopes: scopes,
+            client: client,
+            converter: converter,
+            authStorage: authStorage) {}
+}
+''';
+  static String microsoftDefinitionResult = '''class MicrosoftLiveTestApi extends MicrosoftLiveConnectApi
+    implements MicrosoftLiveDefinition {
+  MicrosoftLiveTestApi(String identifier,
+      {String clientId: 'client_id',
+      String clientSecret: 'client_secret',
+      String redirectUrl: 'http://localhost',
+      List scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super(identifier, clientId,
+            clientSecret: clientSecret,
             redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,

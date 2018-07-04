@@ -64,6 +64,100 @@ class OAuthApiDeclaration extends ApiDeclaration {
 }
 
 @immutable
+class AmazonApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const AmazonApiDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class DropboxApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const DropboxApiDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class FacebookApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const FacebookApiDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+
+@immutable
+class GithubApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const GithubApiDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+
+@immutable
+class InstagramApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const InstagramApiDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class LinkedInApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const LinkedInApiDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class MicrosoftLiveDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const MicrosoftLiveDeclaration(String name, this.clientId,this.clientSecret,
+      {String baseUrl: "/",
+      this.scopes,
+      this.redirectUrl = "http://localhost"})
+      : super(name, baseUrl: baseUrl);
+}
+
+
+@immutable
 class AzureADApiDeclaration extends ApiDeclaration {
   final String authorizationUrl;
   final String tokenUrl;
