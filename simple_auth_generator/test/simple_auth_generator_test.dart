@@ -163,7 +163,7 @@ class ApiGenerationResults {
       String clientId: 'AIzaSyCxoYMmVpDwj7KXI3tRjWkVGsgg7JR5zAw',
       String clientSecret: 'UwQ8aUXKDpqPzH0gpJnSij3i',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -199,7 +199,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -319,7 +319,7 @@ class ApiGenerationResults {
       String resource: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -367,7 +367,7 @@ class ApiGenerationResults {
       String tokenUrl: 'TokenUrl',
       String authorizationUrl: 'AuthUrl',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -392,7 +392,7 @@ class ApiGenerationResults {
       String tokenUrl: 'TokenUrl',
       String authorizationUrl: 'AuthUrl',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -410,7 +410,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -428,7 +428,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -446,7 +446,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -464,7 +464,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -482,7 +482,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -500,7 +500,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -519,7 +519,7 @@ class ApiGenerationResults {
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
       String redirectUrl: 'http://localhost',
-      List scopes,
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})

@@ -498,7 +498,7 @@ class SimpleAuthGenerator
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.scopes
             ..named
-            ..type = new Reference("${List}")
+            ..type = new Reference("List<String>")
             ..named = true));
           break;
         case BuiltInParameters.identifier:
