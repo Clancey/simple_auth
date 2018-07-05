@@ -1,4 +1,4 @@
-# Simple Auth for Dart/Flutter
+# Simple Auth for Dart/Flutter  [![Pub](https://img.shields.io/pub/v/simple_auth_flutter.svg)](https://pub.dartlang.org/packages/simple_auth_flutter)
 Most apps need to make API calls. Every API needs authentication, yet no developer wants to deal with authentication. Simple Auth embeds authentication into the API so you dont need to deal with it.
 
 This is a port of [Clancey.SimpleAuth](https://github.com/clancey/simpleauth) for Dart and Flutter
@@ -8,6 +8,8 @@ The network/api part including the generator was based off of [Chopper by Hadrie
 iOS: [![Build status](https://build.appcenter.ms/v0.1/apps/788e968e-4f7d-4c90-a662-9877cee9d85a/branches/master/badge)](https://appcenter.ms)
 
 Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-4694-ae98-eea0ec992d58/branches/master/badge)](https://appcenter.ms)
+
+
 
 ## Providers
 
