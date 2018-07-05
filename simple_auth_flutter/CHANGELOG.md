@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 07-05-2018
 
-* TODO: Describe initial release.
+* Initial release of Simple Auth

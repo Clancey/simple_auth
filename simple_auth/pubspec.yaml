@@ -1,8 +1,8 @@
 name: simple_auth
-description: A new flutter package project.
+description: Simple Auth is the simplest way to authenticate your users/apis.
 version: 0.0.1
-author: James Clancey
-homepage:
+author: James Clancey <james.clancey@gmail.com>
+homepage: https://github.com/clancey/simple_auth
 
 environment:
   sdk: '>=2.0.0-dev <2.0.0'

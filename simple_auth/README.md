@@ -38,53 +38,6 @@ var userInfo = await api.send<UserInfo>(request);
 ```
 That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds! Expired tokens even automatically refresh.
 
-# Flutter Setup
-Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically present your login UI
-
-
-# Android Manifest
-Android requires you to add the callback scheme:
-```xml
-<activity android:name="clancey.simpleauth.simpleauthflutter.SimpleAuthCallbackActivity" >
-    <intent-filter android:label="simple_auth">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="com.googleusercontent.apps.992461286651-k3tsbcreniknqptanrugsetiimt0lkvo" />
-    </intent-filter>
-</activity>
-```
-
-# iOS
-To use the Native Safari Authenticator, you are required to add the following snippet in your AppDelegate.
-
-```objective-c
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
-    return [SimpleAuthFlutterPlugin checkUrl:url];
-}
-
-```
-
-You are also required to add the following to add a CFBundleURLSchemes to your info.plist 
-
-For Google: com.googleusercontent.apps.YOUR_CLIENT_ID
-
-```xml
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.YOURCLIENTID</string>
-			</array>
-			<key>CFBundleURLName</key>
-			<string>googleLogin</string>
-		</dict>
-	</array>
-	
-```
-
-
 # Serialization
 Json objects will automatically serialize if you conform to [JsonSerializable](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/jsonSerializable.dart)
 
@@ -130,7 +83,9 @@ var user = await getCurrentUserInfo();
 
 For more examples, check out the [example project](https://github.com/Clancey/simple_auth/tree/master/simple_auth_flutter_example/lib/api_definitions)
 
+# Auth Storage and Show Authenticator
+If you are using the ```simple_auth_flutter``` plugin this is handled for you. Ignore this section unless you want to override default behavior.
 
-# TODO
-* Add more documentation
-* Add native flutter providers for google
+If you do not implement your own [Auth Storage](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/authStorage.dart#L5), tokens are only stored in memory and do not persist through sessions.
+
+You need to implement the  [ShowAuthenticator](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/oauth/oauthApi.dart#L10) callback to present the login UI.

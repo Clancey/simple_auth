@@ -93,11 +93,6 @@ If you use the generator and you objects have the factory `factory JsonSerializa
 Or you can pass your own [Converter](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/converter.dart) to the api and handle conversion yourself.
 
 # Generator
-### Dart
-```
-pub run build_runner build
-```
-
 ### flutter
 ```
 flutter packages pub run build_runner build
