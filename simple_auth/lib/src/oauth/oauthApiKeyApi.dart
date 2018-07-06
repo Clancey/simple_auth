@@ -7,15 +7,21 @@ class OAuthApiKeyApi extends OAuthApi {
   AuthLocation authLocation;
   String apiKey;
   String authKey;
-  OAuthApiKeyApi(String identifier, this.apiKey, this.authKey,
-      this.authLocation, String clientId, String clientSecret,String tokenUrl,
+  OAuthApiKeyApi(
+      String identifier,
+      this.apiKey,
+      this.authKey,
+      this.authLocation,
+      String clientId,
+      String clientSecret,
+      String tokenUrl,
       String authorizationUrl,
       {String redirectUrl = "http://localhost",
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId, clientSecret,tokenUrl,authorizationUrl,
+      : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
             client: client,
             scopes: scopes,
             converter: converter,

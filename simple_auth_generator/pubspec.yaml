@@ -1,7 +1,7 @@
 name: simple_auth_generator
 description: simple_auth is an http client generator using source_gen and inspired from retrofit and chopper
 version: 0.0.2
-homepage: https://github.com/clancey/simple_auth_flutter
+homepage: https://github.com/clancey/simple_auth
 author: James Clancey <james.clancey@gmail.com>
 
 environment:

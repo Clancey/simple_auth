@@ -11,7 +11,8 @@ abstract class Converter {
 
   Future<Request> encode(Request request);
 
-  Future<Response> decode(Response response, Type responseType, bool responseIsList);
+  Future<Response> decode(
+      Response response, Type responseType, bool responseIsList);
 }
 
 @immutable
@@ -27,7 +28,8 @@ class BodyConverterCodec extends Converter {
     return request.replaceBody(codec.encode(request.body));
   }
 
-  Future<Response> decode(Response response, Type responseType, bool responseIsList ) async {
+  Future<Response> decode(
+      Response response, Type responseType, bool responseIsList) async {
     if (response.base.body == null) {
       return response;
     }
@@ -43,10 +45,11 @@ class JsonConverter extends BodyConverterCodec {
   @override
   Future<Request> encode(Request request) {
     var body = request.body;
-    if(body is List)
-    {
-      new List.from((body as List).map((f) =>  (f is JsonSerializable) ? f.toJson() : f));
-      body = new List.from((body as List).map((f) =>  (f is JsonSerializable) ? f.toJson() : f));
+    if (body is List) {
+      new List.from(
+          (body as List).map((f) => (f is JsonSerializable) ? f.toJson() : f));
+      body = new List.from(
+          (body as List).map((f) => (f is JsonSerializable) ? f.toJson() : f));
     }
     if (request.body is JsonSerializable) {
       body = (request.body as JsonSerializable).toJson();

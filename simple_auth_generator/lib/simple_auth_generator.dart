@@ -4,4 +4,5 @@ import 'package:build/build.dart';
 import 'src/generator.dart';
 
 Builder simple_authGeneratorFactory(BuilderOptions options) =>
-    simple_authGeneratorFactoryBuilder(header: options.config['header'] as String);
+    simple_authGeneratorFactoryBuilder(
+        header: options.config['header'] as String);

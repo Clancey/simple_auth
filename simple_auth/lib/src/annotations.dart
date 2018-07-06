@@ -25,9 +25,7 @@ class ApiKeyDeclaration extends ApiDeclaration {
 @immutable
 class BasicAuthDeclaration extends ApiDeclaration {
   final String loginUrl;
-  const BasicAuthDeclaration(
-      String name, this.loginUrl,
-      {String baseUrl: "/"})
+  const BasicAuthDeclaration(String name, this.loginUrl, {String baseUrl: "/"})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -44,9 +42,18 @@ class OAuthApiKeyApiDeclaration extends ApiDeclaration {
   final String authorizationUrl;
   final String redirectUrl;
   final List<String> scopes;
-  const OAuthApiKeyApiDeclaration(String name, this.apiKey, this.authKey,
-      this.authLocation, this.clientId, this.clientSecret, this.tokenUrl, this.authorizationUrl,
-      {String baseUrl: "/",this.redirectUrl = "http://localhost" ,this.scopes})
+  const OAuthApiKeyApiDeclaration(
+      String name,
+      this.apiKey,
+      this.authKey,
+      this.authLocation,
+      this.clientId,
+      this.clientSecret,
+      this.tokenUrl,
+      this.authorizationUrl,
+      {String baseUrl: "/",
+      this.redirectUrl = "http://localhost",
+      this.scopes})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -58,7 +65,8 @@ class OAuthApiDeclaration extends ApiDeclaration {
   final String authorizationUrl;
   final String redirectUrl;
   final List<String> scopes;
-  const OAuthApiDeclaration(String name, this.clientId, this.clientSecret, this.tokenUrl, this.authorizationUrl,
+  const OAuthApiDeclaration(String name, this.clientId, this.clientSecret,
+      this.tokenUrl, this.authorizationUrl,
       {this.redirectUrl = "http://localhost", String baseUrl: "/", this.scopes})
       : super(name, baseUrl: baseUrl);
 }
@@ -69,10 +77,8 @@ class AmazonApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const AmazonApiDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const AmazonApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -82,10 +88,8 @@ class DropboxApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const DropboxApiDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const DropboxApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -95,13 +99,10 @@ class FacebookApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const FacebookApiDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const FacebookApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
-
 
 @immutable
 class GithubApiDeclaration extends ApiDeclaration {
@@ -109,13 +110,10 @@ class GithubApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const GithubApiDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const GithubApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
-
 
 @immutable
 class InstagramApiDeclaration extends ApiDeclaration {
@@ -123,10 +121,8 @@ class InstagramApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const InstagramApiDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const InstagramApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -136,10 +132,8 @@ class LinkedInApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const LinkedInApiDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const LinkedInApiDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -149,13 +143,10 @@ class MicrosoftLiveDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const MicrosoftLiveDeclaration(String name, this.clientId,this.clientSecret,
-      {String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
+  const MicrosoftLiveDeclaration(String name, this.clientId, this.clientSecret,
+      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
       : super(name, baseUrl: baseUrl);
 }
-
 
 @immutable
 class AzureADApiDeclaration extends ApiDeclaration {
@@ -172,7 +163,7 @@ class AzureADApiDeclaration extends ApiDeclaration {
       this.redirectUrl = "http://localhost",
       String authorizationUrl,
       String tokenUrl,
-      this.azureTennant="\$azureTennant"})
+      this.azureTennant = "\$azureTennant"})
       : authorizationUrl = authorizationUrl ??
             "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
         tokenUrl = tokenUrl ??
