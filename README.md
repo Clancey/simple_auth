@@ -127,7 +127,7 @@ will generate a new Api for you that is easy to use!
 
 ```dart
 var api = new GoogleTestApi("google");
-var user = await getCurrentUserInfo();
+var user = await api.getCurrentUserInfo();
 ```
 
 For more examples, check out the [example project](https://github.com/Clancey/simple_auth/tree/master/simple_auth_flutter_example/lib/api_definitions)
