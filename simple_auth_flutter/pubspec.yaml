@@ -5,7 +5,7 @@ author: James Clancey <james.clancey@gmail.com>
 homepage: https://github.com/clancey/simple_auth
 
 environment:
-    sdk: ">=1.19.0 <2.0.0"
+    sdk: ">=2.0.0-dev <3.0.0"
 
 dependencies:
   flutter:

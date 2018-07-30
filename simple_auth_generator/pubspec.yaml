@@ -5,7 +5,7 @@ homepage: https://github.com/clancey/simple_auth
 author: James Clancey <james.clancey@gmail.com>
 
 environment:
-  sdk: '>=2.0.0-dev <2.0.0'
+  sdk: '>=2.0.0-dev <3.0.0'
 
 dependencies:
   simple_auth: ^0.0.1
