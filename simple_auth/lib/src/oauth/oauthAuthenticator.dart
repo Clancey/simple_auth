@@ -14,7 +14,7 @@ class OAuthAuthenticator extends WebAuthenticator {
   OAuthAuthenticator.empty();
   @override
   Future<Map<String, dynamic>> getTokenPostData(String clientSecret) async {
-    var map = await super.getInitialUrlQueryParameters();
+    var map = await super.getTokenPostData(clientSecret);
     map["redirect_uri"] = redirectUrl;
     return map;
   }
