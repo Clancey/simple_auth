@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   simple_auth: ^1.0.1
-  analyzer: ^0.31.2-alpha.2
+  analyzer: ^0.32.4
   build: '>=0.9.0 <0.13.0'
   build_config: ^0.2.6
   logging: ^0.11.0 
