@@ -20,6 +20,10 @@ class MicrosoftLiveConnectApi extends OAuthApi {
     this.redirectUrl = redirectUrl;
     this.scopes = scopes ?? ["basic"];
   }
+
+  Authenticator getAuthenticator() => MicrosoftLiveConnectAuthenticator(identifier, clientId,
+      clientSecret, tokenUrl, authorizationUrl, redirectUrl, scopes);
+
 }
 
 class MicrosoftLiveConnectAuthenticator extends OAuthAuthenticator {
