@@ -13,7 +13,7 @@ dependencies:
 
 dev_dependencies:
   simple_auth_generator: 
-  build_runner: ^0.8.0
+  build_runner: ^0.10.1
   flutter_test:
     sdk: flutter
 
