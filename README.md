@@ -1,4 +1,4 @@
-![Logo](logo.png)
+![Simple Auth](https://github.com/Clancey/simple_auth/blob/master/logo.png)
   [![Pub](https://img.shields.io/pub/v/simple_auth_flutter.svg)](https://pub.dartlang.org/packages/simple_auth_flutter)
 Most apps need to make API calls. Every API needs authentication, yet no developer wants to deal with authentication. Simple Auth embeds authentication into the API so you dont need to deal with it.
 
