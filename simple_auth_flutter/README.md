@@ -1,4 +1,6 @@
-# Simple Auth for Dart/Flutter
+![Simple Auth](https://github.com/Clancey/simple_auth/blob/master/logo.png)
+  [![Pub](https://img.shields.io/pub/v/simple_auth_flutter.svg)](https://pub.dartlang.org/packages/simple_auth_flutter)
+  
 Most apps need to make API calls. Every API needs authentication, yet no developer wants to deal with authentication. Simple Auth embeds authentication into the API so you dont need to deal with it.
 
 This is a port of [Clancey.SimpleAuth](https://github.com/clancey/simpleauth) for Dart and Flutter
@@ -125,6 +127,9 @@ var user = await getCurrentUserInfo();
 
 For more examples, check out the [example project](https://github.com/Clancey/simple_auth/tree/master/simple_auth_flutter_example/lib/api_definitions)
 
+
+# Contributor
+* Thanks for the logo made by [@iqbalhood](https://github.com/iqbalhood)
 
 # TODO
 * Add more documentation
