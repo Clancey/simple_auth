@@ -1,3 +1,6 @@
+## [1.0.2] - 08-30-2018
+* Fixed crash in Microsoft Live and Azure Auth
+
 ## [1.0.1] - 07-30-2018
 * OAuth Bug fix
 

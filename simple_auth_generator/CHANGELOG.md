@@ -1,3 +1,5 @@
+## [1.0.3] - 08-30-2018
+* Updated dependencies
 ## [1.0.2] - 08-30-2018
 * Updated dependencies
 ## [1.0.1] - 07-30-2018
