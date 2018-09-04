@@ -13,8 +13,8 @@ class GithubApi extends OAuthApi {
             scopes: scopes,
             converter: converter,
             authStorage: authStorage) {
-    this.tokenUrl = "https://api.amazon.com/auth/o2/token";
-    this.authorizationUrl = "https://www.amazon.com/ap/oa";
+    this.tokenUrl = "https://github.com/login/oauth/access_token";
+    this.authorizationUrl = "https://github.com/login/oauth/authorize";
     this.redirectUrl = redirectUrl;
   }
 }
