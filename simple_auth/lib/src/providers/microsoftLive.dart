@@ -3,10 +3,9 @@ import "package:http/http.dart" as http;
 import 'dart:async';
 
 class MicrosoftLiveConnectApi extends OAuthApi {
-  MicrosoftLiveConnectApi(
-      String identifier, String clientId, String clientSecret,
-      {String redirectUrl = "http://localhost",
-      List<String> scopes,
+  MicrosoftLiveConnectApi(String identifier, String clientId,
+      String clientSecret, String redirectUrl,
+      {List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
@@ -21,9 +20,14 @@ class MicrosoftLiveConnectApi extends OAuthApi {
     this.scopes = scopes ?? ["basic"];
   }
 
-  Authenticator getAuthenticator() => MicrosoftLiveConnectAuthenticator(identifier, clientId,
-      clientSecret, tokenUrl, authorizationUrl, redirectUrl, scopes);
-
+  Authenticator getAuthenticator() => MicrosoftLiveConnectAuthenticator(
+      identifier,
+      clientId,
+      clientSecret,
+      tokenUrl,
+      authorizationUrl,
+      redirectUrl,
+      scopes);
 }
 
 class MicrosoftLiveConnectAuthenticator extends OAuthAuthenticator {

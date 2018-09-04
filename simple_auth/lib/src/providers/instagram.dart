@@ -3,8 +3,8 @@ import "package:http/http.dart" as http;
 
 class InstagramApi extends OAuthApi {
   InstagramApi(String identifier, String clientId, String clientSecret,
-      {String redirectUrl = "http://localhost",
-      List<String> scopes,
+      String redirectUrl,
+      {List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
