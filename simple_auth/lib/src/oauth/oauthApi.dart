@@ -21,7 +21,7 @@ class OAuthApi extends AuthenticatedApi {
   bool forceRefresh = false;
 
   OAuthApi(identifier, this.clientId, this.clientSecret, this.tokenUrl,
-      this.authorizationUrl, this.redirectUrl,      
+      this.authorizationUrl, this.redirectUrl,
       {this.scopes,
       http.Client client,
       Converter converter,
@@ -60,7 +60,8 @@ class OAuthApi extends AuthenticatedApi {
     OAuthAccount account =
         currentOauthAccount ?? await loadAccountFromCache<OAuthAccount>();
     if (account != null &&
-        ((account.refreshToken?.isNotEmpty ?? false ) || (account.expiresIn != null && account.expiresIn <= 0))) {
+        ((account.refreshToken?.isNotEmpty ?? false) ||
+            (account.expiresIn != null && account.expiresIn <= 0))) {
       var valid = account.isValid();
       if (!valid || forceRefresh ?? false) {
         //If there is no interent, give them the current expired account
