@@ -5,10 +5,10 @@ import "package:http/http.dart" as http;
 class AzureADApi extends OAuthApi {
   bool useClientSecret;
   String resource;
-  AzureADApi(String identifier, String clientId, String authorizationUrl,
-      String tokenUrl, this.resource,
+  AzureADApi(String identifier, String clientId,
+      String tokenUrl, this.resource, String authorizationUrl,
       {String clientSecret = "native",
-      String redirectUrl = "http://localhost",
+      String redirectUrl,
       List<String> scopes,
       http.Client client,
       Converter converter,

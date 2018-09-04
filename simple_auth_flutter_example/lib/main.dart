@@ -61,19 +61,21 @@ class _MyHomePageState extends State<MyHomePage> {
       "amazon",
       "amzn1.application-oa2-client.848f75b20206455097cde6b63ca53dec",
       "759db00c1a71fe308d55ce42387c510af8337a5b3aa402a835b77dc552766c3a",
+      "http://localhost",
       scopes: ["clouddrive:read", "clouddrive:write"]);
 
   final simpleAuth.DropboxApi dropboxApi = new simpleAuth.DropboxApi(
-      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg");
+      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "redirect");
 
   final simpleAuth.FacebookApi facebookApi =
-      new simpleAuth.FacebookApi("facebook", "clientId", "clientSecret");
+      new simpleAuth.FacebookApi("facebook", "clientId", "clientSecret","redirect",);
 
   final simpleAuth.GithubApi githubApi =
-      new simpleAuth.GithubApi("github", "clientId", "clientSecret");
+      new simpleAuth.GithubApi("github", "clientId", "clientSecret","redirect");
 
   final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
+      "redirect",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",

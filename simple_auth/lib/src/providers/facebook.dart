@@ -7,9 +7,8 @@ import "dart:convert" as convert;
 
 class FacebookApi extends OAuthApi {
   static bool isUsingNative;
-  FacebookApi(String identifier, String clientId, String clientSecret,
-      {String redirectUrl = "http://localhost",
-      List<String> scopes,
+  FacebookApi(String identifier, String clientId, String clientSecret,String redirectUrl,
+      {List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})

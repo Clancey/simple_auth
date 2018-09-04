@@ -21,9 +21,8 @@ class OAuthApi extends AuthenticatedApi {
   bool forceRefresh = false;
 
   OAuthApi(identifier, this.clientId, this.clientSecret, this.tokenUrl,
-      this.authorizationUrl,
-      {this.redirectUrl = "http://localhost",
-      this.scopes,
+      this.authorizationUrl, this.redirectUrl,      
+      {this.scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})

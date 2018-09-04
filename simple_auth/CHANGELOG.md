@@ -1,3 +1,7 @@
+## [1.0.4] - 08-30-2018
+* Breaking Change: Redirects are now required. This prevents user error. 
+* Fixed crash in Google Auth.
+
 ## [1.0.2] - 08-30-2018
 * Fixed crash in Microsoft Live and Azure Auth
 

@@ -4,9 +4,8 @@ import 'package:simple_auth/simple_auth.dart';
 import "package:http/http.dart" as http;
 
 class DropboxApi extends OAuthApi {
-  DropboxApi(String identifier, String clientId, String clientSecret,
-      {String redirectUrl = "http://localhost",
-      List<String> scopes,
+  DropboxApi(String identifier, String clientId, String clientSecret,String redirectUrl,
+      {List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
