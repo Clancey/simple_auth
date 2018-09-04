@@ -6,7 +6,7 @@ import "dart:convert" as Convert;
 
 class GoogleApi extends OAuthApi {
   bool isUsingNative;
-  GoogleApi(String identifier, String clientId,String redirectUrl,
+  GoogleApi(String identifier, String clientId, String redirectUrl,
       {String clientSecret = "native",
       List<String> scopes,
       http.Client client,
@@ -82,7 +82,8 @@ class GoogleApiKeyApi extends GoogleApi {
   AuthLocation authLocation;
   String apiKey;
   String authKey;
-  GoogleApiKeyApi(String identifier, this.apiKey, String clientId, String redirectUrl,
+  GoogleApiKeyApi(
+      String identifier, this.apiKey, String clientId, String redirectUrl,
       {this.authKey = "key",
       this.authLocation = AuthLocation.query,
       String clientSecret = "native",

@@ -67,13 +67,18 @@ class _MyHomePageState extends State<MyHomePage> {
   final simpleAuth.DropboxApi dropboxApi = new simpleAuth.DropboxApi(
       "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "redirect");
 
-  final simpleAuth.FacebookApi facebookApi =
-      new simpleAuth.FacebookApi("facebook", "clientId", "clientSecret","redirect",);
+  final simpleAuth.FacebookApi facebookApi = new simpleAuth.FacebookApi(
+    "facebook",
+    "clientId",
+    "clientSecret",
+    "redirect",
+  );
 
-  final simpleAuth.GithubApi githubApi =
-      new simpleAuth.GithubApi("github", "clientId", "clientSecret","redirect");
+  final simpleAuth.GithubApi githubApi = new simpleAuth.GithubApi(
+      "github", "clientId", "clientSecret", "redirect");
 
-  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
+  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi(
+      "google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
       "redirect",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
@@ -85,15 +90,15 @@ class _MyHomePageState extends State<MyHomePage> {
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
 
-  final simpleAuth.InstagramApi instagramApi =
-      new simpleAuth.InstagramApi("instagram", "clientId", "clientSecret");
+  final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
+      "instagram", "clientId", "clientSecret", "redirecturl");
 
-  final simpleAuth.LinkedInApi linkedInApi =
-      new simpleAuth.LinkedInApi("linkedin", "clientId", "clientSecret");
+  final simpleAuth.LinkedInApi linkedInApi = new simpleAuth.LinkedInApi(
+      "linkedin", "clientId", "clientSecret", "redirecturl");
 
   final simpleAuth.MicrosoftLiveConnectApi microsoftLiveApi =
       new simpleAuth.MicrosoftLiveConnectApi(
-          "microsoftconnect", "clientId", "clientSecret");
+          "microsoftconnect", "clientId", "clientSecret", "redirecturl");
   final youtubeApi = new YoutubeApi("Youtube");
   @override
   Widget build(BuildContext context) {
@@ -174,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 showError(e);
               }
             },
-          ), 
+          ),
           ListTile(
             leading: Icon(Icons.launch),
             title: Text('Search for "Flutter"'),
@@ -365,7 +370,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  
+
   void showError(dynamic ex) {
     showMessage(ex.toString());
   }

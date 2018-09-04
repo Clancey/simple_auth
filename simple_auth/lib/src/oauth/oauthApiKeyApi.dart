@@ -21,7 +21,8 @@ class OAuthApiKeyApi extends OAuthApi {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl, redirectUrl,
+      : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
+            redirectUrl,
             client: client,
             scopes: scopes,
             converter: converter,

@@ -41,9 +41,9 @@ class Request {
           Encoding encoding}) =>
       new Request(method ?? this.method, url ?? this.url,
           parameters: parameters ?? this.parameters,
-          headers: headers ?? this.headers, authenticated: this.authenticated);
-  Request replaceBody(
-          dynamic body,
+          headers: headers ?? this.headers,
+          authenticated: this.authenticated);
+  Request replaceBody(dynamic body,
           {HttpMethod method,
           String url,
           Map<String, dynamic> parameters,
@@ -52,7 +52,8 @@ class Request {
       new Request(method ?? this.method, url ?? this.url,
           body: body,
           parameters: parameters ?? this.parameters,
-          headers: headers ?? this.headers, authenticated: this.authenticated);
+          headers: headers ?? this.headers,
+          authenticated: this.authenticated);
 
   http.BaseRequest toHttpRequest(String baseUrl) {
     var pathUrl = Uri.tryParse(url);
@@ -60,7 +61,10 @@ class Request {
       pathUrl = Uri.parse("$baseUrl/${url}");
     }
     var cleanedParams = parameters;
-    parameters.keys.where((key) => parameters[key] == null).toList().forEach(cleanedParams.remove);
+    parameters.keys
+        .where((key) => parameters[key] == null)
+        .toList()
+        .forEach(cleanedParams.remove);
     final uri = pathUrl.replace(
         queryParameters: cleanedParams.map((k, v) => new MapEntry(k, "$v")));
     final baseRequest = new http.Request(_getMethod(method), uri);
