@@ -1,4 +1,7 @@
-## [1.0.4] - 08-30-2018
+## [1.0.5] - 09-04-2018
+* Removed remaining redirect. Code Formatting.
+
+## [1.0.4] - 09-04-2018
 * Breaking Change: Redirects are now required. This prevents user error. 
 * Fixed crash in Google Auth.
 

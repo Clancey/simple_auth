@@ -1,6 +1,6 @@
 name: simple_auth
 description: Simple Auth is the simplest way to authenticate your users/apis.
-version: 1.0.4
+version: 1.0.5
 author: James Clancey <james.clancey@gmail.com>
 homepage: https://github.com/clancey/simple_auth
 

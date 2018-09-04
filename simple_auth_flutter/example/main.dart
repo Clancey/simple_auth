@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 import 'package:simple_auth_flutter/simple_auth_flutter.dart';
-import 'package:simple_auth_flutter_example/api_definitions/youtubeApi.dart';
 
 void main() => runApp(new MyApp());
 
@@ -57,49 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
       "https://login.microsoftonline.com/$azureTennant/oauth2/token",
       "https://management.azure.com/");
 
-  final simpleAuth.AmazonApi amazonApi = new simpleAuth.AmazonApi(
-      "amazon",
-      "amzn1.application-oa2-client.848f75b20206455097cde6b63ca53dec",
-      "759db00c1a71fe308d55ce42387c510af8337a5b3aa402a835b77dc552766c3a",
-      "http://localhost",
-      scopes: ["clouddrive:read", "clouddrive:write"]);
-
-  final simpleAuth.DropboxApi dropboxApi = new simpleAuth.DropboxApi(
-      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "redirect");
-
-  final simpleAuth.FacebookApi facebookApi = new simpleAuth.FacebookApi(
-    "facebook",
-    "clientId",
-    "clientSecret",
-    "redirect",
-  );
-
-  final simpleAuth.GithubApi githubApi = new simpleAuth.GithubApi(
-      "github", "clientId", "clientSecret", "redirect");
-
-  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi(
-      "google",
-      "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
-      "redirect",
-      clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
-      scopes: [
-        "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile"
-      ]);
-
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
 
-  final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
-      "instagram", "clientId", "clientSecret", "redirecturl");
-
-  final simpleAuth.LinkedInApi linkedInApi = new simpleAuth.LinkedInApi(
-      "linkedin", "clientId", "clientSecret", "redirecturl");
-
-  final simpleAuth.MicrosoftLiveConnectApi microsoftLiveApi =
-      new simpleAuth.MicrosoftLiveConnectApi(
-          "microsoftconnect", "clientId", "clientSecret", "redirecturl");
-  final youtubeApi = new YoutubeApi("Youtube");
   @override
   Widget build(BuildContext context) {
     SimpleAuthFlutter.context = context;
@@ -139,149 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             title: Text(
-              "Google OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () async {
-              try {
-                var user = await googleApi.getUserProfile();
-                showMessage("${user.name} logged in");
-              } catch (e) {
-                showError(e);
-              }
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(githubApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Youtube",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () async {
-              try {
-                var user = await youtubeApi.getUserProfile();
-                showMessage("${user.name} logged in");
-              } catch (e) {
-                showError(e);
-              }
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Search for "Flutter"'),
-            onTap: () async {
-              try {
-                var user = await youtubeApi.search("flutter");
-                print(user.body);
-                showMessage(user.body.items.length.toString());
-              } catch (e) {
-                showError(e);
-              }
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(githubApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Amazon OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(amazonApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(amazonApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Dropbox OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(dropboxApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(dropboxApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Facebook OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(facebookApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(facebookApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Github OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(githubApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(githubApi);
-            },
-          ),
-          ListTile(
-            title: Text(
               "Github BasicAuth",
               style: Theme.of(context).textTheme.headline,
             ),
@@ -304,66 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () async {
               await basicApi.logOut();
               showMessage("Logged out");
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Instagram OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(instagramApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(instagramApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "LinkedIn OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(linkedInApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(linkedInApi);
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Microsoft Live OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(microsoftLiveApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(microsoftLiveApi);
             },
           ),
         ],
