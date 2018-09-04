@@ -49,7 +49,6 @@ void main() {
 
     var options = new AnalysisOptionsImpl()
       ..analyzeFunctionBodies = false
-      ..strongMode = true
       ..previewDart2 = true;
     var pubPackageMapProvider =
         new PubPackageMapProvider(PhysicalResourceProvider.INSTANCE, sdk);
