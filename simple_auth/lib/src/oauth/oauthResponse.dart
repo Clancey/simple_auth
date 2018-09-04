@@ -27,7 +27,7 @@ class OAuthResponse implements JsonSerializable {
 
   factory OAuthResponse.fromJson(Map<String, dynamic> json) => OAuthResponse(
       json["token_type"],
-      int.parse(json["expires_in"]),
+      json["expires_in"] is int ? json["expires_in"] : int.parse(json["expires_in"]),
       json["refresh_token"],
       json["access_token"],
       json["id_token"],
