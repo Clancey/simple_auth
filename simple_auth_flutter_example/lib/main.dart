@@ -80,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi(
       "google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
-      "redirect",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",

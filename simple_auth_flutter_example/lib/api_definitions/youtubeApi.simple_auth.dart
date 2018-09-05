@@ -17,8 +17,9 @@ class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, apiKey, clientId,redirectUrl,
+      : super(identifier, apiKey, clientId,
             clientSecret: clientSecret,
+            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
