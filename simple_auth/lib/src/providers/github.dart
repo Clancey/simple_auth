@@ -8,13 +8,15 @@ class GithubApi extends OAuthApi {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super.fromIdAndSecret(identifier, clientId, clientSecret,
+      : super(
+            identifier,
+            clientId,
+            clientSecret,
+            "https://github.com/login/oauth/access_token",
+            "https://github.com/login/oauth/authorize",
+            redirectUrl,
             client: client,
             scopes: scopes,
             converter: converter,
-            authStorage: authStorage) {
-    this.tokenUrl = "https://github.com/login/oauth/access_token";
-    this.authorizationUrl = "https://github.com/login/oauth/authorize";
-    this.redirectUrl = redirectUrl;
-  }
+            authStorage: authStorage) {}
 }
