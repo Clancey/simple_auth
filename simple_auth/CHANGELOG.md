@@ -1,4 +1,4 @@
-## [1.0.5] - 09-04-2018
+## [1.0.6] - 09-04-2018
 * Removed remaining redirect. Code Formatting.
 
 ## [1.0.4] - 09-04-2018
