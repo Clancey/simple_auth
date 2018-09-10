@@ -75,10 +75,14 @@ class _MyHomePageState extends State<MyHomePage> {
   );
 
   final simpleAuth.GithubApi githubApi = new simpleAuth.GithubApi(
-      "github", "clientId", "clientSecret", "redirect");
+      "github", "clientId", "clientSecret", "redirect:/",
+      scopes: [
+        "user",
+        "repo",
+        "public_repo",
+      ]);
 
-  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi(
-      "google",
+  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [

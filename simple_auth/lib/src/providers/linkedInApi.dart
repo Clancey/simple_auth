@@ -8,15 +8,17 @@ class LinkedInApi extends OAuthApi {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super.fromIdAndSecret(identifier, clientId, clientSecret,
+      : super(
+            identifier,
+            clientId,
+            clientSecret,
+            "https://www.linkedin.com/uas/oauth2/accessToken",
+            "https://www.linkedin.com/uas/oauth2/authorization",
+            redirectUrl,
             client: client,
-            scopes: scopes,
+            scopes: scopes ?? ["r_basicprofile"],
             converter: converter,
             authStorage: authStorage) {
-    this.tokenUrl = "https://www.linkedin.com/uas/oauth2/accessToken";
-    this.authorizationUrl = "https://www.linkedin.com/uas/oauth2/authorization";
-    this.redirectUrl = redirectUrl;
     this.baseUrl = "https://api.linkedin.com/v1/";
-    this.scopes = scopes ?? ["r_basicprofile"];
   }
 }
