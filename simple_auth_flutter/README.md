@@ -1,6 +1,5 @@
 ![Simple Auth](https://github.com/Clancey/simple_auth/blob/master/logo.png)
   [![Pub](https://img.shields.io/pub/v/simple_auth_flutter.svg)](https://pub.dartlang.org/packages/simple_auth_flutter)
-  
 Most apps need to make API calls. Every API needs authentication, yet no developer wants to deal with authentication. Simple Auth embeds authentication into the API so you dont need to deal with it.
 
 This is a port of [Clancey.SimpleAuth](https://github.com/clancey/simpleauth) for Dart and Flutter
@@ -10,6 +9,8 @@ The network/api part including the generator was based off of [Chopper by Hadrie
 iOS: [![Build status](https://build.appcenter.ms/v0.1/apps/788e968e-4f7d-4c90-a662-9877cee9d85a/branches/master/badge)](https://appcenter.ms)
 
 Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-4694-ae98-eea0ec992d58/branches/master/badge)](https://appcenter.ms)
+
+
 
 ## Providers
 
@@ -43,22 +44,30 @@ That's it! If the user is not logged in, they will automatically be prompted. If
 # Flutter Setup
 Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically present your login UI
 
+#Redirect
 
-# Android Manifest
-Android requires you to add the callback scheme:
+Google requires the following redirect: `com.googleusercontent.apps.YOUR_CLIENT_ID`
+
+Simple Auth by default uses SFSafari on iOS and Chrome Tabs on Android.
+
+This means normal http redirects cannot work. You will need to register a custom scheme for your app as a redirect. For most providers, you can create whatever you want. i.e. `com.myapp.foo:/redirct`
+
+## Android Manifest
+you would then add the following to your Android manifest
+ 
 ```xml
 <activity android:name="clancey.simpleauth.simpleauthflutter.SimpleAuthCallbackActivity" >
     <intent-filter android:label="simple_auth">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="com.googleusercontent.apps.992461286651-k3tsbcreniknqptanrugsetiimt0lkvo" />
+        <data android:scheme="com.myapp.foo" />
     </intent-filter>
 </activity>
 ```
 
-# iOS
-To use the Native Safari Authenticator, you are required to add the following snippet in your AppDelegate.
+## iOS
+on iOS you need the following in your app delegate.
 
 ```objective-c
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
@@ -67,9 +76,7 @@ To use the Native Safari Authenticator, you are required to add the following sn
 
 ```
 
-You are also required to add the following to add a CFBundleURLSchemes to your info.plist 
-
-For Google: com.googleusercontent.apps.YOUR_CLIENT_ID
+For iOS 11 and higher, you don't need to do anything else. On older iOS versions the following is required in the info.plist
 
 ```xml
 	<key>CFBundleURLTypes</key>
@@ -77,10 +84,10 @@ For Google: com.googleusercontent.apps.YOUR_CLIENT_ID
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.YOURCLIENTID</string>
+				<string>com.myapp.foo</string>
 			</array>
 			<key>CFBundleURLName</key>
-			<string>googleLogin</string>
+			<string>myappredirect</string>
 		</dict>
 	</array>
 	
@@ -95,6 +102,11 @@ If you use the generator and you objects have the factory `factory JsonSerializa
 Or you can pass your own [Converter](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/converter.dart) to the api and handle conversion yourself.
 
 # Generator
+### Dart
+```
+pub run build_runner build
+```
+
 ### flutter
 ```
 flutter packages pub run build_runner build
@@ -122,14 +134,14 @@ will generate a new Api for you that is easy to use!
 
 ```dart
 var api = new GoogleTestApi("google");
-var user = await getCurrentUserInfo();
+var user = await api.getCurrentUserInfo();
 ```
 
 For more examples, check out the [example project](https://github.com/Clancey/simple_auth/tree/master/simple_auth_flutter_example/lib/api_definitions)
 
-
 # Contributor
 * Thanks for the logo made by [@iqbalhood](https://github.com/iqbalhood)
+
 
 # TODO
 * Add more documentation
