@@ -44,7 +44,7 @@ That's it! If the user is not logged in, they will automatically be prompted. If
 # Flutter Setup
 Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically present your login UI
 
-#Redirect
+# Redirect
 
 Google requires the following redirect: `com.googleusercontent.apps.YOUR_CLIENT_ID`
 
