@@ -8,6 +8,7 @@
 
 #import "WebAuthenticatorViewController.h"
 #import "WebAuthenticator.h"
+#import "WebAuthenticatorWindow.h"
 
 @implementation WebAuthenticatorViewController
 UIWebView *webview;
@@ -65,6 +66,12 @@ UIActivityIndicatorView *activity;
 {
     NSLog(@"Canceled");
     [self.authenticator cancel];
+    UIWindow *window = UIApplication.sharedApplication.keyWindow;
+    if ([window isKindOfClass:[WebAuthenticatorWindow class]])
+    {
+        WebAuthenticatorWindow *webWindow = (WebAuthenticatorWindow *)window;
+        [webWindow dismiss];
+    }
 }
 -(void)refresh {
     [webview reload];

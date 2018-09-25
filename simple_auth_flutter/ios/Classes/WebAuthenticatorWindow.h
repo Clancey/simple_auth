@@ -13,4 +13,5 @@
 @interface WebAuthenticatorWindow : UIWindow
 + (WebAuthenticatorWindow *) shared;
 + (void) presentAuthenticator:(WebAuthenticator *)authenticator;
+- (void) dismiss;
 @end
