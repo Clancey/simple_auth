@@ -2,7 +2,7 @@
   [![Pub](https://img.shields.io/pub/v/simple_auth_flutter.svg)](https://pub.dartlang.org/packages/simple_auth_flutter)
 Most apps need to make API calls. Every API needs authentication, yet no developer wants to deal with authentication. Simple Auth embeds authentication into the API so you dont need to deal with it.
 
-This is a port of [Clancey.SimpleAuth](https://github.com/clancey/simpleauth) for Dart and Flutter
+This is a Flutter adapter for the port of [Clancey.SimpleAuth](https://github.com/clancey/simpleauth) to Dart, (simple_auth)[https://github.com/Clancey/simple_auth]
 
 The network/api part including the generator was based off of [Chopper by Hadrien Lejard](https://github.com/lejard-h/chopper)
 
@@ -42,7 +42,8 @@ var userInfo = await api.send<UserInfo>(request);
 That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds! Expired tokens even automatically refresh.
 
 # Flutter Setup
-Call `SimpleAuthFlutter.init();` in your Main.Dart. Now Simple Auth can automatically present your login UI
+Import `package:simple_auth/simple_auth.dart` and `package:simple_auth_flutter/simple_auth_flutter.dart`
+Call `SimpleAuthFlutter.init();` in your Main.Dart. Now simple_auth can automatically present your login UI.
 
 # Redirect
 
