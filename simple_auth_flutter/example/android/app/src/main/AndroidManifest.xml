@@ -35,5 +35,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="clancey.simpleauth.simpleauthflutter.SimpleAuthCallbackActivity" >
+            <intent-filter android:label="simple_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.googleusercontent.apps.992461286651-k3tsbcreniknqptanrugsetiimt0lkvo" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
