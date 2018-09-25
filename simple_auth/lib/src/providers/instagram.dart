@@ -8,14 +8,17 @@ class InstagramApi extends OAuthApi {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super.fromIdAndSecret(identifier, clientId, clientSecret,
+      : super(
+            identifier,
+            clientId,
+            clientSecret,
+            "https://api.instagram.com/oauth/access_token",
+            "https://api.instagram.com/oauth/authorize",
+            redirectUrl,
             client: client,
             scopes: scopes,
             converter: converter,
             authStorage: authStorage) {
-    this.tokenUrl = "https://api.instagram.com/oauth/access_token";
-    this.authorizationUrl = "https://api.instagram.com/oauth/authorize";
-    this.redirectUrl = redirectUrl;
     this.scopes = scopes ?? ["basic"];
   }
 }

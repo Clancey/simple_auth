@@ -8,13 +8,15 @@ class AmazonApi extends OAuthApi {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super.fromIdAndSecret(identifier, clientId, clientSecret,
+      : super(
+            identifier,
+            clientId,
+            clientSecret,
+            "https://api.amazon.com/auth/o2/token",
+            "https://www.amazon.com/ap/oa",
+            redirectUrl,
             client: client,
             scopes: scopes,
             converter: converter,
-            authStorage: authStorage) {
-    this.tokenUrl = "https://api.amazon.com/auth/o2/token";
-    this.authorizationUrl = "https://www.amazon.com/ap/oa";
-    this.redirectUrl = redirectUrl;
-  }
+            authStorage: authStorage);
 }
