@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       scopes: ["clouddrive:read", "clouddrive:write"]);
 
   final simpleAuth.DropboxApi dropboxApi = new simpleAuth.DropboxApi(
-      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "redirect");
+      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "http://localhost");
 
   final simpleAuth.FacebookApi facebookApi = new simpleAuth.FacebookApi(
     "facebook",

@@ -1,3 +1,6 @@
+## [1.0.7] - 09-26-2018
+* Fixed remaining provider logins
+
 ## [1.0.6] - 09-04-2018
 * Removed remaining redirect. Code Formatting.
 
