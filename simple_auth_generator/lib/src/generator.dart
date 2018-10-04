@@ -116,11 +116,11 @@ class SimpleAuthGenerator
                 .assignFinal(_requestVar)
                 .statement);
 
-            final namedArguments = {};
-            final typeArguments = [];
+            final Map<String, Expression> namedArguments = {};
+            final List<Reference> typeArguments = [];
             if (responseType != null) {
               namedArguments["responseType"] =
-                  refer(baseResponsetype.displayName).code;
+                  new CodeExpression(refer(baseResponsetype.displayName).code);
               typeArguments.add(refer(responseType.displayName));
               if (baseResponsetype.displayName != responseType.displayName) {
                 namedArguments["responseIsList"] = literal(true);
@@ -283,8 +283,8 @@ class SimpleAuthGenerator
                 BuiltInParameters.authorizationUrl,
                 BuiltInParameters.tokenUrl,
                 BuiltInParameters.resource,
-                BuiltInParameters.clientSecret,
                 BuiltInParameters.redirectUrl,
+                BuiltInParameters.clientSecret,
                 BuiltInParameters.scopes,
                 BuiltInParameters.client,
                 BuiltInParameters.converter,
@@ -292,7 +292,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier, clientId,authorizationUrl,tokenUrl,resource, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier, clientId,authorizationUrl,tokenUrl,resource,redirectUrl,clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
@@ -321,7 +321,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier, clientId, redirectUrl, clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
@@ -345,7 +345,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier,apiKey, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier,apiKey, clientId, redirectUrl, clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
@@ -372,7 +372,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 new Code(
-                    'super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')
+                    'super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')
               ])
               ..body = new Code(body),
           );
@@ -414,7 +414,7 @@ class SimpleAuthGenerator
   }
 
   Code _generateOAuthSuper() => const Code(
-      'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)');
+      'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)');
 
   Parameter _createStringParameterFromAnnotation(
       String name, ConstantReader annotation) {
@@ -548,12 +548,12 @@ class SimpleAuthGenerator
         name = p.displayName;
       }
     }
-    if (annot == null) return {};
+    if (annot == null) return new Map<String, ConstantReader>();
     return {name: new ConstantReader(annot)};
   }
 
   Map<String, ConstantReader> _getAnnotations(MethodElement m, Type type) {
-    var annot = {};
+    Map<String, ConstantReader> annot = {};
     for (final p in m.parameters) {
       final a = _typeChecker(type).firstAnnotationOf(p);
       if (a != null) {
