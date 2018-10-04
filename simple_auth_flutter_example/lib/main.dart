@@ -55,7 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
       azureClientId,
       "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
       "https://login.microsoftonline.com/$azureTennant/oauth2/token",
-      "https://management.azure.com/");
+      "https://management.azure.com/",
+      "redirecturl");
 
   final simpleAuth.AmazonApi amazonApi = new simpleAuth.AmazonApi(
       "amazon",
@@ -92,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
-
   final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
       "instagram", "clientId", "clientSecret", "redirecturl");
 

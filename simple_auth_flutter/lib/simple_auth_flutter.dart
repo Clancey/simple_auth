@@ -20,6 +20,10 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
   static Map<String, simpleAuth.WebAuthenticator> authenticators = {};
   static Future showAuthenticator(
       simpleAuth.WebAuthenticator authenticator) async {
+    if (authenticator.redirectUrl == null) {
+      authenticator.onError("redirectUrl cannot be null");
+      return;
+    }
     var initialUrl = await authenticator.getInitialUrl();
 
     authenticators[authenticator.identifier] = authenticator;
