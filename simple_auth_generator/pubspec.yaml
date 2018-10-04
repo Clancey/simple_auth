@@ -9,17 +9,17 @@ environment:
 
 dependencies:
   simple_auth: ^1.0.4
-  analyzer: ^0.32.4
-  build: '>=0.9.0 <0.13.0'
-  build_config: ^0.3.1
-  logging: ^0.11.0 
-  meta: ^1.1.0
-  path: ^1.3.2
-  source_gen: '>=0.8.1 <0.9.0'
-  code_builder: ^3.0.0
-  dart_style: ^1.0.10
+  analyzer:
+  build:
+  build_config:
+  logging:
+  meta:
+  path: 
+  source_gen:
+  code_builder:
+  dart_style:
 dev_dependencies:
-  test: ^1.3.0
+  test:
 
 dependency_overrides:
   simple_auth:
