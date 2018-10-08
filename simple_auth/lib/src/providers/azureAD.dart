@@ -22,6 +22,7 @@ class AzureADApi extends OAuthApi {
     this.authorizationUrl = authorizationUrl;
     this.redirectUrl = redirectUrl;
     useClientSecret = clientSecret != "native";
+    this.scopes = scopes;
     this.scopesRequired = false;
   }
   @override
@@ -33,7 +34,8 @@ class AzureADApi extends OAuthApi {
       authorizationUrl,
       redirectUrl,
       resource,
-      useClientSecret);
+      useClientSecret,
+      scopes);
   @override
   Future<Map<String, String>> getRefreshTokenPostData(Account account) async {
     var map = await super.getRefreshTokenPostData(account);
@@ -55,9 +57,11 @@ class AzureADAuthenticator extends OAuthAuthenticator {
       String baseUrl,
       String redirectUrl,
       this.resource,
-      this.useClientSecret)
+      this.useClientSecret,
+      List<String> scopes)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl,
             redirectUrl) {
+    this.scope = scopes;
     useEmbeddedBrowser = useClientSecret;
   }
 
