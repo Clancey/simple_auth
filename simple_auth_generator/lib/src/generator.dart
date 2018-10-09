@@ -3,14 +3,12 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-
 import 'package:build/build.dart';
 import 'package:build/src/builder/build_step.dart';
-import 'package:dart_style/dart_style.dart';
-
-import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:simple_auth/simple_auth.dart' as simple_auth;
+import 'package:source_gen/source_gen.dart';
 
 const _urlVar = "url";
 const _parametersVar = "params";
@@ -30,10 +28,10 @@ class SimpleAuthGenerator
               'Remove the ServiceDefinition annotation from `$friendlyName`.');
     }
 
-    return _buildImplementionClass(annotation, element);
+    return _buildImplementationClass(annotation, element);
   }
 
-  String _buildImplementionClass(
+  String _buildImplementationClass(
       ConstantReader annotation, ClassElement element) {
     final friendlyName = element.name;
     final builderName =
@@ -89,7 +87,6 @@ class SimpleAuthGenerator
                         ..type = new Reference(p.type.displayName);
                       if (p.defaultValueCode != null)
                         pb.defaultTo = new Code(p.defaultValueCode);
-                      return pb;
                     })));
 
             b.optionalParameters.addAll(m.parameters
@@ -132,8 +129,6 @@ class SimpleAuthGenerator
                 .statement);
 
             b.body = new Block.of(blocks);
-
-            return b;
           });
         }))
         ..implements.add(new Reference(friendlyName));
@@ -166,7 +161,6 @@ class SimpleAuthGenerator
           ]);
           b.body = new Block.of(body);
         }));
-      return c;
     });
 
     final emitter = new DartEmitter();
@@ -605,9 +599,7 @@ class SimpleAuthGenerator
 
   Expression _generateUrl(
       ConstantReader method, Map<String, ConstantReader> paths) {
-    String value = "${method
-                                .read("url")
-                                .stringValue}";
+    String value = "${method.read("url").stringValue}";
     paths.forEach((String key, ConstantReader r) {
       final name = r.peek("name")?.stringValue ?? key;
       value = value.replaceFirst("{$name}", "\$$key");
