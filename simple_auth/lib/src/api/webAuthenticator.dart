@@ -64,7 +64,9 @@ abstract class WebAuthenticator extends Authenticator {
       "client_id": clientId,
       "client_secret": clientSecret
     };
-
+    if ((scope?.length ?? 0) > 0) {
+      data["scope"] = scope.join(" ");
+    }
     if (_redirectUrl?.isNotEmpty ?? false) data["redirect_uri"] = _redirectUrl;
     return data;
   }
