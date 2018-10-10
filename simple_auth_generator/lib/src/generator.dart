@@ -668,8 +668,8 @@ class SimpleAuthGenerator
 }
 
 Builder simple_authGeneratorFactoryBuilder({String header}) =>
-    new PartBuilder([new SimpleAuthGenerator()],
-        header: header, generatedExtension: ".simple_auth.dart");
+    new PartBuilder([new SimpleAuthGenerator()], ".simple_auth.dart",
+        header: header);
 
 class BuiltInParameters {
   static const String scopes = 'scopes';
