@@ -79,9 +79,11 @@ class AzureADAuthenticator extends OAuthAuthenticator {
   Future<Map<String, dynamic>> getTokenPostData(String clientSecret) async {
     var map = await super.getTokenPostData(clientSecret);
     map["redirect_uri"] = redirectUrl;
+    map["response_type"] = "token id_token";
     if (!useClientSecret && map.containsKey("client_secret")) {
       map.remove("client_secret");
     }
     return map;
   }
+
 }
