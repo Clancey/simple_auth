@@ -1,3 +1,7 @@
+## [2.0] - 11-09-2018
+* The rest of the providers now require a redirect
+* Cleaned up dependencies
+
 ## [1.0.7] - 09-26-2018
 * Fixed Canceling with Embedded Browser on iOS
 * Now works properly with Swift Flutter apps
