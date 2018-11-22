@@ -36,8 +36,10 @@
         [authenticators setObject:authenticator  forKey:authenticator.identifier];
         if(authenticator.useEmbeddedBrowser)
             [WebAuthenticatorWindow presentAuthenticator: authenticator];
-        else
+        else {
             [SFSafariAuthenticator presentAuthenticator:authenticator];
+            [SFSafariAuthenticator.authenticators setObject:authenticator  forKey:authenticator.redirectUrl.scheme];
+        }
         result(@"success");
         return;
     }
