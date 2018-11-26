@@ -53,6 +53,15 @@ class DropboxAuthenticator extends OAuthAuthenticator {
   String uid;
   bool checkUrl(Uri url) {
     try {
+      /*
+       * If dropbox uses fragments instead of query parameters then swap convert
+       * them to parameters so it is easier to parse. This also allows us to use
+       * parameters if they don't use fragments.
+       */
+      if (url.hasFragment && !url.hasQuery) {
+        url = url.replace(query: url.fragment);
+      }
+      
       if (url?.host != redirectUri.host) return false;
       if (url?.query?.isEmpty ?? true) return false;
       if (!url.queryParameters.containsKey(authCodeKey)) return false;
