@@ -68,7 +68,7 @@ class DropboxAuthenticator extends OAuthAuthenticator {
       var code = url.queryParameters[authCodeKey];
       if (code?.isEmpty ?? true) return false;
       token = code;
-      tokenType = url.queryParameters["token_type"];
+      tokenType = url.queryParameters["token_type"] == 'bearer' ? 'Bearer' : url.queryParameters["token_type"];
       uid = url.queryParameters["uid"];
       foundAuthCode(code);
       return true;
