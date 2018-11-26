@@ -35,6 +35,8 @@
         NSLog(@"presenting the authenticator");
         UIWindow *window = UIApplication.sharedApplication.keyWindow;
         UIViewController *root = window.rootViewController;
+        [SFSafariAuthenticator.authenticators setObject:authenticator  forKey:authenticator.redirectUrl.scheme];
+
         if(root != nil)
         {
             UIViewController *current = root;
