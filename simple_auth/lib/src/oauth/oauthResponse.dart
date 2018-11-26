@@ -31,7 +31,7 @@ class OAuthResponse implements JsonSerializable {
           ? json["expires_in"] is int
               ? json["expires_in"]
               : int.parse(json["expires_in"])
-          : 3600, 
+          : 3600,
       json["refresh_token"],
       json["access_token"],
       json["id_token"],

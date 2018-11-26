@@ -91,7 +91,7 @@ class GoogleApiKeyApi extends GoogleApi {
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,redirectUrl,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             client: client,
             scopes: scopes,
