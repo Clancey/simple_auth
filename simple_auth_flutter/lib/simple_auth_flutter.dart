@@ -12,11 +12,13 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
   static const EventChannel _eventChannel =
       const EventChannel('simple_auth_flutter/urlChanged');
 
+//Gets the current platform version
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod("getPlatformVersion");
     return version;
   }
 
+//The map of all the currently in use authenticators
   static Map<String, simpleAuth.WebAuthenticator> authenticators = {};
   static Future showAuthenticator(
       simpleAuth.WebAuthenticator authenticator) async {
@@ -41,7 +43,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
       return;
     }
   }
-
+//This method shows the basic login page
   static Future showBasicAuthenticator(
       simpleAuth.BasicAuthAuthenticator authenticator) async {
     showDialog(
@@ -76,6 +78,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
   }
 
   static Stream<UrlChange> _onUrlChanged;
+  //This method is used to pass url changes around for the authenticators
   static Stream<UrlChange> get onUrlChanged {
     if (_onUrlChanged == null) {
       _onUrlChanged = _eventChannel.receiveBroadcastStream().map(
@@ -88,6 +91,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
     return _onUrlChanged;
   }
 
+//This is used to read secure data from the device
   @override
   Future<String> read({String key}) async {
     String value = await _channel.invokeMethod("getValue", {
@@ -96,6 +100,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
     return value;
   }
 
+//This is used to write secure data from the device
   @override
   Future<void> write({String key, String value}) async {
     String success =
