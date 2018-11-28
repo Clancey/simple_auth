@@ -32,6 +32,7 @@ class DropboxApi extends OAuthApi {
     return OAuthAccount(identifier,
         created: DateTime.now().toUtc(),
         expiresIn: -1,
+        scope: authenticator.scope,
         refreshToken: auth.token,
         tokenType: auth.tokenType,
         token: auth.token);
