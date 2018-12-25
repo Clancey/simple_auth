@@ -8,9 +8,13 @@ class OAuthAccount extends Account {
       this.refreshToken,
       this.expiresIn,
       this.created,
-      this.scope,
+      List<String> scope,
       Map<String, String> userData = const {}})
-      : super(identifier, userData: userData) {}
+      : super(identifier, userData: userData) {
+    if (scope == null) {
+      this.scope = scope;
+    }
+  }
 
   String tokenType = "Bearer";
   String idToken;
