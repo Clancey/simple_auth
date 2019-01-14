@@ -11,7 +11,7 @@ class OAuthAccount extends Account {
       List<String> scope,
       Map<String, String> userData = const {}})
       : super(identifier, userData: userData) {
-    if (scope == null) {
+    if (scope != null) {
       this.scope = scope;
     }
   }
