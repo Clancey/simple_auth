@@ -27,7 +27,7 @@ public class CustomTabsAuthenticator {
     static HashMap<String,WebAuthenticator> Authenticators = new HashMap<>();
     public static void presentAuthenticator(Context context, WebAuthenticator authenticator)
     {
-        final String scheme = authenticator.redirectUrl.getScheme();
+        final String scheme = authenticator.redirectUrl.getScheme().toLowerCase();
         Authenticators.put(scheme,authenticator);
         authenticator.addListener(authenticator.new CompleteNotifier(){
             @Override
@@ -59,7 +59,7 @@ public class CustomTabsAuthenticator {
         if(intent == null || intent.getData() == null)
             return;
         Uri uri = intent.getData();
-        String scheme = uri.getScheme();
+        String scheme = uri.getScheme().toLowerCase();
         if(!Authenticators.containsKey(scheme))
             return;
         WebAuthenticator authenticator = Authenticators.get(scheme);
