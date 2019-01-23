@@ -1,3 +1,7 @@
+## [2.0.1] - 01-28-2019
+* Android now uses To Lower when comparing schemas
+* iOS 9 now works
+
 ## [2.0] - 11-09-2018
 * The rest of the providers now require a redirect
 * Cleaned up dependencies

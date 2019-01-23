@@ -1,3 +1,6 @@
+## [2.0.1] - 01-28-2019
+* Fixed Dropbox and Azure API, ForcesInstagram to use the embeded browsers
+
 ## [2.0] - 11-09-2018
 * The rest of the providers now require a redirect
 * Cleaned up dependencies
