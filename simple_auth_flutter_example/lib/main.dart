@@ -55,7 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
       azureClientId,
       "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
       "https://login.microsoftonline.com/$azureTennant/oauth2/token",
-      "https://management.azure.com/");
+      "https://management.azure.com/",
+      "redirecturl");
 
   final simpleAuth.AmazonApi amazonApi = new simpleAuth.AmazonApi(
       "amazon",
@@ -65,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       scopes: ["clouddrive:read", "clouddrive:write"]);
 
   final simpleAuth.DropboxApi dropboxApi = new simpleAuth.DropboxApi(
-      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "redirect");
+      "dropbox", "51ekthoysn2mwno", "sscq5yu19uyt1kg", "http://localhost");
 
   final simpleAuth.FacebookApi facebookApi = new simpleAuth.FacebookApi(
     "facebook",
@@ -84,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
+      "redirecturl",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",
@@ -92,7 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
-
   final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
       "instagram", "clientId", "clientSecret", "redirecturl");
 
@@ -185,6 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             leading: Icon(Icons.launch),
+
             title: Text('Search for "Flutter"'),
             onTap: () async {
               try {
@@ -196,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
           ),
-          ListTile(
+          ListTile( 
             leading: Icon(Icons.delete),
             title: Text('Logout'),
             onTap: () {

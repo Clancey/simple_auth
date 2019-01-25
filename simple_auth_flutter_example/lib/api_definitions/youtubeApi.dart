@@ -8,6 +8,7 @@ part 'youtubeApi.simple_auth.dart';
     "YoutubeApi",
     "AIzaSyA6pSGpSe7dmcKGq87lcAcRl03h2CKSN7c",
     "419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com",
+    "redirecturl",
     clientSecret: "UwQ8aUXKDpqPzH0gpJnSij3i",
     baseUrl: "https://www.googleapis.com/youtube/v3",
     scopes: [

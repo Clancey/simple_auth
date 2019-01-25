@@ -51,8 +51,8 @@ class OAuthApiKeyApiDeclaration extends ApiDeclaration {
       this.clientSecret,
       this.tokenUrl,
       this.authorizationUrl,
+      this.redirectUrl,
       {String baseUrl: "/",
-      this.redirectUrl = "http://localhost",
       this.scopes})
       : super(name, baseUrl: baseUrl);
 }
@@ -66,8 +66,8 @@ class OAuthApiDeclaration extends ApiDeclaration {
   final String redirectUrl;
   final List<String> scopes;
   const OAuthApiDeclaration(String name, this.clientId, this.clientSecret,
-      this.tokenUrl, this.authorizationUrl,
-      {this.redirectUrl = "http://localhost", String baseUrl: "/", this.scopes})
+      this.tokenUrl, this.authorizationUrl, this.redirectUrl,
+      {String baseUrl: "/", this.scopes})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -77,9 +77,14 @@ class AmazonApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const AmazonApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const AmazonApiDeclaration(
+    String name,
+    this.clientId,
+    this.clientSecret,
+    this.redirectUrl, {
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -88,9 +93,14 @@ class DropboxApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const DropboxApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const DropboxApiDeclaration(
+    String name,
+    this.clientId,
+    this.clientSecret,
+    this.redirectUrl, {
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -99,9 +109,14 @@ class FacebookApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const FacebookApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const FacebookApiDeclaration(
+    String name,
+    this.clientId,
+    this.clientSecret,
+    this.redirectUrl, {
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -110,9 +125,14 @@ class GithubApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const GithubApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const GithubApiDeclaration(
+    String name,
+    this.clientId,
+    this.clientSecret,
+    this.redirectUrl, {
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -121,9 +141,14 @@ class InstagramApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const InstagramApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const InstagramApiDeclaration(
+    String name,
+    this.clientId,
+    this.clientSecret,
+    this.redirectUrl, {
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -132,9 +157,14 @@ class LinkedInApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const LinkedInApiDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const LinkedInApiDeclaration(
+    String name,
+    this.clientId,
+    this.clientSecret,
+    this.redirectUrl, {
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -143,8 +173,9 @@ class MicrosoftLiveDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const MicrosoftLiveDeclaration(String name, this.clientId, this.clientSecret,
-      {String baseUrl: "/", this.scopes, this.redirectUrl = "http://localhost"})
+  const MicrosoftLiveDeclaration(
+      String name, this.clientId, this.clientSecret, this.redirectUrl,
+      {String baseUrl: "/", this.scopes})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -157,10 +188,10 @@ class AzureADApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  const AzureADApiDeclaration(String name, this.clientId, this.resource,
+  const AzureADApiDeclaration(
+      String name, this.clientId, this.resource, this.redirectUrl,
       {this.clientSecret = "native",
       String baseUrl: "/",
-      this.redirectUrl = "http://localhost",
       String authorizationUrl,
       String tokenUrl,
       this.azureTennant = "\$azureTennant"})
@@ -178,12 +209,15 @@ class GoogleApiKeyApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const GoogleApiKeyApiDeclaration(String name, this.apiKey, this.clientId,
-      {this.clientSecret = "native",
-      String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const GoogleApiKeyApiDeclaration(
+    String name,
+    this.apiKey,
+    this.clientId,
+    this.redirectUrl, {
+    this.clientSecret = "native",
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable
@@ -192,12 +226,14 @@ class GoogleApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const GoogleApiDeclaration(String name, this.clientId,
-      {this.clientSecret = "native",
-      String baseUrl: "/",
-      this.scopes,
-      this.redirectUrl = "http://localhost"})
-      : super(name, baseUrl: baseUrl);
+  const GoogleApiDeclaration(
+    String name,
+    this.clientId,
+    this.redirectUrl, {
+    this.clientSecret = "native",
+    String baseUrl: "/",
+    this.scopes,
+  }) : super(name, baseUrl: baseUrl);
 }
 
 @immutable

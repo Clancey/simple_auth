@@ -3,14 +3,12 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-
 import 'package:build/build.dart';
 import 'package:build/src/builder/build_step.dart';
-import 'package:dart_style/dart_style.dart';
-
-import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:simple_auth/simple_auth.dart' as simple_auth;
+import 'package:source_gen/source_gen.dart';
 
 const _urlVar = "url";
 const _parametersVar = "params";
@@ -30,10 +28,10 @@ class SimpleAuthGenerator
               'Remove the ServiceDefinition annotation from `$friendlyName`.');
     }
 
-    return _buildImplementionClass(annotation, element);
+    return _buildImplementationClass(annotation, element);
   }
 
-  String _buildImplementionClass(
+  String _buildImplementationClass(
       ConstantReader annotation, ClassElement element) {
     final friendlyName = element.name;
     final builderName =
@@ -89,7 +87,6 @@ class SimpleAuthGenerator
                         ..type = new Reference(p.type.displayName);
                       if (p.defaultValueCode != null)
                         pb.defaultTo = new Code(p.defaultValueCode);
-                      return pb;
                     })));
 
             b.optionalParameters.addAll(m.parameters
@@ -116,11 +113,11 @@ class SimpleAuthGenerator
                 .assignFinal(_requestVar)
                 .statement);
 
-            final namedArguments = {};
-            final typeArguments = [];
+            final Map<String, Expression> namedArguments = {};
+            final List<Reference> typeArguments = [];
             if (responseType != null) {
               namedArguments["responseType"] =
-                  refer(baseResponsetype.displayName).code;
+                  new CodeExpression(refer(baseResponsetype.displayName).code);
               typeArguments.add(refer(responseType.displayName));
               if (baseResponsetype.displayName != responseType.displayName) {
                 namedArguments["responseIsList"] = literal(true);
@@ -132,8 +129,6 @@ class SimpleAuthGenerator
                 .statement);
 
             b.body = new Block.of(blocks);
-
-            return b;
           });
         }))
         ..implements.add(new Reference(friendlyName));
@@ -166,7 +161,6 @@ class SimpleAuthGenerator
           ]);
           b.body = new Block.of(body);
         }));
-      return c;
     });
 
     final emitter = new DartEmitter();
@@ -283,8 +277,8 @@ class SimpleAuthGenerator
                 BuiltInParameters.authorizationUrl,
                 BuiltInParameters.tokenUrl,
                 BuiltInParameters.resource,
-                BuiltInParameters.clientSecret,
                 BuiltInParameters.redirectUrl,
+                BuiltInParameters.clientSecret,
                 BuiltInParameters.scopes,
                 BuiltInParameters.client,
                 BuiltInParameters.converter,
@@ -292,7 +286,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier, clientId,authorizationUrl,tokenUrl,resource, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier, clientId,tokenUrl,resource,authorizationUrl,redirectUrl,clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
@@ -321,7 +315,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier, clientId, redirectUrl, clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
@@ -345,7 +339,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier,apiKey, clientId, clientSecret: clientSecret,redirectUrl: redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier,apiKey, clientId, redirectUrl, clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
@@ -372,7 +366,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 new Code(
-                    'super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')
+                    'super(identifier,apiKey,authKey,authLocation,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)')
               ])
               ..body = new Code(body),
           );
@@ -414,7 +408,7 @@ class SimpleAuthGenerator
   }
 
   Code _generateOAuthSuper() => const Code(
-      'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl:redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)');
+      'super(identifier,clientId,clientSecret,tokenUrl,authorizationUrl,redirectUrl,scopes:scopes, client: client, converter: converter,authStorage:authStorage)');
 
   Parameter _createStringParameterFromAnnotation(
       String name, ConstantReader annotation) {
@@ -548,12 +542,12 @@ class SimpleAuthGenerator
         name = p.displayName;
       }
     }
-    if (annot == null) return {};
+    if (annot == null) return new Map<String, ConstantReader>();
     return {name: new ConstantReader(annot)};
   }
 
   Map<String, ConstantReader> _getAnnotations(MethodElement m, Type type) {
-    var annot = {};
+    Map<String, ConstantReader> annot = {};
     for (final p in m.parameters) {
       final a = _typeChecker(type).firstAnnotationOf(p);
       if (a != null) {
@@ -605,9 +599,7 @@ class SimpleAuthGenerator
 
   Expression _generateUrl(
       ConstantReader method, Map<String, ConstantReader> paths) {
-    String value = "${method
-                                .read("url")
-                                .stringValue}";
+    String value = "${method.read("url").stringValue}";
     paths.forEach((String key, ConstantReader r) {
       final name = r.peek("name")?.stringValue ?? key;
       value = value.replaceFirst("{$name}", "\$$key");
@@ -676,8 +668,8 @@ class SimpleAuthGenerator
 }
 
 Builder simple_authGeneratorFactoryBuilder({String header}) =>
-    new PartBuilder([new SimpleAuthGenerator()],
-        header: header, generatedExtension: ".simple_auth.dart");
+    new PartBuilder([new SimpleAuthGenerator()], ".simple_auth.dart",
+        header: header);
 
 class BuiltInParameters {
   static const String scopes = 'scopes';

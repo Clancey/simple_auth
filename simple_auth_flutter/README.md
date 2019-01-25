@@ -1,5 +1,9 @@
 ![Simple Auth](https://github.com/Clancey/simple_auth/blob/master/logo.png)
   [![Pub](https://img.shields.io/pub/v/simple_auth_flutter.svg)](https://pub.dartlang.org/packages/simple_auth_flutter)
+  
+  [![Join the chat at https://gitter.im/simple_auth/community](https://badges.gitter.im/simple_auth/community.svg)](https://gitter.im/simple_auth/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+  
 Most apps need to make API calls. Every API needs authentication, yet no developer wants to deal with authentication. Simple Auth embeds authentication into the API so you dont need to deal with it.
 
 This is a Flutter adapter for the port of [Clancey.SimpleAuth](https://github.com/clancey/simpleauth) to Dart, (simple_auth)[https://github.com/Clancey/simple_auth]

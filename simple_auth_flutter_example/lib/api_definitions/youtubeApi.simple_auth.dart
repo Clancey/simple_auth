@@ -12,14 +12,13 @@ class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
       String clientId:
           '419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com',
       String clientSecret: 'UwQ8aUXKDpqPzH0gpJnSij3i',
-      String redirectUrl: 'http://localhost',
-      List scopes,
+      String redirectUrl: 'redirecturl',
+      List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, apiKey, clientId,
+      : super(identifier, apiKey, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,

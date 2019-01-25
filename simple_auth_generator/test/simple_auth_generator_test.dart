@@ -1,28 +1,17 @@
 import 'package:simple_auth_generator/src/generator.dart';
 import 'package:test/test.dart';
 import 'dart:async';
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_style/dart_style.dart' as dart_style;
 import 'package:path/path.dart' as p;
 import 'package:source_gen/source_gen.dart';
-import 'dart:io';
 
-import 'package:analyzer/file_system/physical_file_system.dart';
-import 'package:analyzer/src/dart/sdk/sdk.dart' show FolderBasedDartSdk;
-import 'package:analyzer/src/generated/engine.dart';
-import 'package:analyzer/src/generated/source.dart';
-import 'package:analyzer/src/source/package_map_resolver.dart';
-import 'package:analyzer/src/source/pub_package_map_provider.dart';
-import 'package:analyzer/src/generated/source_io.dart';
-import 'package:analyzer/file_system/file_system.dart' hide File;
+import 'analysis_utils.dart';
+import 'test_file_utils.dart';
 
 import 'dart:mirrors';
-
 import 'test_apis/services.dart';
 
 final _formatter = new dart_style.DartFormatter();
-
-CompilationUnit _compilationUnit;
 
 String _packagePathCache;
 String getPackagePath() {
@@ -39,44 +28,17 @@ String getPackagePath() {
   return _packagePathCache;
 }
 
+LibraryReader _library;
 void main() {
   setUpAll(() async {
-    var sdkPath = p.dirname(p.dirname(Platform.resolvedExecutable));
 
-    var resourceProvider = PhysicalResourceProvider.INSTANCE;
-    var sdk = new FolderBasedDartSdk(
-        resourceProvider, resourceProvider.getFolder(sdkPath));
-
-    var options = new AnalysisOptionsImpl()
-      ..analyzeFunctionBodies = false
-      ..previewDart2 = true;
-    var pubPackageMapProvider =
-        new PubPackageMapProvider(PhysicalResourceProvider.INSTANCE, sdk);
-    var packageMapInfo = pubPackageMapProvider.computePackageMap(
-        PhysicalResourceProvider.INSTANCE.getResource(getPackagePath())
-            as Folder);
-
-    AnalysisEngine.instance.processRequiredPlugins();
-    var context = AnalysisEngine.instance.createAnalysisContext()
-      ..analysisOptions = options
-      ..sourceFactory = new SourceFactory([
-        new DartUriResolver(sdk),
-        new ResourceUriResolver(PhysicalResourceProvider.INSTANCE),
-        new PackageMapUriResolver(
-            PhysicalResourceProvider.INSTANCE, packageMapInfo.packageMap)
-      ]);
-
-    var fileUri =
-        p.toUri(p.join(getPackagePath(), 'test', 'test_apis', 'services.dart'));
-    var source = context.sourceFactory.forUri2(fileUri);
-    var libElement = context.computeLibraryElement(source);
-    _compilationUnit = context.resolveCompilationUnit(source, libElement);
+  final path = testFilePath('test', 'test_apis');
+  _library = await resolveCompilationUnit(path);
   });
   var generator = new SimpleAuthGenerator();
 
   Future<String> runForElementNamed(String name) async {
-    var library = new LibraryReader(_compilationUnit.element.library);
-    var element = library.allElements.singleWhere((e) => e.name == name);
+    final element = _library.allElements.singleWhere((e) => e.name == name);
     var annotation = generator.typeChecker.firstAnnotationOf(element);
     var generated = await generator.generateForAnnotatedElement(
         element, new ConstantReader(annotation), null);
@@ -161,14 +123,13 @@ class ApiGenerationResults {
           '419855213697-uq56vcune334omgqi51ou7jg08i3dnb1.apps.googleusercontent.com',
       String clientId: 'AIzaSyCxoYMmVpDwj7KXI3tRjWkVGsgg7JR5zAw',
       String clientSecret: 'UwQ8aUXKDpqPzH0gpJnSij3i',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, apiKey, clientId,
+      : super(identifier, apiKey, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -197,14 +158,13 @@ class ApiGenerationResults {
   GoogleTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -316,15 +276,15 @@ class ApiGenerationResults {
       String tokenUrl:
           'https://login.microsoftonline.com/azureTennant/oauth2/token',
       String resource: 'client_id',
+      String redirectUrl: 'redirecturl',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
       : super(identifier, clientId, authorizationUrl, tokenUrl, resource,
+            redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -365,13 +325,13 @@ class ApiGenerationResults {
       String clientSecret: 'clientSecret',
       String tokenUrl: 'TokenUrl',
       String authorizationUrl: 'AuthUrl',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
       : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
-            redirectUrl: redirectUrl,
+            redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -390,14 +350,13 @@ class ApiGenerationResults {
       String clientSecret: 'clientSecret',
       String tokenUrl: 'TokenUrl',
       String authorizationUrl: 'AuthUrl',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
       : super(identifier, apiKey, authKey, authLocation, clientId, clientSecret,
-            tokenUrl, authorizationUrl,
-            redirectUrl: redirectUrl,
+            tokenUrl, authorizationUrl, redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -408,14 +367,13 @@ class ApiGenerationResults {
   AmazonTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -426,14 +384,13 @@ class ApiGenerationResults {
   DropboxTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -444,14 +401,13 @@ class ApiGenerationResults {
   FacebookTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -462,14 +418,13 @@ class ApiGenerationResults {
   GithubTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -480,14 +435,13 @@ class ApiGenerationResults {
   InstagramTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -498,14 +452,13 @@ class ApiGenerationResults {
   LinkedInTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,
@@ -517,14 +470,13 @@ class ApiGenerationResults {
   MicrosoftLiveTestApi(String identifier,
       {String clientId: 'client_id',
       String clientSecret: 'client_secret',
-      String redirectUrl: 'http://localhost',
+      String redirectUrl: 'redirecturl',
       List<String> scopes,
       http.Client client,
       Converter converter,
       AuthStorage authStorage})
-      : super(identifier, clientId,
+      : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
-            redirectUrl: redirectUrl,
             scopes: scopes,
             client: client,
             converter: converter,

@@ -42,6 +42,7 @@ class Request {
       new Request(method ?? this.method, url ?? this.url,
           parameters: parameters ?? this.parameters,
           headers: headers ?? this.headers,
+          body: this.body,
           authenticated: this.authenticated);
   Request replaceBody(dynamic body,
           {HttpMethod method,

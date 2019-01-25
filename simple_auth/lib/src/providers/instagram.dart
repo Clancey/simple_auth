@@ -21,4 +21,10 @@ class InstagramApi extends OAuthApi {
             authStorage: authStorage) {
     this.scopes = scopes ?? ["basic"];
   }
+  @override
+  Authenticator getAuthenticator() {
+    var authenticator = super.getAuthenticator() as WebAuthenticator;
+    authenticator.useEmbeddedBrowser = true;
+    return authenticator;
+  }
 }

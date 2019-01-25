@@ -77,6 +77,7 @@ class Api {
     return res;
   }
 
+  ///Used to send a request
   Future<Response<Value>> send<Value>(Request request,
       {Type responseType, bool responseIsList = false}) async {
     Request req = request;
@@ -106,7 +107,9 @@ class Api {
     return res;
   }
 
+//Pings the baseUrl
   Future<bool> ping() => pingUrl(baseUrl);
+//Pings a url to see if it is available
   Future<bool> pingUrl(String url) async {
     try {
       final Uri uri = Uri.parse(url);

@@ -1,3 +1,15 @@
+## [2.0.1] - 01-28-2019
+* Android now uses To Lower when comparing schemas
+* iOS 9 now works
+
+## [2.0] - 11-09-2018
+* The rest of the providers now require a redirect
+* Cleaned up dependencies
+
+## [1.0.7] - 09-26-2018
+* Fixed Canceling with Embedded Browser on iOS
+* Now works properly with Swift Flutter apps
+
 ## [1.0.6] - 09-04-2018
 * Removed remaining redirect. Code Formatting.
 

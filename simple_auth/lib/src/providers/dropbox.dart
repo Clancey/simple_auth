@@ -32,6 +32,7 @@ class DropboxApi extends OAuthApi {
     return OAuthAccount(identifier,
         created: DateTime.now().toUtc(),
         expiresIn: -1,
+        scope: authenticator.scope,
         refreshToken: auth.token,
         tokenType: auth.tokenType,
         token: auth.token);
@@ -53,13 +54,24 @@ class DropboxAuthenticator extends OAuthAuthenticator {
   String uid;
   bool checkUrl(Uri url) {
     try {
+      /*
+       * If dropbox uses fragments instead of query parameters then swap convert
+       * them to parameters so it is easier to parse. This also allows us to use
+       * parameters if they don't use fragments.
+       */
+      if (url.hasFragment && !url.hasQuery) {
+        url = url.replace(query: url.fragment);
+      }
+
       if (url?.host != redirectUri.host) return false;
       if (url?.query?.isEmpty ?? true) return false;
       if (!url.queryParameters.containsKey(authCodeKey)) return false;
       var code = url.queryParameters[authCodeKey];
       if (code?.isEmpty ?? true) return false;
       token = code;
-      tokenType = url.queryParameters["token_type"];
+      tokenType = url.queryParameters["token_type"] == 'bearer'
+          ? 'Bearer'
+          : url.queryParameters["token_type"];
       uid = url.queryParameters["uid"];
       foundAuthCode(code);
       return true;

@@ -18,7 +18,7 @@
                                      binaryMessenger:[registrar messenger]];
     SimpleAuthFlutterPlugin* instance = [[SimpleAuthFlutterPlugin alloc] init];
     [registrar addMethodCallDelegate:instance channel:channel];
-    NSLog(@"regisetered SimpleAuth on iOS");
+    NSLog(@"Registered SimpleAuth on iOS");
     FlutterEventChannel* chargingChannel =
     [FlutterEventChannel eventChannelWithName:@"simple_auth_flutter/urlChanged"
                               binaryMessenger:[registrar messenger]];
