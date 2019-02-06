@@ -180,6 +180,8 @@ class SimpleAuthGenerator
         return "${simple_auth.AmazonApi}";
       case BuiltInAnnotations.azureADApiDeclaration:
         return "${simple_auth.AzureADApi}";
+      case BuiltInAnnotations.azureADV2ApiDeclaration:
+        return "${simple_auth.AzureADV2Api}";
       case BuiltInAnnotations.dropboxApiDeclaration:
         return "${simple_auth.DropboxApi}";
       case BuiltInAnnotations.facebookApiDeclaration:
@@ -267,6 +269,31 @@ class SimpleAuthGenerator
           );
         }
       case BuiltInAnnotations.azureADApiDeclaration:
+        {
+          return new Constructor(
+            (b) => b
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.clientId,
+                BuiltInParameters.authorizationUrl,
+                BuiltInParameters.tokenUrl,
+                BuiltInParameters.resource,
+                BuiltInParameters.redirectUrl,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.scopes,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
+              ..initializers.addAll([
+                const Code(
+                    'super(identifier, clientId,tokenUrl,resource,authorizationUrl,redirectUrl,clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+              ])
+              ..body = new Code(body),
+          );
+        }
+      case BuiltInAnnotations.azureADV2ApiDeclaration:
         {
           return new Constructor(
             (b) => b
@@ -693,6 +720,7 @@ class BuiltInParameters {
 class BuiltInAnnotations {
   static const String amazonApiDeclaration = 'AmazonApiDeclaration';
   static const String azureADApiDeclaration = 'AzureADApiDeclaration';
+  static const String azureADV2ApiDeclaration = 'AzureADV2ApiDeclaration';
   static const String dropboxApiDeclaration = 'DropboxApiDeclaration';
   static const String facebookApiDeclaration = 'FacebookApiDeclaration';
   static const String githubApiDeclaration = 'GithubApiDeclaration';
