@@ -59,7 +59,9 @@ public class CustomTabsAuthenticator {
         if(intent == null || intent.getData() == null)
             return;
         Uri uri = intent.getData();
-        String scheme = uri.getScheme().toLowerCase();
+        String scheme = uri.getScheme();
+        if(scheme != null)
+            scheme = scheme.toLowerCase();
         if(!Authenticators.containsKey(scheme))
             return;
         WebAuthenticator authenticator = Authenticators.get(scheme);
