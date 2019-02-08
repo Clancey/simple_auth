@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:simple_auth/simple_auth.dart';
+
 import 'request.dart';
 
 @immutable
@@ -188,13 +189,15 @@ class AzureADApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
+  final List<String> scopes;
   const AzureADApiDeclaration(
       String name, this.clientId, this.resource, this.redirectUrl,
       {this.clientSecret = "native",
       String baseUrl: "/",
       String authorizationUrl,
       String tokenUrl,
-      this.azureTennant = "\$azureTennant"})
+      this.azureTennant = "\$azureTennant",
+      this.scopes})
       : authorizationUrl = authorizationUrl ??
             "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
         tokenUrl = tokenUrl ??
@@ -211,8 +214,7 @@ class AzureADV2ApiDeclaration extends ApiDeclaration {
   final String clientSecret;
   final String redirectUrl;
   final List<String> scopes;
-  const AzureADV2ApiDeclaration(
-      String name, this.clientId, this.redirectUrl,
+  const AzureADV2ApiDeclaration(String name, this.clientId, this.redirectUrl,
       {this.clientSecret = "native",
       String baseUrl: "/",
       String authorizationUrl,

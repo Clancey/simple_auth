@@ -303,7 +303,6 @@ class SimpleAuthGenerator
                 BuiltInParameters.clientId,
                 BuiltInParameters.authorizationUrl,
                 BuiltInParameters.tokenUrl,
-                BuiltInParameters.resource,
                 BuiltInParameters.redirectUrl,
                 BuiltInParameters.clientSecret,
                 BuiltInParameters.scopes,
@@ -313,7 +312,7 @@ class SimpleAuthGenerator
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier, clientId,tokenUrl,resource,authorizationUrl,redirectUrl,clientSecret: clientSecret,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl, redirectUrl,scopes: scopes, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );
