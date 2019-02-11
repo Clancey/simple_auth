@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:simple_auth/simple_auth.dart';
+
 import 'request.dart';
 
 @immutable
@@ -188,17 +189,42 @@ class AzureADApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
+  final List<String> scopes;
   const AzureADApiDeclaration(
       String name, this.clientId, this.resource, this.redirectUrl,
       {this.clientSecret = "native",
       String baseUrl: "/",
       String authorizationUrl,
       String tokenUrl,
-      this.azureTennant = "\$azureTennant"})
+      this.azureTennant = "\$azureTennant",
+      this.scopes})
       : authorizationUrl = authorizationUrl ??
             "https://login.microsoftonline.com/$azureTennant/oauth2/authorize",
         tokenUrl = tokenUrl ??
             "https://login.microsoftonline.com/$azureTennant/oauth2/token",
+        super(name, baseUrl: baseUrl);
+}
+
+@immutable
+class AzureADV2ApiDeclaration extends ApiDeclaration {
+  final String authorizationUrl;
+  final String tokenUrl;
+  final String azureTennant;
+  final String clientId;
+  final String clientSecret;
+  final String redirectUrl;
+  final List<String> scopes;
+  const AzureADV2ApiDeclaration(String name, this.clientId, this.redirectUrl,
+      {this.clientSecret = "native",
+      String baseUrl: "/",
+      String authorizationUrl,
+      String tokenUrl,
+      this.azureTennant = "\$azureTennant",
+      this.scopes})
+      : authorizationUrl = authorizationUrl ??
+            "https://login.microsoftonline.com/$azureTennant/oauth2/v2.0/authorize",
+        tokenUrl = tokenUrl ??
+            "https://login.microsoftonline.com/$azureTennant/oauth2/v2.0/token",
         super(name, baseUrl: baseUrl);
 }
 
