@@ -19,4 +19,5 @@ class GithubApi extends OAuthApi {
             scopes: scopes,
             converter: converter,
             authStorage: authStorage) {}
+
 }

@@ -21,4 +21,5 @@ class LinkedInApi extends OAuthApi {
             authStorage: authStorage) {
     this.baseUrl = "https://api.linkedin.com/v1/";
   }
+
 }
