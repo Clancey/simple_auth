@@ -30,6 +30,7 @@ class OAuthApi extends AuthenticatedApi {
             client: client, converter: converter, authStorage: authStorage) {
     authenticator = OAuthAuthenticator(identifier, clientId, clientSecret,
         tokenUrl, authorizationUrl, redirectUrl);
+    authenticator.useEmbeddedBrowser = true;
   }
 
   OAuthApi.fromIdAndSecret(String identifier, this.clientId, this.clientSecret,
