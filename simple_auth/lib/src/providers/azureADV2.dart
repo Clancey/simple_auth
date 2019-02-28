@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import "package:http/http.dart" as http;
 import 'package:simple_auth/simple_auth.dart';
@@ -47,7 +46,6 @@ class AzureADV2Api extends OAuthApi {
 }
 
 class AzureADV2Authenticator extends OAuthAuthenticator {
-  String nonce;
   bool useClientSecret;
 
   AzureADV2Authenticator(
@@ -64,6 +62,7 @@ class AzureADV2Authenticator extends OAuthAuthenticator {
     this.scope = scopes;
     this.authCodeKey = "code";
     useEmbeddedBrowser = false;
+    useNonce = true;
   }
 
   @override
@@ -95,9 +94,8 @@ class AzureADV2Authenticator extends OAuthAuthenticator {
 
   @override
   Future<Map<String, dynamic>> getInitialUrlQueryParameters() async {
-    this.nonce = _randomString(8);
+    this.nonce = generateNonce(8);
     var map = await super.getInitialUrlQueryParameters();
-    map['nonce'] = nonce;
     map['response_type'] = "id_token code";
     map["display"] = "touch";
 
@@ -112,17 +110,5 @@ class AzureADV2Authenticator extends OAuthAuthenticator {
     var map = await super.getTokenPostData(clientSecret);
     map.remove("client_secret");
     return map;
-  }
-
-  String _randomString(int length) {
-    var rand = new Random();
-    var codeUnits = new List.generate(
-        length,
-            (index){
-          return rand.nextInt(33)+89;
-        }
-    );
-
-    return new String.fromCharCodes(codeUnits);
   }
 }

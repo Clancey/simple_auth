@@ -1,10 +1,14 @@
 import "dart:async";
+import 'dart:math';
 import "package:simple_auth/simple_auth.dart";
 import "package:simple_auth/src/utils.dart";
 
 abstract class WebAuthenticator extends Authenticator {
   String clientId;
   String baseUrl;
+  String nonce;
+  bool useNonce;
+  int nonceLength = 8;
   String _redirectUrl;
   String get redirectUrl => _redirectUrl;
   bool useEmbeddedBrowser = false;
@@ -49,7 +53,9 @@ abstract class WebAuthenticator extends Authenticator {
       "response_type": authCodeKey,
       "redirect_uri": _redirectUrl
     };
-
+    if (useNonce) {
+      data['nonce'] = nonce = generateNonce(nonceLength);
+    }
     if ((scope?.length ?? 0) > 0) {
       data["scope"] = scope.join(" ");
     }
@@ -69,5 +75,13 @@ abstract class WebAuthenticator extends Authenticator {
     }
     if (_redirectUrl?.isNotEmpty ?? false) data["redirect_uri"] = _redirectUrl;
     return data;
+  }
+
+  String generateNonce(int length) {
+    var rand = new Random();
+    var codeUnits = new List.generate(length, (index) {
+      return rand.nextInt(33) + 89;
+    });
+    return new String.fromCharCodes(codeUnits);
   }
 }
