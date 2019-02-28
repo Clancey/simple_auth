@@ -1,3 +1,6 @@
+## [2.0.2] - 02-28-2019
+* Now works with Android X
+
 ## [2.0.1] - 01-28-2019
 * Android now uses To Lower when comparing schemas
 * iOS 9 now works

@@ -1,3 +1,6 @@
+## [2.0.2] - 02-28-2019
+* Added Azure A2D V2
+
 ## [2.0.1] - 01-28-2019
 * Fixed Dropbox and Azure API, ForcesInstagram to use the embeded browsers
 
