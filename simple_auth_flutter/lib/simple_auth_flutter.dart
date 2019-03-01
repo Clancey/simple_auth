@@ -43,6 +43,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
       return;
     }
   }
+
 //This method shows the basic login page
   static Future showBasicAuthenticator(
       simpleAuth.BasicAuthAuthenticator authenticator) async {
