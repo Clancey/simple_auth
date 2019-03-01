@@ -1,11 +1,10 @@
 package clancey.simpleauth.simpleauthflutter;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import java.util.HashMap;
 import java.util.Map;

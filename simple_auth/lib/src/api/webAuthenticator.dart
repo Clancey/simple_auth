@@ -7,7 +7,7 @@ abstract class WebAuthenticator extends Authenticator {
   String clientId;
   String baseUrl;
   String nonce;
-  bool useNonce;
+  bool useNonce = false;
   int nonceLength = 8;
   String _redirectUrl;
   String get redirectUrl => _redirectUrl;
