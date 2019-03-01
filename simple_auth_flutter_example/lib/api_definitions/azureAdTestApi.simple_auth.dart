@@ -26,5 +26,5 @@ class AzureAdTestApi extends AzureADApi implements AzureADDefinition {
             scopes: scopes,
             client: client,
             converter: converter,
-            authStorage: authStorage) {}
+            authStorage: authStorage);
 }

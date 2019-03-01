@@ -7,7 +7,7 @@ import 'request.dart';
 class ApiDeclaration {
   final String baseUrl;
   final String name;
-  const ApiDeclaration(this.name, {this.baseUrl: "/"});
+  const ApiDeclaration(this.name, {this.baseUrl = "/"});
 }
 
 @immutable
@@ -26,7 +26,7 @@ class ApiKeyDeclaration extends ApiDeclaration {
 @immutable
 class BasicAuthDeclaration extends ApiDeclaration {
   final String loginUrl;
-  const BasicAuthDeclaration(String name, this.loginUrl, {String baseUrl: "/"})
+  const BasicAuthDeclaration(String name, this.loginUrl, {String baseUrl = "/"})
       : super(name, baseUrl: baseUrl);
 }
 
@@ -53,7 +53,7 @@ class OAuthApiKeyApiDeclaration extends ApiDeclaration {
       this.tokenUrl,
       this.authorizationUrl,
       this.redirectUrl,
-      {String baseUrl: "/",
+      {String baseUrl = "/",
       this.scopes})
       : super(name, baseUrl: baseUrl);
 }
@@ -68,7 +68,7 @@ class OAuthApiDeclaration extends ApiDeclaration {
   final List<String> scopes;
   const OAuthApiDeclaration(String name, this.clientId, this.clientSecret,
       this.tokenUrl, this.authorizationUrl, this.redirectUrl,
-      {String baseUrl: "/", this.scopes})
+      {String baseUrl = "/", this.scopes})
       : super(name, baseUrl: baseUrl);
 }
 
