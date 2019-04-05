@@ -45,7 +45,7 @@ class BasicAuthApi extends AuthenticatedApi {
       sharedShowAuthenticator(authenticator);
     else
       throw new Exception(
-          "You are required to implement the 'showAuthenticator or sharedShowAuthenticator");
+          "Please call `SimpleAuthFlutter.init();` or implement the 'showAuthenticator' or 'sharedShowAuthenticator'");
     var token = await authenticator.getAuthCode();
     if (token?.isEmpty ?? true) {
       throw new Exception("Null Token");
