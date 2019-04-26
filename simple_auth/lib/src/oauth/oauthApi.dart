@@ -29,7 +29,7 @@ class OAuthApi extends AuthenticatedApi {
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
     authenticator = OAuthAuthenticator(identifier, clientId, clientSecret,
-        tokenUrl, authorizationUrl, redirectUrl);
+        tokenUrl, authorizationUrl, redirectUrl, scopes);
   }
 
   OAuthApi.fromIdAndSecret(String identifier, this.clientId, this.clientSecret,
