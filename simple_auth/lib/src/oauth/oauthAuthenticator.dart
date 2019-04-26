@@ -5,7 +5,8 @@ class OAuthAuthenticator extends WebAuthenticator {
   String clientSecret;
   String tokenUrl;
   OAuthAuthenticator(String identifier, String clientId, this.clientSecret,
-      this.tokenUrl, String baseUrl, String redirectUrl, List<String> scopes) {
+      this.tokenUrl, String baseUrl, String redirectUrl,
+      [List<String> scopes]) {
     this.clientId = clientId;
     this.baseUrl = baseUrl;
     this.redirectUrl = redirectUrl;
