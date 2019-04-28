@@ -1,3 +1,6 @@
+## [2.0.5] - 04-28-2019
+* Bug fixes. Thanks @sjmcdowall 
+
 ## [2.0.4] - 02-28-2019
 * Added Azure A2D V2
 
