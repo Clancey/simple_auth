@@ -55,7 +55,7 @@ abstract class AuthenticatedApi extends Api {
   ///Log the user out
   @override
   Future logOut() async {
-    await _authStorage.write(key: identifier, value: "");
+    await _authStorage.write(key: identifier, value: '');
     currentAccount?.invalidate();
     currentAccount = null;
   }
@@ -70,7 +70,7 @@ abstract class AuthenticatedApi extends Api {
   ///This should not be called, it is used to cache the account locally
   Future<T> loadAccountFromCache<T extends Account>() async {
     var json = await _authStorage.read(key: identifier);
-    if (json == null) return null;
+    if (json == null || json == '') return null;
     try {
       var data = Convert.jsonDecode(json);
       return getAccountFromMap<T>(data);
