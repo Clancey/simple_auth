@@ -202,6 +202,8 @@ class SimpleAuthGenerator
         return "${simple_auth.OAuthApi}";
       case BuiltInAnnotations.oAuthApiKeyApiDeclaration:
         return "${simple_auth.OAuthApiKeyApi}";
+      case BuiltInAnnotations.oAuthPasswordApiDeclaration:
+        return "${simple_auth.OAuthPasswordApi}";        
       default:
         return "${simple_auth.Api}";
     }
@@ -418,6 +420,29 @@ class SimpleAuthGenerator
               ..body = new Code(body),
           );
         }
+      case BuiltInAnnotations.oAuthPasswordApiDeclaration:
+        {
+          return new Constructor(
+            (b) => b
+              ..requiredParameters.addAll(
+                  _createParameters(annotation, [BuiltInParameters.identifier]))
+              ..optionalParameters.addAll(_createParameters(annotation, [
+                BuiltInParameters.clientId,
+                BuiltInParameters.clientSecret,
+                BuiltInParameters.tokenUrl,
+                BuiltInParameters.loginUrl,
+                BuiltInParameters.client,
+                BuiltInParameters.converter,
+                BuiltInParameters.authStorage
+              ]))
+              ..initializers.addAll([
+                const Code(
+                    'super(identifier, clientId, clientSecret, tokenUrl, loginUrl, client: client, converter: converter,authStorage:authStorage)'),
+              ])
+              ..body = new Code(body),
+          );
+        }
+
       default:
         return new Constructor(
           (b) => b
@@ -729,6 +754,7 @@ class BuiltInAnnotations {
   static const String linkedInApiDeclaration = 'LinkedInApiDeclaration';
   static const String microsoftLiveDeclaration = 'MicrosoftLiveDeclaration';
   static const String oAuthApiDeclaration = 'OAuthApiDeclaration';
+  static const String oAuthPasswordApiDeclaration = 'OAuthPasswordApiDeclaration';
   static const String oAuthApiKeyApiDeclaration = 'OAuthApiKeyApiDeclaration';
   static const String apiKeyDeclaration = 'ApiKeyDeclaration';
   static const String basicAuthDeclaration = "BasicAuthDeclaration";
