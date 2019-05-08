@@ -3,53 +3,41 @@ import "package:simple_auth/simple_auth.dart";
 import "package:http/http.dart" as http;
 import "dart:convert" as convert;
 
-typedef void ShowOauthPasswordAuthenticator(OauthPasswordAuthenticator authenticator);
+typedef void ShowOauthPasswordAuthenticator(
+    OauthPasswordAuthenticator authenticator);
 
-class OAuthPasswordApi extends AuthenticatedApi {
-  String clientId;
-  String clientSecret;
+class OAuthPasswordApi extends OAuthApi {
   String loginUrl;
   String tokenUrl;
-  bool forceRefresh = false;
-  OauthPasswordAuthenticator authenticator;
+  OauthPasswordAuthenticator currentAuthenticator;
   static ShowOauthPasswordAuthenticator sharedShowAuthenticator;
-  ShowOauthPasswordAuthenticator showAuthenticator;
-
-  OAuthPasswordApi(String identifier, this.clientId , this.clientSecret, this.tokenUrl, this.loginUrl, 
-      {http.Client client, Converter converter, AuthStorage authStorage})
-      : super(identifier,
-            client: client, converter: converter, authStorage: authStorage) {
-    authenticator = OauthPasswordAuthenticator(identifier ,clientId , clientSecret, tokenUrl, loginUrl);
-  }
-
-  // OAuthPasswordApi.fromIdAndSecret(String identifier, this.clientId, this.clientSecret,
-  //     {this.scopes,
-  //     http.Client client,
-  //     Converter converter,
-  //     AuthStorage authStorage})
-  //     : super(identifier,
-  //           client: client, converter: converter, authStorage: authStorage);
-
-  // OAuthPasswordApi.fromAuthenticator(String identifier, this.authenticator,
-  //     {http.Client client, Converter converter, AuthStorage authStorage})
-  //     : super(identifier,
-  //           client: client, converter: converter, authStorage: authStorage) {
-  //   this.clientId = authenticator.clientId;
-  //   this.clientSecret = authenticator.clientSecret;
-  //   this.tokenUrl = authenticator.tokenUrl;
-  //   this.scopes = authenticator.scope;
-  // }
 
 
+  OAuthPasswordApi(String identifier, 
+      this.loginUrl,
+      this.tokenUrl,
+      String clientId,
+      String clientSecret,
+      {List<String> scopes,
+      http.Client client,
+      Converter converter,
+      AuthStorage authStorage})
+      : super.fromIdAndSecret(identifier, clientId, clientSecret,
+            client: client,
+            scopes: scopes,
+            converter: converter,
+            authStorage: authStorage) {
+        this.scopesRequired = false;
+      }
 
   OAuthAccount get currentOauthAccount => currentAccount as OAuthAccount;
 
 
   @override
   Future<Account> performAuthenticate() async {
-    // if (scopesRequired && (scopes?.length ?? 0) == 0) {
-    //   throw Exception("Scopes are required");
-    // }
+    if (scopesRequired && (scopes?.length ?? 0) == 0) {
+      throw Exception("Scopes are required");
+    }
     OAuthAccount account =
         currentOauthAccount ?? await loadAccountFromCache<OAuthAccount>();
     if (account != null &&
@@ -73,9 +61,7 @@ class OAuthPasswordApi extends AuthenticatedApi {
 
     var _authenticator = getAuthenticator();
     await _authenticator.resetAuthenticator();
-    if (showAuthenticator != null)
-      showAuthenticator(_authenticator);
-    else if (sharedShowAuthenticator != null)
+    if (sharedShowAuthenticator != null)
       sharedShowAuthenticator(_authenticator);
     else
       throw new Exception(
@@ -91,89 +77,20 @@ class OAuthPasswordApi extends AuthenticatedApi {
   }
 
 
+  @override  
+  OauthPasswordAuthenticator getAuthenticator() => OauthPasswordAuthenticator(identifier, clientId, clientSecret,loginUrl , tokenUrl, baseUrl, redirectUrl, scopes);
+
+
   @override
-  Future<Request> authenticateRequest(Request request) async {
-    Map<String, String> map = new Map.from(request.headers);
-    map["Authorization"] =
-        "${currentOauthAccount.tokenType} ${currentOauthAccount.token}";
-    return request.replace(headers: map);
-  }
-
-
   Future<OAuthAccount> getAccountFromAuthCode(
       WebAuthenticator authenticator) async {
-    if (tokenUrl?.isEmpty ?? true) throw new Exception("Invalid tokenURL");
-    var postData = await authenticator.getTokenPostData(clientSecret);
-    var resp = await httpClient.post(tokenUrl,
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: postData);
-    var map = convert.json.decode(resp.body);
-    var result = OAuthResponse.fromJson(map);
-    var account = OAuthAccount(identifier,
+    var auth = authenticator as OauthPasswordAuthenticator;
+    return OAuthAccount(identifier,
         created: DateTime.now().toUtc(),
-        expiresIn: result.expiresIn,
-        idToken: result.idToken,
-        refreshToken: result.refreshToken,
-        scope: authenticator.scope,
-        tokenType: result.tokenType,
-        token: result.accessToken);
-    return account;
-  }
-
-  Authenticator getAuthenticator() => authenticator;
-  @override
-  getAccountFromMap<T extends Account>(Map<String, dynamic> data) =>
-      OAuthAccount.fromJson(data);
-  @override
-  Future<bool> refreshAccount(Account _account) async {
-    try {
-      var account = _account as OAuthAccount;
-      if (account == null) throw new Exception("Invalid Account");
-      var postData = await getRefreshTokenPostData(account);
-
-      var resp = await httpClient.post(tokenUrl,
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: postData);
-      var map = convert.json.decode(resp.body);
-      var result = OAuthResponse.fromJson(map);
-      if (result?.error?.isNotEmpty ?? false) {
-        if ((account.refreshToken?.isEmpty ?? true) ||
-            result.error == "invalid_grant" ||
-            (result.errorDescription?.contains("revoked") ?? false)) {
-          account.token = "";
-          account.refreshToken = "";
-          saveAccountToCache(account);
-          return await performAuthenticate() != null;
-        } else
-          throw new Exception("${result.error} : ${result.errorDescription}");
-      }
-      if (result.refreshToken?.isNotEmpty ?? false)
-        account.refreshToken = result.refreshToken;
-      account.tokenType = result.tokenType;
-      account.token = result.accessToken;
-      account.expiresIn = result.expiresIn;
-      account.created = DateTime.now().toUtc();
-      currentAccount = account;
-      saveAccountToCache(account);
-      return true;
-    } catch (exception) {}
-    return false;
-  }
-
-  Future<Map<String, String>> getRefreshTokenPostData(Account account) async {
-    var oaccount = account as OAuthAccount;
-    if (oaccount == null) throw new Exception("Invalid Account");
-    return {
-      "grant_type": "refresh_token",
-      "refresh_token": oaccount.refreshToken,
-      "client_id": clientId,
-      "client_secret": clientSecret,
-    };
+        expiresIn: auth.token.expiresIn,
+        refreshToken: auth.token.refreshToken,
+        scope: authenticator.scope ?? List<String>(),
+        tokenType: auth.token.tokenType,
+        token: auth.token.accessToken);
   }
 }

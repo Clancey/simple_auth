@@ -429,15 +429,15 @@ class SimpleAuthGenerator
               ..optionalParameters.addAll(_createParameters(annotation, [
                 BuiltInParameters.clientId,
                 BuiltInParameters.clientSecret,
-                BuiltInParameters.tokenUrl,
                 BuiltInParameters.loginUrl,
+                BuiltInParameters.tokenUrl,
                 BuiltInParameters.client,
                 BuiltInParameters.converter,
                 BuiltInParameters.authStorage
               ]))
               ..initializers.addAll([
                 const Code(
-                    'super(identifier, clientId, clientSecret, tokenUrl, loginUrl, client: client, converter: converter,authStorage:authStorage)'),
+                    'super(identifier, clientId, clientSecret, loginUrl, tokenUrl, client: client, converter: converter,authStorage:authStorage)'),
               ])
               ..body = new Code(body),
           );

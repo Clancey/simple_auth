@@ -79,7 +79,7 @@ class OAuthPasswordApiDeclaration extends ApiDeclaration {
   final String tokenUrl;
   final String loginUrl;
   const OAuthPasswordApiDeclaration(String name, this.clientId,
-      this.clientSecret, this.tokenUrl, this.loginUrl,
+      this.clientSecret, this.loginUrl , this.tokenUrl,
       {String baseUrl = "/"})
       : super(name, baseUrl: baseUrl);
 }

@@ -94,6 +94,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
+  
+  final simpleAuth.OAuthPasswordApi oauthPasswordApi = new simpleAuth
+          .OAuthPasswordApi(
+      "oauth-password",
+      "loginUrl",
+      "tokenUrl",
+      "clientId",
+      "clientSecret");
+
   final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
       "instagram", "clientId", "clientSecret", "redirecturl");
 
@@ -308,6 +317,32 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Logout'),
             onTap: () async {
               await basicApi.logOut();
+              showMessage("Logged out");
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Oauth Grant Password",
+              style: Theme.of(context).textTheme.headline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.launch),
+            title: Text('Login'),
+            onTap: () async {
+              try {
+                var success = await oauthPasswordApi.authenticate();
+                showMessage("Logged in success: $success");
+              } catch (e) {
+                showError(e);
+              }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Logout'),
+            onTap: () async {
+              await oauthPasswordApi.logOut();
               showMessage("Logged out");
             },
           ),
