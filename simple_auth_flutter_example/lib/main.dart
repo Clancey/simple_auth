@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
             leading: Icon(Icons.delete),
             title: Text('Logout'),
             onTap: () {
-              logout(githubApi);
+              logout(googleApi);
             },
           ),
           ListTile(
