@@ -25,11 +25,12 @@ class OAuthApi extends AuthenticatedApi {
       {this.scopes,
       http.Client client,
       Converter converter,
+      bool usePkce,
       AuthStorage authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
     authenticator = OAuthAuthenticator(identifier, clientId, clientSecret,
-        tokenUrl, authorizationUrl, redirectUrl, scopes);
+        tokenUrl, authorizationUrl, redirectUrl, scopes, usePkce);
   }
 
   OAuthApi.fromIdAndSecret(String identifier, this.clientId, this.clientSecret,
