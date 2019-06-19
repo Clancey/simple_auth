@@ -53,6 +53,7 @@ class GoogleAuthenticator extends OAuthAuthenticator {
             redirectUrl) {
     this.scope = scopes;
     useEmbeddedBrowser = false;
+    usePkce = true;
   }
 
   @override
