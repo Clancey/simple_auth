@@ -11,7 +11,7 @@
 #import "WebAuthenticatorWindow.h"
 
 @implementation WebAuthenticatorViewController
-UIWebView *webview;
+WKWebView *webview;
 UIActivityIndicatorView *activity;
 
 -(id)initWithAuthenticator:(WebAuthenticator *)authenticator
@@ -50,8 +50,8 @@ UIActivityIndicatorView *activity;
 - (void) viewDidLoad{
     NSLog(@"webauthenticator view did load");
     self.view.backgroundColor = UIColor.blackColor;
-    webview = [[UIWebView alloc] init];
-    webview.delegate = self;
+    webview = [[WKWebView alloc] init];
+    webview.UIDelegate = self;
     [self.view addSubview:webview];
 }
 -(void)viewDidAppear:(BOOL)animated{
@@ -76,19 +76,19 @@ UIActivityIndicatorView *activity;
 -(void)refresh {
     [webview reload];
 }
--(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+-(BOOL)webView:(WKWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(WKNavigation *)navigationType{
     if(!self.authenticator.isCompleted){
         [self.authenticator checkUrl:request.URL forceComplete:NO];
     }
     return true;
 }
--(void)webViewDidStartLoad:(UIWebView *)webView{
+-(void)webViewDidStartLoad:(WKWebView *)webView{
     [activity startAnimating];
 }
--(void)webViewDidFinishLoad:(UIWebView *)webView{
+-(void)webViewDidFinishLoad:(WKWebView *)webView{
     [activity stopAnimating];
 }
--(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+-(void)webView:(WKWebView *)webView didFailLoadWithError:(NSError *)error{
     [activity stopAnimating];
 }
 
