@@ -8,12 +8,12 @@ part of 'azureAdTestApi.dart';
 
 class AzureAdTestApi extends AzureADApi implements AzureADDefinition {
   AzureAdTestApi(String identifier,
-      {String clientId: 'resource',
+      {String clientId: 'client_id',
       String authorizationUrl:
           'https://login.microsoftonline.com/azureTennant/oauth2/authorize',
       String tokenUrl:
           'https://login.microsoftonline.com/azureTennant/oauth2/token',
-      String resource: 'client_id',
+      String resource: 'resource',
       String redirectUrl: 'redirecturl',
       String clientSecret: 'client_secret',
       List<String> scopes,
