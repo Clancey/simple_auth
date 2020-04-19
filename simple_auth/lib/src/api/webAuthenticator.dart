@@ -12,6 +12,7 @@ abstract class WebAuthenticator extends Authenticator {
   String _redirectUrl;
   String get redirectUrl => _redirectUrl;
   bool useEmbeddedBrowser = false;
+  bool useSSO = true;
   set redirectUrl(String value) {
     this._redirectUrl = value;
     if (value?.isNotEmpty ?? false)

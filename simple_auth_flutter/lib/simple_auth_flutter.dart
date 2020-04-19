@@ -36,7 +36,8 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
       "title": authenticator.title,
       "allowsCancel": authenticator.allowsCancel.toString(),
       "redirectUrl": authenticator.redirectUrl,
-      "useEmbeddedBrowser": authenticator.useEmbeddedBrowser.toString()
+      "useEmbeddedBrowser": authenticator.useEmbeddedBrowser.toString(),
+      "useSSO": authenticator.useSSO.toString()
     });
     if (url == "cancel") {
       authenticator.cancel();
