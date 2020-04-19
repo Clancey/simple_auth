@@ -56,7 +56,7 @@ SFSafariViewController *controller;
 -(void) beginAuthentication:(WebAuthenticator *)authenticator viewController:(UIViewController *)viewController{
     @try{
         NSString *scheme = authenticator.redirectUrl.scheme;
-        if(@available(iOS 11.0, *))
+        if(@available(iOS 11.0, *) && authenticator.useSSO)
         {
             session =  [[SFAuthenticationSession alloc] initWithURL:authenticator.initialUrl callbackURLScheme:scheme completionHandler:^(NSURL * _Nullable callbackURL, NSError * _Nullable error) {
                 if(error == nil)

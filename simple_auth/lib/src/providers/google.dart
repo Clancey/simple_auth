@@ -53,6 +53,8 @@ class GoogleAuthenticator extends OAuthAuthenticator {
             redirectUrl) {
     this.scope = scopes;
     useEmbeddedBrowser = false;
+    // Set this to false to remove Apple's user consent dialog
+    useSSO = true;
     usePkce = true;
   }
 

@@ -82,6 +82,7 @@ on iOS you need the following in your app delegate.
 ```
 
 For iOS 11 and higher, you don't need to do anything else. On older iOS versions the following is required in the info.plist
+Note, these lines are required, if you want to avoid Apples mandatory user consent dialog - **"this allows the app and website to share information about you"**. This can be achieved by setting `WebAuthenticator.useSSO = false;` which will not use SFAuthenticationSession.  
 
 ```xml
 	<key>CFBundleURLTypes</key>

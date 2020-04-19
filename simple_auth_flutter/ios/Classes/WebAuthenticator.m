@@ -18,6 +18,7 @@
         self.identifier = [data_ valueForKey:@"identifier"];
         self.allowsCancel = [[data_ valueForKey:@"allowsCancel"] boolValue];
         self.useEmbeddedBrowser =[[data_ valueForKey:@"useEmbeddedBrowser"] boolValue];
+        self.useSSO =[[data_ valueForKey:@"useSSO"] boolValue];
         self.initialUrl = [NSURL URLWithString:[data_ valueForKey:@"initialUrl"]];
         self.redirectUrl = [NSURL URLWithString:[data_ valueForKey:@"redirectUrl"]];
         self.title = [data_ valueForKey:@"title"];

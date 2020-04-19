@@ -17,6 +17,7 @@
 @property BOOL allowsCancel;
 @property BOOL isCompleted;
 @property BOOL useEmbeddedBrowser;
+@property BOOL useSSO;
 @property FlutterEventSink eventSink;
 -(void)checkUrl:(NSURL *)url forceComplete:(BOOL)force;
 -(void)foundToken;
