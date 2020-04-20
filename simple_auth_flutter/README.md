@@ -29,6 +29,7 @@ Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-469
 * Instagram
 * Linked In
 * Microsoft Live Connect
+* Keycloak
 * And of course any standard OAuth2/Basic Auth server.
 
 
@@ -82,7 +83,6 @@ on iOS you need the following in your app delegate.
 ```
 
 For iOS 11 and higher, you don't need to do anything else. On older iOS versions the following is required in the info.plist
-Note, these lines are required, if you want to avoid Apples mandatory user consent dialog - **"this allows the app and website to share information about you"**. This can be achieved by setting `WebAuthenticator.useSSO = false;` which will not use SFAuthenticationSession.  
 
 ```xml
 	<key>CFBundleURLTypes</key>
@@ -98,7 +98,13 @@ Note, these lines are required, if you want to avoid Apples mandatory user conse
 	</array>
 	
 ```
+Note, if you want to avoid Apples mandatory user consent dialog
 
+| "foo" Wants to use "bar.com" to Sign In |
+| - |
+|This allows the app and website to share information about you.|
+
+add the lines above and set `FooAuthenticator.useSSO = false;` which will not use SFAuthenticationSession.  This is the default behavior for the Keycloak provider.
 
 # Serialization
 Json objects will automatically serialize if you conform to [JsonSerializable](https://github.com/Clancey/simple_auth/blob/master/simple_auth/lib/src/jsonSerializable.dart)
