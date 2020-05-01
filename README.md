@@ -70,6 +70,24 @@ you would then add the following to your Android manifest
 </activity>
 ```
 
+For instagram, the above won't work, as it will only accept redirect URIs that start with https. Add the following instead:
+
+```xml
+    <activity android:name="clancey.simpleauth.simpleauthflutter.SimpleAuthCallbackActivity">
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data android:scheme="http" />
+        <data android:scheme="https" />
+        <data android:host="myflutterapp.com" />
+      </intent-filter>
+    </activity>
+```
+
 ## iOS
 
 on iOS you need something like the following as your AppDelegate.m file under the Runner folder
