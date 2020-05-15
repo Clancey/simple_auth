@@ -5,13 +5,13 @@ import "package:http/http.dart" as http;
 import "dart:convert" as Convert;
 
 
-class KeycloakProvider extends OAuthApi {
+class KeycloakApi extends OAuthApi {
   String realm;
 
   // Keycloak base url E.G., https://auth.mydomain.com
   String baseUrl;
 
-  KeycloakProvider(String identifier,
+  KeycloakApi(String identifier,
       String clientId,
       String clientSecret,
       String redirectUrl,
