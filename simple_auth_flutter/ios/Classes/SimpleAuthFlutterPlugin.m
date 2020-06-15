@@ -1,6 +1,5 @@
 #import "SimpleAuthFlutterPlugin.h"
 #import "WebAuthenticator.h"
-#import "WebAuthenticatorWindow.h"
 #import <Foundation/Foundation.h>
 #import "SFSafariAuthenticator.h"
 #import "AuthStorage.h"
@@ -33,11 +32,8 @@
         NSDictionary *argsMap = call.arguments;
         WebAuthenticator *authenticator = [[WebAuthenticator alloc] initFromDictionary:argsMap];
         authenticator.eventSink = _eventSink;
-        [authenticators setObject:authenticator  forKey:authenticator.identifier];
-        if(authenticator.useEmbeddedBrowser)
-            [WebAuthenticatorWindow presentAuthenticator: authenticator];
-        else
-            [SFSafariAuthenticator presentAuthenticator:authenticator];
+        [[authenticators setObject:authenticator  forKey:authenticator.identifier];
+        [SFSafariAuthenticator presentAuthenticator:authenticator];
         result(@"success");
         return;
     }
