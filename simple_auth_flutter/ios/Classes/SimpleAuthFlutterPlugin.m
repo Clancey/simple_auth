@@ -32,7 +32,7 @@
         NSDictionary *argsMap = call.arguments;
         WebAuthenticator *authenticator = [[WebAuthenticator alloc] initFromDictionary:argsMap];
         authenticator.eventSink = _eventSink;
-        [[authenticators setObject:authenticator  forKey:authenticator.identifier];
+        [authenticators setObject:authenticator forKey:authenticator.identifier];
         [SFSafariAuthenticator presentAuthenticator:authenticator];
         result(@"success");
         return;
