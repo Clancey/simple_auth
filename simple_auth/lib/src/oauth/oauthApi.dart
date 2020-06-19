@@ -25,7 +25,7 @@ class OAuthApi extends AuthenticatedApi {
       {this.scopes,
       http.Client client,
       Converter converter,
-      bool usePkce,
+      bool usePkce = false,
       AuthStorage authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
