@@ -20,6 +20,8 @@ flutter:
         pluginClass: SimpleAuthFlutterPlugin
       ios:
         pluginClass: SimpleAuthFlutterPlugin
+      macos:
+        pluginClass: SimpleAuthFlutterPlugin
 
 dev_dependencies_overrides:
   simple_auth:
