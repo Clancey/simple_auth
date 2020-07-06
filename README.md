@@ -88,7 +88,7 @@ For instagram, the above won't work, as it will only accept redirect URIs that s
     </activity>
 ```
 
-## iOS
+## iOS & macOS
 
 on iOS you need something like the following as your AppDelegate.m file under the Runner folder
 
@@ -119,7 +119,35 @@ on iOS you need something like the following as your AppDelegate.m file under th
 
 ```
 
-For iOS 11 and higher, you don't need to do anything else. On older iOS versions the following is required in the info.plist
+On macOS:
+
+```swift
+import Cocoa
+import FlutterMacOS
+import simple_auth_flutter
+
+@NSApplicationMain
+class AppDelegate: FlutterAppDelegate {
+  override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+    return true
+  }
+    
+    override func applicationDidFinishLaunching(_ notification: Notification) {
+        let appleEventManager:NSAppleEventManager = NSAppleEventManager.shared()
+        appleEventManager.setEventHandler(self, andSelector: #selector(AppDelegate.handleGetURLEvent(event:replyEvent:)), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+
+    }
+    
+    @objc func handleGetURLEvent(event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
+        let urlString = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue!
+        let url = URL(string: urlString!)!
+        SimpleAuthFlutterPlugin.check(url);
+    }
+}
+
+```
+
+For iOS 11/macOS 10.15 and higher, you don't need to do anything else. On older versions the following is required in the info.plist
 
 ```xml
 	<key>CFBundleURLTypes</key>
@@ -141,7 +169,7 @@ Note, if you want to avoid Apples mandatory user consent dialog
 | - |
 |This allows the app and website to share information about you.|
 
-add the lines above and set `FooAuthenticator.useSSO = false;` which will not use SFAuthenticationSession.  This is the default behavior for the Keycloak provider.
+add the lines above and set `FooAuthenticator.useSSO = false;` which will not use SFAuthenticationSession on iOS, and ASWebAuthenticationSession on macOS. This is the default behavior for the Keycloak provider.
 
 # Serialization
 
