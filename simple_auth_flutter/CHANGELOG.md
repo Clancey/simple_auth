@@ -1,5 +1,6 @@
 ## [2.0.8] - 03-11-2021
 * Update http and crypto dependencies 
+
 ## [2.0.3] - 02-28-2019
 * Now works with Android X
 
