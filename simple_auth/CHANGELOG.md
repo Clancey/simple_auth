@@ -1,3 +1,6 @@
+## [2.0.8] - 03-11-2021
+* Update http and crypto dependencies 
+
 ## [2.0.5] - 04-28-2019
 * Bug fixes. Thanks @sjmcdowall 
 
