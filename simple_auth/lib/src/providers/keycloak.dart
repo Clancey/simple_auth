@@ -52,7 +52,9 @@ class KeycloakApi extends OAuthApi {
     if (account == null) throw new Exception("Invalid Account");
 
     var postData = await getRefreshTokenPostData(account);
-    var resp = await httpClient.post("${this.baseUrl}/auth/realms/${this.realm}/protocol/openid-connect/logout",
+    var resp = await httpClient.post(
+        Uri.parse(
+            "${this.baseUrl}/auth/realms/${this.realm}/protocol/openid-connect/logout"),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
