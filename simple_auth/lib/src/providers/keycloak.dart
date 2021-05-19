@@ -6,10 +6,10 @@ import "dart:convert" as Convert;
 
 
 class KeycloakApi extends OAuthApi {
-  String realm;
+  String? realm;
 
   // Keycloak base url E.G., https://auth.mydomain.com
-  String baseUrl;
+  String? baseUrl;
 
   KeycloakApi(String identifier,
       String clientId,
@@ -19,9 +19,9 @@ class KeycloakApi extends OAuthApi {
       String realm,
       {
         List<String> scopes = const ["email", "profile"],
-        http.Client client,
-        Converter converter,
-        AuthStorage authStorage
+        http.Client? client,
+        Converter? converter,
+        AuthStorage? authStorage
       }) : super(
       identifier,
       clientId,
@@ -48,7 +48,7 @@ class KeycloakApi extends OAuthApi {
 
   /// Log out of Keycloak session and if successful proceed to logout locally
   Future<bool> logOutAccount() async {
-    OAuthAccount account = currentOauthAccount ?? await loadAccountFromCache<OAuthAccount>();
+    OAuthAccount? account = currentOauthAccount ?? await loadAccountFromCache<OAuthAccount>();
     if (account == null) throw new Exception("Invalid Account");
 
     var postData = await getRefreshTokenPostData(account);
@@ -81,7 +81,7 @@ class KeycloakApi extends OAuthApi {
 
 /// Extend OAuthAuthenticator to disable SSO by default
 class KeycloakAuthenticator extends OAuthAuthenticator {
-  KeycloakAuthenticator(String identifier, String clientId, String clientSecret, String tokenUrl, String baseUrl, String redirectUrl, List<String> scopes)
+  KeycloakAuthenticator(String? identifier, String? clientId, String? clientSecret, String? tokenUrl, String? baseUrl, String? redirectUrl, List<String>? scopes)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl, redirectUrl) {
     this.scope = scopes;
     useEmbeddedBrowser = false;
@@ -93,26 +93,26 @@ class KeycloakAuthenticator extends OAuthAuthenticator {
 
 class KeycloakUser implements JsonSerializable {
 //  https://www.keycloak.org/docs/latest/server_development/index.html#_action_token_anatomy
-  String sub;
+  String? sub;
 
   // Email scope
-  String email;
-  bool emailVerified;
+  String? email;
+  bool? emailVerified;
 
   // Profile scope
-  String gender;
-  String fullName;
-  String picture;
-  String birthdate;
-  String website;
-  String nickname;
-  String lastName;
-  String middleName;
-  String firstName;
-  String updatedAt;
-  String username;
-  String locale;
-  String zoneinfo;
+  String? gender;
+  String? fullName;
+  String? picture;
+  String? birthdate;
+  String? website;
+  String? nickname;
+  String? lastName;
+  String? middleName;
+  String? firstName;
+  String? updatedAt;
+  String? username;
+  String? locale;
+  String? zoneinfo;
 
   // TODO: Phone scope
   // TODO: Roles scope

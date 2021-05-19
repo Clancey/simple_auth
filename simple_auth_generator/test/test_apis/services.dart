@@ -3,7 +3,7 @@ import 'package:simple_auth/simple_auth.dart';
 
 abstract class JsonSerializableObject {
   Map<String, dynamic> toJson();
-  factory JsonSerializableObject.fromJson(Map<String, dynamic> json) => null;
+  static fromJson(Map<String, dynamic> json) => null;
 }
 
 @ApiDeclaration("MyService", baseUrl: "/resources")

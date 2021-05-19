@@ -5,13 +5,13 @@ import "package:http/http.dart" as http;
 import "dart:convert" as Convert;
 
 class GoogleApi extends OAuthApi {
-  bool isUsingNative;
+  bool? isUsingNative;
   GoogleApi(String identifier, String clientId, String redirectUrl,
       {String clientSecret = "native",
-      List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super.fromIdAndSecret(
             identifier, _cleanseClientId(clientId), clientSecret,
             client: client,
@@ -47,8 +47,8 @@ class GoogleApi extends OAuthApi {
 }
 
 class GoogleAuthenticator extends OAuthAuthenticator {
-  GoogleAuthenticator(String identifier, String clientId, String clientSecret,
-      String tokenUrl, String baseUrl, String redirectUrl, List<String> scopes)
+  GoogleAuthenticator(String? identifier, String? clientId, String? clientSecret,
+      String? tokenUrl, String? baseUrl, String? redirectUrl, List<String>? scopes)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl,
             redirectUrl) {
     this.scope = scopes;
@@ -59,14 +59,14 @@ class GoogleAuthenticator extends OAuthAuthenticator {
   }
 
   @override
-  String get redirectUrl {
+  String? get redirectUrl {
     var url = getRedirectUrl();
     if (url != super.redirectUrl) super.redirectUrl = url;
     return url;
   }
 
-  String getRedirectUrl() {
-    if (!useEmbeddedBrowser)
+  String? getRedirectUrl() {
+    if (!useEmbeddedBrowser!)
       return "com.googleusercontent.apps.${this.clientId}:/oauthredirect";
     return super.redirectUrl;
   }
@@ -75,7 +75,7 @@ class GoogleAuthenticator extends OAuthAuthenticator {
   Future<Map<String, dynamic>> getInitialUrlQueryParameters() async {
     var map = await super.getInitialUrlQueryParameters();
     map["access_type"] = "offline";
-    map["client_id"] = GoogleApi.getGoogleClientId(clientId);
+    map["client_id"] = GoogleApi.getGoogleClientId(clientId!);
     map["redirect_uri"] = getRedirectUrl();
     return map;
   }
@@ -90,10 +90,10 @@ class GoogleApiKeyApi extends GoogleApi {
       {this.authKey = "key",
       this.authLocation = AuthLocation.query,
       String clientSecret = "native",
-      List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             client: client,
@@ -121,16 +121,16 @@ class GoogleApiKeyApi extends GoogleApi {
 }
 
 class GoogleUser implements JsonSerializable {
-  String id;
-  String email;
-  bool verifiedEmail;
-  String name;
-  String givenName;
-  String familyName;
-  String link;
-  String picture;
-  String gender;
-  String locale;
+  String? id;
+  String? email;
+  bool? verifiedEmail;
+  String? name;
+  String? givenName;
+  String? familyName;
+  String? link;
+  String? picture;
+  String? gender;
+  String? locale;
   GoogleUser(
       {this.id,
       this.email,

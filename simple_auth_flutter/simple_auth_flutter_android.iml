@@ -19,6 +19,8 @@
     <content url="file://$MODULE_DIR$/android">
       <sourceFolder url="file://$MODULE_DIR$/android/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/android/gen" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.idea" />
     </content>
     <content url="file://$MODULE_DIR$/example/android">
       <sourceFolder url="file://$MODULE_DIR$/example/android/app/src/main/java" isTestSource="false" />

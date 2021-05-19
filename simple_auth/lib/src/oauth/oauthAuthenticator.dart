@@ -5,13 +5,13 @@ import "package:simple_auth/simple_auth.dart";
 import 'package:crypto/crypto.dart';
 
 class OAuthAuthenticator extends WebAuthenticator {
-  String clientSecret;
-  String verifier;
-  bool usePkce;
-  String tokenUrl;
-  OAuthAuthenticator(String identifier, String clientId, this.clientSecret,
-      this.tokenUrl, String baseUrl, String redirectUrl,
-      [List<String> scopes, this.usePkce = false]) {
+  String? clientSecret;
+  String? verifier;
+  bool? usePkce;
+  String? tokenUrl;
+  OAuthAuthenticator(String? identifier, String? clientId, this.clientSecret,
+      this.tokenUrl, String? baseUrl, String? redirectUrl,
+      [List<String>? scopes, this.usePkce = false]) {
     this.clientId = clientId;
     this.baseUrl = baseUrl;
     this.redirectUrl = redirectUrl;
@@ -20,10 +20,10 @@ class OAuthAuthenticator extends WebAuthenticator {
   }
   OAuthAuthenticator.empty();
   @override
-  Future<Map<String, dynamic>> getTokenPostData(String clientSecret) async {
+  Future<Map<String, dynamic>> getTokenPostData(String? clientSecret) async {
     var map = await super.getTokenPostData(clientSecret);
     map["redirect_uri"] = redirectUrl;
-    if (usePkce){
+    if (usePkce!){
       map["code_verifier"] = verifier;
     }
 
@@ -33,7 +33,7 @@ class OAuthAuthenticator extends WebAuthenticator {
   @override
   Future resetAuthenticator() {
     // Generated a new code verifier at the beginning of the authorize flow
-    if (usePkce){
+    if (usePkce!){
       verifier = _generateCodeVerifier();
     }
     return super.resetAuthenticator();
@@ -42,9 +42,9 @@ class OAuthAuthenticator extends WebAuthenticator {
   @override
   Future<Map<String, dynamic>> getInitialUrlQueryParameters() async {
     var map = await super.getInitialUrlQueryParameters();
-    if (usePkce) {
+    if (usePkce!) {
       map["code_challenge_method"] = "S256";
-      map["code_challenge"] = _encodeVerifier(verifier);
+      map["code_challenge"] = _encodeVerifier(verifier!);
     }
     return map;
   }

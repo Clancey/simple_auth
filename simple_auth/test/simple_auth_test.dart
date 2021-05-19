@@ -25,8 +25,8 @@ class Resource2 implements JsonSerializable {
         'id': id,
         'name': name,
       };
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   Resource2(this.id, this.name);
 
   @override
@@ -39,8 +39,8 @@ class Resource {
         'id': id,
         'name': name,
       };
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   Resource(this.id, this.name);
 
   factory Resource.fromJson(Map<String, dynamic> json) =>

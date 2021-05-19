@@ -18,17 +18,17 @@ part 'youtubeApi.simple_auth.dart';
     ])
 abstract class YouTubeApiDefinition {
   @Get(url: "search", authenticated: false)
-  Future<Response<YoutubeSearchListResult>> search(@Query() String q,
+  Future<Response<YoutubeSearchListResult?>> search(@Query() String q,
       [@Query() int maxResults = 25, @Query() String part = "snippet"]);
 }
 
 class YoutubeSearchListResult {
-  String kind;
-  String etag;
-  String nextPageToken;
-  String prevPageToken;
-  String regionCode;
-  PageInfo pageInfo;
+  String? kind;
+  String? etag;
+  String? nextPageToken;
+  String? prevPageToken;
+  String? regionCode;
+  PageInfo? pageInfo;
   List<Resource> items;
 
   YoutubeSearchListResult({
@@ -59,14 +59,14 @@ class YoutubeSearchListResult {
         'nextPageToken': nextPageToken,
         'prevPageToken': prevPageToken,
         'regionCode': regionCode,
-        'pageInfo': pageInfo.toJson(),
+        'pageInfo': pageInfo!.toJson(),
         'items': items.map((i) => i.toJson()),
       };
 }
 
 class PageInfo {
-  int totalResults;
-  int resultsPerPage;
+  int? totalResults;
+  int? resultsPerPage;
 
   PageInfo({
     this.totalResults,
@@ -84,10 +84,10 @@ class PageInfo {
 }
 
 class ResourceId {
-  String kind;
-  String videoId;
-  String channelId;
-  String playlistId;
+  String? kind;
+  String? videoId;
+  String? channelId;
+  String? playlistId;
 
   ResourceId({
     this.kind,
@@ -113,12 +113,12 @@ class ResourceId {
 class ResourceSnippet {}
 
 class Resource {
-  String kind;
-  String etag;
-  String channelTitle;
-  String liveBroadcastContent;
-  ResourceId id;
-  ResourceSnippet snippet;
+  String? kind;
+  String? etag;
+  String? channelTitle;
+  String? liveBroadcastContent;
+  ResourceId? id;
+  ResourceSnippet? snippet;
 
   Resource({
     this.kind,
@@ -143,7 +143,7 @@ class Resource {
         'etag': etag,
         'channelTitle': channelTitle,
         'liveBroadcastContent': liveBroadcastContent,
-        'id': id.toJson(),
+        'id': id!.toJson(),
         //'snippet': snippet,
       };
 }

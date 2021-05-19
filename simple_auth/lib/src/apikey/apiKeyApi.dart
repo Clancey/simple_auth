@@ -10,7 +10,7 @@ class ApiKeyApi extends Api {
   String apiKey;
   String authKey;
   ApiKeyApi(this.apiKey, this.authKey, this.authLocation,
-      {http.Client client, Converter converter, AuthStorage authStorage})
+      {http.Client? client, Converter? converter, AuthStorage? authStorage})
       : super(identifier: apiKey, client: client, converter: converter);
   @override
   Future<Request> interceptRequest(Request request) async {

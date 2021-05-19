@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_auth/simple_auth.dart';
 
 class BasicLoginPage extends StatefulWidget {
-  static String defaultLogo;
+  static String? defaultLogo;
   final BasicAuthAuthenticator authenticator;
   BasicLoginPage(this.authenticator);
   static String tag = 'basic-login-page';
@@ -22,7 +22,7 @@ class _LoginPageState extends State<BasicLoginPage> {
         radius: 48.0,
         child: (BasicLoginPage.defaultLogo?.isEmpty ?? true)
             ? Icon(Icons.supervised_user_circle)
-            : Image.asset(BasicLoginPage.defaultLogo),
+            : Image.asset(BasicLoginPage.defaultLogo!),
       ),
     );
 
@@ -64,8 +64,8 @@ class _LoginPageState extends State<BasicLoginPage> {
               if (success) Navigator.pop(context);
             } catch (ex) {
               var alert =
-                  new AlertDialog(content: new Text(ex), actions: <Widget>[
-                new FlatButton(
+                  new AlertDialog(content: new Text('$ex'), actions: <Widget>[
+                new TextButton(
                     child: const Text("Ok"),
                     onPressed: () {
                       Navigator.pop(context);

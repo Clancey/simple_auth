@@ -13,13 +13,13 @@ import 'test_apis/services.dart';
 
 final _formatter = new dart_style.DartFormatter();
 
-String _packagePathCache;
-String getPackagePath() {
+String? _packagePathCache;
+String? getPackagePath() {
   if (_packagePathCache == null) {
     // Getting the location of this file – via reflection
     var currentFilePath = (reflect(getPackagePath) as ClosureMirror)
         .function
-        .location
+        .location!
         .sourceUri
         .path;
 
@@ -28,7 +28,7 @@ String getPackagePath() {
   return _packagePathCache;
 }
 
-LibraryReader _library;
+late LibraryReader _library;
 void main() {
   setUpAll(() async {
 

@@ -6,13 +6,13 @@ import 'package:simple_auth/src/utils.dart';
 import "dart:convert" as convert;
 
 class FacebookApi extends OAuthApi {
-  static bool isUsingNative;
+  static late bool isUsingNative;
   FacebookApi(String identifier, String clientId, String clientSecret,
       String redirectUrl,
-      {List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      {List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super.fromIdAndSecret(identifier, clientId, clientSecret,
             client: client,
             scopes: scopes,
@@ -39,7 +39,7 @@ class FacebookApi extends OAuthApi {
           "Bearer", auth.expiration, auth.authCode, auth.authCode, null);
     } else {
       var postData = await authenticator.getTokenPostData(clientSecret);
-      var url = addParameters(Uri.parse(tokenUrl), postData);
+      var url = addParameters(Uri.parse(tokenUrl!), postData);
       var resp = await this.httpClient.get(url);
       var map = convert.json.decode(resp.body);
       result = OAuthResponse.fromJson(map);
@@ -57,14 +57,14 @@ class FacebookApi extends OAuthApi {
 }
 
 class FacebookAuthenticator extends OAuthAuthenticator {
-  Uri redirectUri;
-  FacebookAuthenticator(String identifier, String clientId, String clientSecret,
-      String tokenUrl, String baseUrl, String redirectUrl, List<String> scopes)
+  Uri? redirectUri;
+  FacebookAuthenticator(String? identifier, String? clientId, String? clientSecret,
+      String? tokenUrl, String? baseUrl, String? redirectUrl, List<String>? scopes)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl,
             redirectUrl) {}
-  int expiration;
+  int? expiration;
   @override
-  Future<Map<String, dynamic>> getTokenPostData(String clientSecret) async {
+  Future<Map<String, dynamic>> getTokenPostData(String? clientSecret) async {
     var map = {
       "redirect_uri": redirectUrl,
       "code": authCode,
