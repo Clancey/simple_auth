@@ -4,15 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:simple_auth/simple_auth.dart';
 
 class Api {
-  final String identifier;
-  String baseUrl;
+  final String? identifier;
+  String? baseUrl;
   String defaultMediaType = "application/json";
-  String useragent;
+  String? useragent;
   final http.Client httpClient;
-  Converter converter;
+  Converter? converter;
   final JsonConverter jsonConverter = new JsonConverter();
-  Map<String, String> defaultHeaders;
-  Api({this.identifier, http.Client client, Converter converter})
+  Map<String, String>? defaultHeaders;
+  Api({this.identifier, http.Client? client, Converter? converter})
       : httpClient = client ?? new http.Client(),
         converter = converter;
 
@@ -20,7 +20,7 @@ class Api {
 
   ///Used to encode the body of the request before sending it.
   Future<Request> encodeRequest(Request request) async {
-    var converted = await converter?.encode(request);
+    var converted = (await converter?.encode(request));
     if (converted == null && request.body is JsonSerializable) {
       converted = await jsonConverter.encode(request);
     }
@@ -33,24 +33,20 @@ class Api {
   }
 
   ///Used to decode the response body before returning from an API call
-  Future<Response<Value>> decodeResponse<Value>(
-      Response<String> response, Type responseType, bool responseIsList) async {
+  Future<Response<Value?>> decodeResponse<Value>(
+      Response<String?> response, Type responseType, bool responseIsList) async {
     final converted =
         await converter?.decode(response, responseType, responseIsList) ??
             response;
 
-    if (converted == null) {
-      throw new Exception("No converter found for type $Value");
-    }
-
-    return converted as Response<Value>;
+    return converted as Response<Value?>;
   }
 
   ///Called before a request is sent across the wire.
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
     if (useragent?.isNotEmpty ?? false) {
-      Map<String, String> map = new Map.from(request.headers);
+      Map<String, String?> map = new Map.from(request.headers);
       map["User-Agent"] = useragent;
       req = request.replace(headers: map);
     }
@@ -78,8 +74,8 @@ class Api {
   }
 
   ///Used to send a request
-  Future<Response<Value>> send<Value>(Request request,
-      {Type responseType, bool responseIsList = false}) async {
+  Future<Response<Value?>> send<Value>(Request request,
+      {Type? responseType, bool responseIsList = false}) async {
     Request req = request;
 
     if (req.body != null) {
@@ -95,7 +91,7 @@ class Api {
     Response res = new Response<String>(response, response.body);
 
     if (res.isSuccessful && responseType != null) {
-      res = await decodeResponse<Value>(res, responseType, responseIsList);
+      res = await decodeResponse<Value>(res as Response<String?>, responseType, responseIsList);
     }
 
     res = await interceptResponse(res);
@@ -104,11 +100,11 @@ class Api {
       throw res;
     }
 
-    return res;
+    return res as FutureOr<Response<Value?>>;
   }
 
 //Pings the baseUrl
-  Future<bool> ping() => pingUrl(baseUrl);
+  Future<bool> ping() => pingUrl(baseUrl!);
 //Pings a url to see if it is available
   Future<bool> pingUrl(String url) async {
     try {

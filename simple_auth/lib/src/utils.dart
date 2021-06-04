@@ -6,7 +6,7 @@ Request applyHeader(Request request, String name, String value) =>
 Request applyHeaders(Request request, Map<String, String> headers) {
   final h = new Map.from(request.headers);
   h.addAll(headers);
-  return request.replace(headers: h);
+  return request.replace(headers: h as Map<String, String?>?);
 }
 
 Request addParameter(Request request, String name, dynamic value) =>
@@ -16,7 +16,7 @@ Request addParametersToRequest(
     Request request, Map<String, dynamic> parameters) {
   final h = new Map.from(request.parameters);
   h.addAll(parameters);
-  return request.replace(parameters: h);
+  return request.replace(parameters: h as Map<String, dynamic>?);
 }
 
 Uri addParameters(Uri uri, Map<String, dynamic> parameters) {

@@ -6,48 +6,48 @@ typedef void ShowBasicAuthenticator(BasicAuthAuthenticator authenticator);
 
 class BasicAuthApi extends AuthenticatedApi {
   String loginUrl;
-  BasicAuthAuthenticator currentAuthenticator;
-  static ShowBasicAuthenticator sharedShowAuthenticator;
-  ShowBasicAuthenticator showAuthenticator;
+  BasicAuthAuthenticator? currentAuthenticator;
+  static ShowBasicAuthenticator? sharedShowAuthenticator;
+  ShowBasicAuthenticator? showAuthenticator;
 
   BasicAuthApi(String identifier, this.loginUrl,
-      {http.Client client, Converter converter, AuthStorage authStorage})
+      {http.Client? client, Converter? converter, AuthStorage? authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
     currentAuthenticator = BasicAuthAuthenticator(client, loginUrl);
   }
 
-  BasicAuthAccount get currentBasicAccount =>
-      currentAccount as BasicAuthAccount;
+  BasicAuthAccount? get currentBasicAccount =>
+      currentAccount as BasicAuthAccount?;
 
   @override
   Future<Request> authenticateRequest(Request request) async {
     Map<String, String> map = new Map.from(request.headers);
-    map["Authorization"] = "Basic ${currentBasicAccount.key}";
+    map["Authorization"] = "Basic ${currentBasicAccount!.key}";
     return request.replace(headers: map);
   }
 
-  BasicAuthAuthenticator getAuthenticator() => currentAuthenticator;
+  BasicAuthAuthenticator? getAuthenticator() => currentAuthenticator;
 
   @override
-  Future<Account> performAuthenticate() async {
-    BasicAuthAccount account =
+  Future<Account?> performAuthenticate() async {
+    BasicAuthAccount? account =
         currentBasicAccount ?? await loadAccountFromCache<BasicAuthAccount>();
     if (account?.isValid() ?? false) {
       return currentAccount = account;
     }
-    BasicAuthAuthenticator authenticator = getAuthenticator();
+    BasicAuthAuthenticator authenticator = getAuthenticator()!;
     await authenticator.resetAuthenticator();
 
     if (showAuthenticator != null)
-      showAuthenticator(authenticator);
+      showAuthenticator!(authenticator);
     else if (sharedShowAuthenticator != null)
-      sharedShowAuthenticator(authenticator);
+      sharedShowAuthenticator!(authenticator);
     else
       throw new Exception(
           "Please call `SimpleAuthFlutter.init();` or implement the 'showAuthenticator' or 'sharedShowAuthenticator'");
     var token = await authenticator.getAuthCode();
-    if (token?.isEmpty ?? true) {
+    if (token.isEmpty) {
       throw new Exception("Null Token");
     }
     account = new BasicAuthAccount(identifier, key: token);

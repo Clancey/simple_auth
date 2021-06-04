@@ -4,10 +4,10 @@ import "package:http/http.dart" as http;
 class AmazonApi extends OAuthApi {
   AmazonApi(String identifier, String clientId, String clientSecret,
       String redirectUrl,
-      {List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      {List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(
             identifier,
             clientId,

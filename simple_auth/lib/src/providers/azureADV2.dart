@@ -4,14 +4,14 @@ import "package:http/http.dart" as http;
 import 'package:simple_auth/simple_auth.dart';
 
 class AzureADV2Api extends OAuthApi {
-  bool useClientSecret;
+  bool? useClientSecret;
 
   AzureADV2Api(String identifier, String clientId, String clientSecret,
       String tokenUrl, String authorizationUrl, String redirectUrl,
-      {List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      {List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super.fromIdAndSecret(identifier, clientId, clientSecret,
             client: client,
             scopes: scopes,
@@ -36,9 +36,9 @@ class AzureADV2Api extends OAuthApi {
       scopes);
 
   @override
-  Future<Map<String, String>> getRefreshTokenPostData(Account account) async {
+  Future<Map<String, String?>> getRefreshTokenPostData(Account account) async {
     var map = await super.getRefreshTokenPostData(account);
-    if (!useClientSecret && map.containsKey("client_secret")) {
+    if (!useClientSecret! && map.containsKey("client_secret")) {
       map.remove("client_secret");
     }
     return map;
@@ -46,17 +46,17 @@ class AzureADV2Api extends OAuthApi {
 }
 
 class AzureADV2Authenticator extends OAuthAuthenticator {
-  bool useClientSecret;
+  bool? useClientSecret;
 
   AzureADV2Authenticator(
-      String identifier,
-      String clientId,
-      String clientSecret,
-      String tokenUrl,
-      String baseUrl,
-      String redirectUrl,
+      String? identifier,
+      String? clientId,
+      String? clientSecret,
+      String? tokenUrl,
+      String? baseUrl,
+      String? redirectUrl,
       this.useClientSecret,
-      List<String> scopes)
+      List<String>? scopes)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl,
             redirectUrl) {
     this.scope = scopes;
@@ -67,11 +67,11 @@ class AzureADV2Authenticator extends OAuthAuthenticator {
 
   @override
   bool checkUrl(Uri url) {
-    Uri _redirectUri = Uri.parse(redirectUrl);
+    Uri _redirectUri = Uri.parse(redirectUrl!);
     try {
-      if (url?.host != _redirectUri.host) return false;
+      if (url.host != _redirectUri.host) return false;
       var params = splitFragment(url.fragment);
-      if (params.isEmpty ?? true) return false;
+      if (params.isEmpty) return false;
       if (!params.containsKey(authCodeKey)) return false;
       var code = params[authCodeKey];
       foundAuthCode(code);
@@ -99,14 +99,14 @@ class AzureADV2Authenticator extends OAuthAuthenticator {
     map['response_type'] = "id_token code";
     map["display"] = "touch";
 
-    if (!useClientSecret && map.containsKey("client_secret")) {
+    if (!useClientSecret! && map.containsKey("client_secret")) {
       map.remove("client_secret");
     }
     return map;
   }
 
   @override
-  Future<Map<String, dynamic>> getTokenPostData(String clientSecret) async {
+  Future<Map<String, dynamic>> getTokenPostData(String? clientSecret) async {
     var map = await super.getTokenPostData(clientSecret);
     map.remove("client_secret");
     return map;

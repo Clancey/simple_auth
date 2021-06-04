@@ -17,10 +17,10 @@ class OAuthApiKeyApi extends OAuthApi {
       String tokenUrl,
       String authorizationUrl,
       String redirectUrl,
-      {List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      {List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
             redirectUrl,
             client: client,

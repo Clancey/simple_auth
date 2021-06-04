@@ -1,5 +1,8 @@
+## [2.1.0] - 05-19-2021
+* Migrates to null-safety
+
 ## [2.0.9] - 04-06-2021
-* Fix keycloack logout 
+* Fix keycloak logout
 
 ## [2.0.8] - 03-11-2021
 * Update http and crypto dependencies 
