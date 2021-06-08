@@ -1,6 +1,6 @@
 name: simple_auth_generator
 description: simple_auth is an http client generator using source_gen and inspired from retrofit and chopper
-version: 2.0.3
+version: 2.0.10
 homepage: https://github.com/clancey/simple_auth
 author: James Clancey <james.clancey@gmail.com>
 
@@ -8,7 +8,7 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  simple_auth: ^2.0.9
+  simple_auth: ^2.0.10
   analyzer: ^1.5.0
   build: ^2.0.1
   build_config: ^1.0.0
