@@ -28,7 +28,7 @@ class SimpleAuthFlutter implements simpleAuth.AuthStorage {
     }
     var initialUrl = await authenticator.getInitialUrl();
 
-    authenticators[authenticator.identifier] = authenticator;
+    authenticators[authenticator.identifier!] = authenticator;
 
     String? url = await _channel.invokeMethod("showAuthenticator", {
       "initialUrl": initialUrl.toString(),
