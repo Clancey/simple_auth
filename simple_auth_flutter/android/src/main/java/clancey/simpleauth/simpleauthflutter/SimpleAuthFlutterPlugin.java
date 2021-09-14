@@ -1,47 +1,37 @@
 package clancey.simpleauth.simpleauthflutter;
 
+import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
+
+import androidx.annotation.NonNull;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
+import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * SimpleAuthFlutterPlugin
  */
-public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler {
-  /**
-   * Plugin registration.
-   */
-  static Context context;
-  public static void registerWith(Registrar registrar) {
-    if(registrar.activity() != null) {
-      context = registrar.activity();
-      CustomTabsAuthenticator.Setup(registrar.activity().getApplication());
-    }
-    else
-        context = registrar.context();
-    AuthStorage.Context = context;
+public class SimpleAuthFlutterPlugin implements FlutterPlugin, ActivityAware,MethodCallHandler,StreamHandler {
 
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "simple_auth_flutter/showAuthenticator");
-    final EventChannel eventChannel =
-            new EventChannel(registrar.messenger(), "simple_auth_flutter/urlChanged");
-    final SimpleAuthFlutterPlugin instance = new SimpleAuthFlutterPlugin();
-    channel.setMethodCallHandler(instance);
-    eventChannel.setStreamHandler(instance);
-  }
+  private Context applicationContext;
+  private ActivityPluginBinding activityBinding;
+  private MethodChannel methodChannel;
+  private EventChannel eventChannel;
 
   @Override
   public void onMethodCall(MethodCall call, Result result)   {
-
     if(call.method.equals("showAuthenticator")){
       try {
         WebAuthenticator authenticator = new WebAuthenticator(call);
@@ -49,11 +39,11 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
         authenticators.put(authenticator.identifier,authenticator);
 
         if(authenticator.useEmbeddedBrowser) {
-          WebAuthenticatorActivity.presentAuthenticator(context,authenticator);
+          WebAuthenticatorActivity.presentAuthenticator(applicationContext,authenticator);
         }
         else
         {
-          CustomTabsAuthenticator.presentAuthenticator(context,authenticator);
+          CustomTabsAuthenticator.presentAuthenticator(activityBinding.getActivity(),authenticator);
         }
 
         result.success("success");
@@ -125,5 +115,63 @@ public class SimpleAuthFlutterPlugin implements MethodCallHandler,StreamHandler 
       value.eventSink = null;
     }
     _eventSink = null;
+  }
+
+  /**
+   * Plugin registration.
+   */
+
+  @SuppressWarnings("deprecation")
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final SimpleAuthFlutterPlugin instance = new SimpleAuthFlutterPlugin();
+    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+  }
+
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+    onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
+  }
+
+  private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
+    this.applicationContext = applicationContext;
+
+    AuthStorage.Context = applicationContext;
+
+    methodChannel = new MethodChannel(messenger, "simple_auth_flutter/showAuthenticator");
+    eventChannel =
+            new EventChannel(messenger, "simple_auth_flutter/urlChanged");
+    methodChannel.setMethodCallHandler(this);
+    eventChannel.setStreamHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+    applicationContext = null;
+    methodChannel.setMethodCallHandler(null);
+    methodChannel = null;
+    eventChannel.setStreamHandler(null);
+    eventChannel = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding activityPluginBinding) {
+    activityBinding = activityPluginBinding;
+    Application app = activityPluginBinding.getActivity().getApplication();
+    CustomTabsAuthenticator.Setup(app);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    activityBinding = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding activityPluginBinding) {
+    activityBinding = activityPluginBinding;
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    activityBinding = null;
   }
 }
