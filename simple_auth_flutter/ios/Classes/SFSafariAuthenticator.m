@@ -79,6 +79,7 @@ SFSafariViewController *controller;
             controller = [[SFSafariViewController alloc] initWithURL:authenticator.initialUrl];
             controller.delegate = self;
             [viewController presentViewController:controller animated:true completion:nil];
+            [authenticator cancel];
             return;
         }
         BOOL opened = [UIApplication.sharedApplication openURL:authenticator.initialUrl];
