@@ -73,6 +73,19 @@ class OAuthApiDeclaration extends ApiDeclaration {
 }
 
 @immutable
+class OAuthPasswordApiDeclaration extends ApiDeclaration {
+  final String clientId;
+  final String clientSecret;
+  final String tokenUrl;
+  final String loginUrl;
+  const OAuthPasswordApiDeclaration(String name, this.clientId,
+      this.clientSecret, this.loginUrl , this.tokenUrl,
+      {String baseUrl = "/"})
+      : super(name, baseUrl: baseUrl);
+}
+
+
+@immutable
 class AmazonApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;

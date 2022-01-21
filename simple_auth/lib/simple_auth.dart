@@ -19,6 +19,8 @@ export 'src/oauth/oauthApi.dart';
 export 'src/oauth/oauthApiKeyApi.dart';
 export 'src/oauth/oauthAuthenticator.dart';
 export 'src/oauth/oauthResponse.dart';
+export 'src/oauth/oauthPasswordApi.dart';
+export 'src/oauth/oauthPasswordAuthenticator.dart';
 export 'src/providers/amazon.dart';
 export 'src/providers/azureAD.dart';
 export 'src/providers/azureADV2.dart';
