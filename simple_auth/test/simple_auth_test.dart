@@ -12,7 +12,7 @@ void main() {
     var json = await convert.encode(new Request("get", "foo",
         body: new List.from([respStart, respStart2])));
     var decoded = await convert.decode(
-        new Response(new http.Response(json.body, 200), null), Resource, true);
+        new Response(new http.Response(json.body, 200), null), true);
     var newJson =
         await convert.encode(new Request("get", "foo", body: decoded.body));
     expect(json.body, newJson.body);
@@ -49,17 +49,17 @@ class Resource {
 
 class ModelConverter extends JsonConverter {
   @override
-  Future<Response> decode(
-      Response response, Type responseType, bool responseIsList) async {
-    final d = await super.decode(response, responseType, responseIsList);
+  Future<Response<Value>> decode<Value>(
+      Response response, bool responseIsList) async {
+    final d = await super.decode(response, responseIsList);
     var body = d.body;
 
-    if (responseType == Resource) {
+    if (Value == Resource) {
       body = responseIsList && body is List
           ? new List.from(
               body.map((f) => new Resource.fromJson(f as Map<String, dynamic>)))
           : new Resource.fromJson(d.body as Map<String, dynamic>);
-    } else if (responseType == Resource2) {
+    } else if (Value == Resource2) {
       body = new Resource2.fromJson(body as Map<String, dynamic>);
     }
     return new Response(response.base, body);

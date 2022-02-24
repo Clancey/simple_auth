@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:simple_auth/simple_auth.dart' as simpleAuth;
 import 'package:simple_auth_flutter/basic_login_page.dart';
 

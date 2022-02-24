@@ -33,21 +33,19 @@ class Api {
   }
 
   ///Used to decode the response body before returning from an API call
-  Future<Response<Value?>> decodeResponse<Value>(
-      Response<String?> response, Type responseType, bool responseIsList) async {
+  Future<Response<Value>> decodeResponse<Value>(
+      Response<String?> response, bool responseIsList) async {
     final converted =
-        await converter?.decode(response, responseType, responseIsList) ??
-            response;
-
-    return converted as Response<Value?>;
+        await converter?.decode<Value>(response, responseIsList) ?? response;
+    return converted as Response<Value>;
   }
 
   ///Called before a request is sent across the wire.
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
     if (useragent?.isNotEmpty ?? false) {
-      Map<String, String?> map = new Map.from(request.headers);
-      map["User-Agent"] = useragent;
+      Map<String, String> map = new Map.from(request.headers);
+      map["User-Agent"] = useragent!;
       req = request.replace(headers: map);
     }
     // for (final i in _requestInterceptors) {
@@ -74,8 +72,8 @@ class Api {
   }
 
   ///Used to send a request
-  Future<Response<Value?>> send<Value>(Request request,
-      {Type? responseType, bool responseIsList = false}) async {
+  Future<Response<Value>> send<Value>(Request request,
+      {bool responseIsList = false}) async {
     Request req = request;
 
     if (req.body != null) {
@@ -90,8 +88,9 @@ class Api {
 
     Response res = new Response<String>(response, response.body);
 
-    if (res.isSuccessful && responseType != null) {
-      res = await decodeResponse<Value>(res as Response<String?>, responseType, responseIsList);
+    if (res.isSuccessful) {
+      res =
+          await decodeResponse<Value>(res as Response<String?>, responseIsList);
     }
 
     res = await interceptResponse(res);
@@ -100,7 +99,7 @@ class Api {
       throw res;
     }
 
-    return res as FutureOr<Response<Value?>>;
+    return res as FutureOr<Response<Value>>;
   }
 
 //Pings the baseUrl

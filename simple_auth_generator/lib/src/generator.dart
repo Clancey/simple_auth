@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:build/src/builder/build_step.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:simple_auth/simple_auth.dart' as simple_auth;
@@ -71,20 +70,23 @@ class SimpleAuthGenerator
           }
           return new Method((b) {
             b.name = m.displayName;
-            b.returns = new Reference(m.returnType.getDisplayString(withNullability: true));
+            b.returns = new Reference(
+                m.returnType.getDisplayString(withNullability: true));
             b.requiredParameters.addAll(m.parameters
                 .where((p) => p.isNotOptional)
                 .map((p) => new Parameter((pb) => pb
                   ..name = p.name
                   ..named = true
-                  ..type = new Reference(p.type.getDisplayString(withNullability: true)))));
+                  ..type = new Reference(
+                      p.type.getDisplayString(withNullability: true)))));
 
             b.optionalParameters.addAll(m.parameters
                 .where((p) => p.isOptionalPositional)
                 .map((p) => new Parameter((pb) {
                       pb
                         ..name = p.name
-                        ..type = new Reference(p.type.getDisplayString(withNullability: true));
+                        ..type = new Reference(
+                            p.type.getDisplayString(withNullability: true));
                       if (p.defaultValueCode != null)
                         pb.defaultTo = new Code(p.defaultValueCode!);
                     })));
@@ -94,7 +96,8 @@ class SimpleAuthGenerator
                 .map((p) => new Parameter((pb) => pb
                   ..named = true
                   ..name = p.name
-                  ..type = new Reference(p.type.getDisplayString(withNullability: true)))));
+                  ..type = new Reference(
+                      p.type.getDisplayString(withNullability: true)))));
 
             final blocks = [
               url.assignFinal(_urlVar).statement,
@@ -115,15 +118,16 @@ class SimpleAuthGenerator
 
             final Map<String, Expression> namedArguments = {};
             final List<Reference> typeArguments = [];
+            final String baseTypeString =
+                responseType?.getDisplayString(withNullability: true) ??
+                    "dynamic";
             if (responseType != null) {
-              namedArguments["responseType"] =
-                  new CodeExpression(refer(baseResponsetype!.getDisplayString(withNullability: true)).code);
-              typeArguments.add(refer(responseType.getDisplayString(withNullability: true)));
-              if (baseResponsetype.getDisplayString(withNullability: true) != responseType.getDisplayString(withNullability: true)) {
+              if (baseResponsetype?.getDisplayString(withNullability: true) !=
+                  responseType.getDisplayString(withNullability: true)) {
                 namedArguments["responseIsList"] = literal(true);
               }
             }
-            blocks.add(refer("send")
+            blocks.add(refer("send<$baseTypeString>")
                 .call([refer(_requestVar)], namedArguments, typeArguments)
                 .returned
                 .statement);
@@ -136,7 +140,7 @@ class SimpleAuthGenerator
         c.methods.add(new Method((b) {
           final List<Code> body = [
             new Code(
-                "var converted = await converter?.decode(response, responseType,responseIsList);"),
+                "var converted = await converter?.decode<Value>(response,responseIsList);"),
             new Code("if(converted != null) return converted;"),
           ];
           body.addAll(jsonSearializables.map((j) {
@@ -151,10 +155,7 @@ class SimpleAuthGenerator
           b.requiredParameters.addAll([
             new Parameter((p) => p
               ..name = 'response'
-              ..type = new Reference("Response<String>")),
-            new Parameter((p) => p
-              ..name = 'responseType'
-              ..type = new Reference("Type")),
+              ..type = new Reference("Response<String?>")),
             new Parameter((p) => p
               ..name = 'responseIsList'
               ..type = new Reference("bool")),
@@ -170,7 +171,8 @@ class SimpleAuthGenerator
   }
 
   String _getBaseClass(ConstantReader annotation) {
-    final type = annotation.objectValue.type!.getDisplayString(withNullability: true);
+    final type =
+        annotation.objectValue.type!.getDisplayString(withNullability: true);
     switch (type) {
       case BuiltInAnnotations.apiKeyDeclaration:
         return "${simple_auth.ApiKeyApi}";
@@ -209,11 +211,12 @@ class SimpleAuthGenerator
 
   Code _generateJsonDeserialization(ClassElement element) {
     return new Code(
-        "if(responseType == ${element.name}){ final d = await jsonConverter.decode(response,responseType,responseIsList); final body = responseIsList && d.body is List ?  new List.from((d.body as List).map((f) => new ${element.name}.fromJson(f as Map<String, dynamic>))) :  new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
+        "if(Value == ${element.name}){ final d = await jsonConverter.decode<Value>(response,responseIsList); final body = responseIsList && d.body is List ?  new List.from((d.body as List).map((f) => new ${element.name}.fromJson(f as Map<String, dynamic>))) :  new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
   }
 
   Constructor _getConstructor(ConstantReader annotation) {
-    final type = annotation.objectValue.type!.getDisplayString(withNullability: true);
+    final type =
+        annotation.objectValue.type!.getDisplayString(withNullability: true);
     final scopes = annotation.peek("scopes")?.listValue;
     final baseUrl = annotation.peek("baseUrl")!.stringValue;
     String body = "";
@@ -481,7 +484,7 @@ class SimpleAuthGenerator
           parameters.add(new Parameter((b) => b
             ..name = name
             ..type = new Reference("${simple_auth.AuthLocation}")
-            ..defaultTo = new Code("${value}")
+            ..defaultTo = new Code("AuthLocation.${value}")
             ..named = true));
           break;
         case BuiltInParameters.clientId:
@@ -533,19 +536,19 @@ class SimpleAuthGenerator
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.client
             ..named
-            ..type = new Reference("http.Client")));
+            ..type = new Reference("http.Client?")));
           break;
         case BuiltInParameters.converter:
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.converter
             ..named
-            ..type = new Reference("${simple_auth.Converter}")));
+            ..type = new Reference("${simple_auth.Converter}?")));
           break;
         case BuiltInParameters.authStorage:
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.authStorage
             ..named
-            ..type = new Reference("${simple_auth.AuthStorage}")));
+            ..type = new Reference("${simple_auth.AuthStorage}?")));
           break;
         default:
           throw pstring;

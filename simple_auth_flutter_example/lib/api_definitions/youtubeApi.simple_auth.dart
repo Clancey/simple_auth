@@ -38,19 +38,16 @@ class YoutubeApi extends GoogleApiKeyApi implements YouTubeApiDefinition {
     final params = {'q': q, 'maxResults': maxResults, 'part': part};
     final request =
         new Request('GET', url, parameters: params, authenticated: false);
-    return send<YoutubeSearchListResult>(request,
-        responseType: YoutubeSearchListResult);
+    return send<YoutubeSearchListResult>(request);
   }
 
   @override
-  Future<Response<Value?>> decodeResponse<Value>(
-      Response<String?> response, Type responseType, bool responseIsList) async {
-    var converted =
-        (await converter?.decode(response, responseType, responseIsList))!;
-    if (converted != null) return converted as FutureOr<Response<Value?>>;
-    if (responseType == YoutubeSearchListResult) {
-      final d =
-          await jsonConverter.decode(response, responseType, responseIsList);
+  Future<Response<Value>> decodeResponse<Value>(
+      Response<String?> response, bool responseIsList) async {
+    var converted = (await converter?.decode(response, responseIsList));
+    if (converted != null) return converted as FutureOr<Response<Value>>;
+    if (Value == YoutubeSearchListResult) {
+      final d = await jsonConverter.decode<Value>(response, responseIsList);
       final body = responseIsList && d.body is List
           ? new List.from((d.body as List).map((f) =>
               new YoutubeSearchListResult.fromJson(f as Map<String, dynamic>)))

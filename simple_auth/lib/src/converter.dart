@@ -2,8 +2,6 @@ import 'dart:async';
 import "dart:convert";
 import "package:meta/meta.dart";
 import 'package:simple_auth/simple_auth.dart';
-import 'request.dart';
-import 'response.dart';
 
 @immutable
 abstract class Converter {
@@ -11,8 +9,7 @@ abstract class Converter {
 
   Future<Request> encode(Request request);
 
-  Future<Response> decode(
-      Response response, Type responseType, bool responseIsList);
+  Future<Response<Value>> decode<Value>(Response response, bool responseIsList);
 }
 
 @immutable
@@ -28,8 +25,8 @@ class BodyConverterCodec extends Converter {
     return request.replaceBody(codec.encode(request.body));
   }
 
-  Future<Response> decode(
-      Response response, Type responseType, bool responseIsList) async {
+  Future<Response<Value>> decode<Value>(
+      Response response, bool responseIsList) async {
     final decoded = codec.decode(response.base.body);
     return new Response(response.base, decoded);
   }
@@ -43,8 +40,7 @@ class JsonConverter extends BodyConverterCodec {
   Future<Request> encode(Request request) {
     var body = request.body;
     if (body is List) {
-      new List.from(
-          body.map((f) => (f is JsonSerializable) ? f.toJson() : f));
+      new List.from(body.map((f) => (f is JsonSerializable) ? f.toJson() : f));
       body = new List.from(
           body.map((f) => (f is JsonSerializable) ? f.toJson() : f));
     }

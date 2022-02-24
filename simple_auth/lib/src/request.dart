@@ -10,7 +10,7 @@ class Request {
   final String url;
   final dynamic body;
   final Map<String, dynamic> parameters;
-  final Map<String, String?> headers;
+  final Map<String, String> headers;
 
   Request(this.method, this.url,
       {this.body,
@@ -37,7 +37,7 @@ class Request {
           {HttpMethod? method,
           String? url,
           Map<String, dynamic>? parameters,
-          Map<String, String?>? headers,
+          Map<String, String>? headers,
           Encoding? encoding}) =>
       new Request(method as String? ?? this.method, url ?? this.url,
           parameters: parameters ?? this.parameters,
@@ -69,7 +69,7 @@ class Request {
     final uri = pathUrl!.replace(
         queryParameters: cleanedParams.map((k, v) => new MapEntry(k, "$v")));
     final baseRequest = new http.Request(_getMethod(method), uri);
-    baseRequest.headers.addAll(headers as Map<String, String>);
+    baseRequest.headers.addAll(headers);
     if (body != null) {
       if (body is String) {
         baseRequest.body = body as String;
