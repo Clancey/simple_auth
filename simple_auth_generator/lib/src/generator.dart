@@ -100,7 +100,7 @@ class SimpleAuthGenerator
                       p.type.getDisplayString(withNullability: true)))));
 
             final blocks = [
-              url.assignFinal(_urlVar).statement,
+              url.assignConst(_urlVar).statement,
             ];
 
             if (queries.isNotEmpty) {
@@ -147,7 +147,7 @@ class SimpleAuthGenerator
             return _generateJsonDeserialization(j);
           }));
           final errorMessage = r"'No converter found for type $Value'";
-          body.add(new Code("throw new Exception($errorMessage);"));
+          body.add(new Code("throw Exception($errorMessage);"));
           b.annotations.add(refer("override"));
           b.modifier = MethodModifier.async;
           b.name = "decodeResponse<Value>";
@@ -211,7 +211,7 @@ class SimpleAuthGenerator
 
   Code _generateJsonDeserialization(ClassElement element) {
     return new Code(
-        "if(Value == ${element.name}){ final d = await jsonConverter.decode<Value>(response,responseIsList); final body = responseIsList && d.body is List ?  new List.from((d.body as List).map((f) => new ${element.name}.fromJson(f as Map<String, dynamic>))) :  new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
+        "if(Value == ${element.name}){ final d = await jsonConverter.decode<Value>(response,responseIsList); final body = responseIsList && d.body is List ?  List.from((d.body as List).map((f) => ${element.name}.fromJson(f as Map<String, dynamic>))) : ${element.name}.fromJson(d.body as Map<String, dynamic>); return Response(d.base,body as Value);}");
   }
 
   Constructor _getConstructor(ConstantReader annotation) {
@@ -221,7 +221,7 @@ class SimpleAuthGenerator
     final baseUrl = annotation.peek("baseUrl")!.stringValue;
     String body = "";
     if (baseUrl != "/") {
-      body = "this.baseUrl = '${baseUrl}'; ";
+      body = "baseUrl = '${baseUrl}'; ";
     }
     if (scopes != null && scopes.length > 0) {
       List<String> strings = [];
