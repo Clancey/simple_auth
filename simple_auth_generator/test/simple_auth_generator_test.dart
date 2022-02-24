@@ -84,31 +84,31 @@ void main() {
     expect(result, ApiGenerationResults.azureADDefinitionResult);
   });
 
-  test('run generator for $AmazonDefinition', () async {
+  test('run generator for AmazonDefinition', () async {
     var result = await runForElementNamed('$AmazonDefinition');
     expect(result, ApiGenerationResults.amazonDefinitionResult);
   });
-  test('run generator for $DropboxDefinition', () async {
+  test('run generator for DropboxDefinition', () async {
     var result = await runForElementNamed('$DropboxDefinition');
     expect(result, ApiGenerationResults.dropboxDefinitionResult);
   });
-  test('run generator for $FacebookDefinition', () async {
+  test('run generator for FacebookDefinition', () async {
     var result = await runForElementNamed('$FacebookDefinition');
     expect(result, ApiGenerationResults.facebookDefinitionResult);
   });
-  test('run generator for $GithubDefinition', () async {
+  test('run generator for GithubDefinition', () async {
     var result = await runForElementNamed('$GithubDefinition');
     expect(result, ApiGenerationResults.githubDefinitionResult);
   });
-  test('run generator for $InstagramDefinition', () async {
-    var result = await runForElementNamed('$InstagramDefinition');
-    expect(result, ApiGenerationResults.instagramDefinitionResult);
-  });
-  test('run generator for $LinkedInDefinition', () async {
+  // test('run generator for $InstagramDefinition', () async {
+  //   var result = await runForElementNamed('$InstagramDefinition');
+  //   expect(result, ApiGenerationResults.instagramDefinitionResult);
+  // });
+  test('run generator for LinkedInDefinition', () async {
     var result = await runForElementNamed('$LinkedInDefinition');
     expect(result, ApiGenerationResults.linkedInDefinitionResult);
   });
-  test('run generator for $MicrosoftLiveDefinition', () async {
+  test('run generator for MicrosoftLiveDefinition', () async {
     var result = await runForElementNamed('$MicrosoftLiveDefinition');
     expect(result, ApiGenerationResults.microsoftDefinitionResult);
   });
@@ -124,16 +124,16 @@ class ApiGenerationResults {
       String clientSecret = 'UwQ8aUXKDpqPzH0gpJnSij3i',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, apiKey, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
             client: client,
             converter: converter,
             authStorage: authStorage) {
-    this.baseUrl = 'https://www.googleapis.com/youtube/v3';
+    baseUrl = 'https://www.googleapis.com/youtube/v3';
     this.scopes = scopes ??
         [
           'https://www.googleapis.com/auth/youtube.readonly',
@@ -144,11 +144,11 @@ class ApiGenerationResults {
 
   Future<Response<String>> search(String q,
       [int maxResults = 25, String part = "snippet"]) {
-    final url = 'search';
+    const url = 'search';
     final params = {'q': q, 'maxResults': maxResults, 'part': part};
     final request =
         Request('GET', url, parameters: params, authenticated: true);
-    return send<String>(request, responseType: String);
+    return send<String, String>(request);
   }
 }
 ''';
@@ -159,9 +159,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
@@ -172,25 +172,28 @@ class ApiGenerationResults {
   }
 
   Future<Response<GoogleUser>> getCurrentUserInfo() {
-    final url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json';
+    const url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json';
     final request = Request('GET', url, authenticated: true);
-    return send<GoogleUser>(request);
+    return send<GoogleUser, GoogleUser>(request);
   }
 
   @override
-  Future<Response<Value>> decodeResponse<Value>(
-      Response<String> response, bool responseIsList) async {
-    var converted = await converter?.decode<Value>(response, responseIsList);
-    if (converted != null) return converted;
-    if (Value == GoogleUser) {
-      final d = await jsonConverter.decode<Value>(response, responseIsList);
-      final body = responseIsList && d.body is List
-          ? new List.from((d.body as List)
-              .map((f) => new GoogleUser.fromJson(f as Map<String, dynamic>)))
-          : new GoogleUser.fromJson(d.body as Map<String, dynamic>);
-      return new Response(d.base, body as Value);
+  Future<Response<Value>> decodeResponse<Value, InnerType>(
+      Response<String?> response) async {
+    var responseIsList = Value != InnerType;
+    var converted = await converter?.decode(response);
+    if (converted?.body is Value) {
+      return Response<Value>(converted!.base, converted.body as Value);
     }
-    throw new Exception('No converter found for type \$Value');
+    if (InnerType == GoogleUser) {
+      final d = await jsonConverter.decode<Value, InnerType>(response);
+      final body = responseIsList && d.body is List
+          ? List<InnerType>.from((d.body as List)
+              .map((f) => GoogleUser.fromJson(f as Map<String, dynamic>)))
+          : GoogleUser.fromJson(d.body as Map<String, dynamic>);
+      return Response(d.base, body as Value);
+    }
+    throw Exception('No converter found for type \$Value');
   }
 }
 ''';
@@ -268,9 +271,9 @@ class ApiGenerationResults {
       String redirectUrl = 'redirecturl',
       String clientSecret = 'client_secret',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, tokenUrl, resource, authorizationUrl,
             redirectUrl,
             clientSecret: clientSecret,
@@ -299,9 +302,9 @@ class ApiGenerationResults {
       '''class MyBasicAuthApi extends BasicAuthApi implements MyBasicAuthApiDefinition {
   MyBasicAuthApi(String identifier,
       {String loginUrl = 'http://example.com/login',
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, loginUrl,
             client: client, converter: converter, authStorage: authStorage) {}
 }
@@ -316,9 +319,9 @@ class ApiGenerationResults {
       String authorizationUrl = 'AuthUrl',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, clientSecret, tokenUrl, authorizationUrl,
             redirectUrl,
             scopes: scopes,
@@ -341,9 +344,9 @@ class ApiGenerationResults {
       String authorizationUrl = 'AuthUrl',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, apiKey, authKey, authLocation, clientId, clientSecret,
             tokenUrl, authorizationUrl, redirectUrl,
             scopes: scopes,
@@ -359,9 +362,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
@@ -377,9 +380,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
@@ -395,9 +398,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
@@ -413,9 +416,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
@@ -449,9 +452,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
@@ -468,9 +471,9 @@ class ApiGenerationResults {
       String clientSecret = 'client_secret',
       String redirectUrl = 'redirecturl',
       List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, redirectUrl,
             clientSecret: clientSecret,
             scopes: scopes,
