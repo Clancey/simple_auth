@@ -197,57 +197,61 @@ class ApiGenerationResults {
 
   static String myServiceResult =
       '''class MyService extends Api implements MyServiceDefinition {
-  MyService([http.Client client, Converter converter, AuthStorage authStorage])
+  MyService(
+      [http.Client? client, Converter? converter, AuthStorage? authStorage])
       : super(client: client, converter: converter);
 
   Future<Response<List<GoogleUser>>> getList(String id) {
-    final url = '/';
+    const url = '/';
     final params = {'id': id};
     final headers = {'foo': 'bar'};
     final request = Request('GET', url,
         parameters: params, headers: headers, authenticated: true);
-    return send<GoogleUser>(request, responseIsList: true);
+    return send<List<GoogleUser>, GoogleUser>(request);
   }
 
   Future<Response<JsonSerializableObject>> getJsonSerializableObject(
       String id) {
-    final url = '/';
+    const url = '/';
     final params = {'id': id};
     final headers = {'foo': 'bar'};
     final request = Request('GET', url,
         parameters: params, headers: headers, authenticated: true);
-    return send<JsonSerializableObject>(request);
+    return send<JsonSerializableObject, JsonSerializableObject>(request);
   }
 
   Future<Response<dynamic>> getResource(String id) {
-    final url = '/\$id';
+    const url = '/\$id';
     final request = Request('GET', url, authenticated: true);
-    return send<dynamic>(request);
+    return send<dynamic, dynamic>(request);
   }
 
   Future<Response<Map<dynamic, dynamic>>> getMapResource(String id) {
-    final url = '/';
+    const url = '/';
     final params = {'id': id};
     final headers = {'foo': 'bar'};
     final request = Request('GET', url,
         parameters: params, headers: headers, authenticated: true);
-    return send<Map<dynamic, dynamic>>(request);
+    return send<Map<dynamic, dynamic>, Map<dynamic, dynamic>>(request);
   }
 
   @override
-  Future<Response<Value>> decodeResponse<Value>(
-      Response<String> response, bool responseIsList) async {
-    var converted = await converter?.decode<Value>(response, responseIsList);
-    if (converted != null) return converted;
-    if (Value == GoogleUser) {
-      final d = await jsonConverter.decode<Value>(response, responseIsList);
-      final body = responseIsList && d.body is List
-          ? new List.from((d.body as List)
-              .map((f) => new GoogleUser.fromJson(f as Map<String, dynamic>)))
-          : new GoogleUser.fromJson(d.body as Map<String, dynamic>);
-      return new Response(d.base, body as Value);
+  Future<Response<Value>> decodeResponse<Value, InnerType>(
+      Response<String?> response) async {
+    var responseIsList = Value != InnerType;
+    var converted = await converter?.decode(response);
+    if (converted?.body is Value) {
+      return Response<Value>(converted!.base, converted.body as Value);
     }
-    throw new Exception('No converter found for type \$Value');
+    if (InnerType == GoogleUser) {
+      final d = await jsonConverter.decode<Value, InnerType>(response);
+      final body = responseIsList && d.body is List
+          ? List<InnerType>.from((d.body as List)
+              .map((f) => GoogleUser.fromJson(f as Map<String, dynamic>)))
+          : GoogleUser.fromJson(d.body as Map<String, dynamic>);
+      return Response(d.base, body as Value);
+    }
+    throw Exception('No converter found for type \$Value');
   }
 }
 ''';
@@ -283,9 +287,9 @@ class ApiGenerationResults {
       {String apiKey = 'fdsfdskjfdskljflds',
       String authKey = 'key',
       AuthLocation authLocation = AuthLocation.query,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(apiKey, authKey, authLocation,
             client: client, converter: converter, authStorage: authStorage) {}
 }

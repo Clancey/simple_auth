@@ -33,10 +33,10 @@ class Api {
   }
 
   ///Used to decode the response body before returning from an API call
-  Future<Response<Value>> decodeResponse<Value>(
-      Response<String?> response, bool responseIsList) async {
+  Future<Response<Value>> decodeResponse<Value, InnerType>(
+      Response<String?> response) async {
     final converted =
-        await converter?.decode<Value>(response, responseIsList) ?? response;
+        await converter?.decode<Value, InnerType>(response) ?? response;
     return converted as Response<Value>;
   }
 
@@ -72,8 +72,8 @@ class Api {
   }
 
   ///Used to send a request
-  Future<Response<Value>> send<Value>(Request request,
-      {bool responseIsList = false}) async {
+  ///
+  Future<Response<Value>> send<Value, InnerType>(Request request) async {
     Request req = request;
 
     if (req.body != null) {
@@ -89,10 +89,8 @@ class Api {
     Response res = new Response<String>(response, response.body);
 
     if (res.isSuccessful) {
-      res =
-          await decodeResponse<Value>(res as Response<String?>, responseIsList);
+      res = await decodeResponse<Value, InnerType>(res as Response<String?>);
     }
-
     res = await interceptResponse(res);
 
     if (!res.isSuccessful) {

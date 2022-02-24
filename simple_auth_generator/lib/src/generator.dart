@@ -118,16 +118,14 @@ class SimpleAuthGenerator
 
             final Map<String, Expression> namedArguments = {};
             final List<Reference> typeArguments = [];
-            final String baseTypeString =
+            final String responseTypeString =
                 responseType?.getDisplayString(withNullability: true) ??
                     "dynamic";
-            if (responseType != null) {
-              if (baseResponsetype?.getDisplayString(withNullability: true) !=
-                  responseType.getDisplayString(withNullability: true)) {
-                namedArguments["responseIsList"] = literal(true);
-              }
-            }
-            blocks.add(refer("send<$baseTypeString>")
+            final String baseTypeString =
+                baseResponsetype?.getDisplayString(withNullability: true) ??
+                    responseTypeString;
+
+            blocks.add(refer("send<$responseTypeString,$baseTypeString>")
                 .call([refer(_requestVar)], namedArguments, typeArguments)
                 .returned
                 .statement);
@@ -140,8 +138,9 @@ class SimpleAuthGenerator
         c.methods.add(new Method((b) {
           final List<Code> body = [
             new Code(
-                "var converted = await converter?.decode<Value>(response,responseIsList);"),
-            new Code("if(converted != null) return converted;"),
+                "var responseIsList = Value != InnerType; var converted = await converter?.decode(response);"),
+            new Code(
+                "if(converted?.body is Value){ return Response<Value>(converted!.base, converted.body as Value);}"),
           ];
           body.addAll(jsonSearializables.map((j) {
             return _generateJsonDeserialization(j);
@@ -150,15 +149,12 @@ class SimpleAuthGenerator
           body.add(new Code("throw Exception($errorMessage);"));
           b.annotations.add(refer("override"));
           b.modifier = MethodModifier.async;
-          b.name = "decodeResponse<Value>";
+          b.name = "decodeResponse<Value,InnerType>";
           b.returns = new Reference("Future<Response<Value>>");
           b.requiredParameters.addAll([
             new Parameter((p) => p
               ..name = 'response'
-              ..type = new Reference("Response<String?>")),
-            new Parameter((p) => p
-              ..name = 'responseIsList'
-              ..type = new Reference("bool")),
+              ..type = new Reference("Response<String?>"))
           ]);
           b.body = new Block.of(body);
         }));
@@ -166,7 +162,7 @@ class SimpleAuthGenerator
 
     final emitter = new DartEmitter();
 
-    //final unformattedCode = classBuilder.accept(emitter).toString();
+    // final unformattedCode = classBuilder.accept(emitter).toString();
     return new DartFormatter().format('${classBuilder.accept(emitter)}');
   }
 
@@ -211,7 +207,7 @@ class SimpleAuthGenerator
 
   Code _generateJsonDeserialization(ClassElement element) {
     return new Code(
-        "if(Value == ${element.name}){ final d = await jsonConverter.decode<Value>(response,responseIsList); final body = responseIsList && d.body is List ?  List.from((d.body as List).map((f) => ${element.name}.fromJson(f as Map<String, dynamic>))) : ${element.name}.fromJson(d.body as Map<String, dynamic>); return Response(d.base,body as Value);}");
+        "if(InnerType == ${element.name}){ final d = await jsonConverter.decode<Value,InnerType>(response); final body = responseIsList && d.body is List ?  List<InnerType>.from((d.body as List).map((f) => ${element.name}.fromJson(f as Map<String, dynamic>))) : ${element.name}.fromJson(d.body as Map<String, dynamic>); return Response(d.base,body as Value);}");
   }
 
   Constructor _getConstructor(ConstantReader annotation) {
@@ -484,7 +480,7 @@ class SimpleAuthGenerator
           parameters.add(new Parameter((b) => b
             ..name = name
             ..type = new Reference("${simple_auth.AuthLocation}")
-            ..defaultTo = new Code("AuthLocation.${value}")
+            ..defaultTo = new Code("${value}")
             ..named = true));
           break;
         case BuiltInParameters.clientId:

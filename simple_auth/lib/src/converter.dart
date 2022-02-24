@@ -9,7 +9,7 @@ abstract class Converter {
 
   Future<Request> encode(Request request);
 
-  Future<Response<Value>> decode<Value>(Response response, bool responseIsList);
+  Future<Response> decode<Value, InnerType>(Response response);
 }
 
 @immutable
@@ -25,8 +25,7 @@ class BodyConverterCodec extends Converter {
     return request.replaceBody(codec.encode(request.body));
   }
 
-  Future<Response<Value>> decode<Value>(
-      Response response, bool responseIsList) async {
+  Future<Response> decode<Value, InnerType>(Response response) async {
     final decoded = codec.decode(response.base.body);
     return new Response(response.base, decoded);
   }
