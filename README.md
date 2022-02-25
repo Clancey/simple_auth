@@ -22,7 +22,6 @@ Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-469
 - Facebook
 - Github
 - Google
-- Instagram
 - Linked In
 - Microsoft Live Connect
 - Keycloak
