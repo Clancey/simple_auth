@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   simple_auth: ^2.0.10
-  analyzer: ^2.1.0
+  analyzer: ^3.0.0
   build: ^2.0.0
   build_config: ^1.0.0
   path: ^1.8.0
