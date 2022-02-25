@@ -83,7 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
         "public_repo",
       ]);
 
-  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
+  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi(
+      "google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
       "redirecturl",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
@@ -94,8 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
-  final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
-      "instagram", "clientId", "clientSecret", "redirecturl");
 
   final simpleAuth.LinkedInApi linkedInApi = new simpleAuth.LinkedInApi(
       "linkedin", "clientId", "clientSecret", "redirecturl");
@@ -186,7 +185,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             leading: Icon(Icons.launch),
-
             title: Text('Search for "Flutter"'),
             onTap: () async {
               try {
@@ -198,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
           ),
-          ListTile( 
+          ListTile(
             leading: Icon(Icons.delete),
             title: Text('Logout'),
             onTap: () {
@@ -309,26 +307,6 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () async {
               await basicApi.logOut();
               showMessage("Logged out");
-            },
-          ),
-          ListTile(
-            title: Text(
-              "Instagram OAuth",
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(instagramApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(instagramApi);
             },
           ),
           ListTile(
