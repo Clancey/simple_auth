@@ -43,8 +43,13 @@ class Api {
   ///Called before a request is sent across the wire.
   Future<Request> interceptRequest(Request request) async {
     Request req = request;
+    if (defaultHeaders != null) {
+      var map = new Map<String, String>.from(req.headers);
+      map.addAll(defaultHeaders!);
+      req = req.replace(headers: map);
+    }
     if (useragent?.isNotEmpty ?? false) {
-      Map<String, String> map = new Map.from(request.headers);
+      Map<String, String> map = new Map.from(req.headers);
       map["User-Agent"] = useragent!;
       req = request.replace(headers: map);
     }
