@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 @immutable
 class Response<Body> {
   final http.Response base;
-  final Body body;
+  final Body? body;
 
   const Response(this.base, this.body);
 

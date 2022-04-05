@@ -1,17 +1,16 @@
 name: simple_auth_flutter
 description: Simple Auth is the simplest way to authenticate your users/apis. This plugin will securely store tokens/credentials as well as automatically present login UI when needed.
-version: 2.0.9
-author: James Clancey <james.clancey@gmail.com>
+version: 2.0.11
 homepage: https://github.com/clancey/simple_auth
 
 environment:
-    sdk: ">=2.7.0 <3.0.0"
-    flutter: ">=1.10.0"
+    sdk: '>=2.12.0 <3.0.0'
+    flutter: ">=2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  simple_auth: ^2.0.9
+  simple_auth: ^2.0.10
 flutter:
   plugin:
     platforms:
@@ -26,3 +25,8 @@ flutter:
 dev_dependencies_overrides:
   simple_auth:
     path: ../simple_auth
+
+
+
+false_secrets:
+  - example/lib/main.dart

@@ -1,10 +1,10 @@
 import "package:simple_auth/simple_auth.dart";
 
 class BasicAuthAccount extends Account {
-  BasicAuthAccount(String identifier,
+  BasicAuthAccount(String? identifier,
       {this.key, Map<String, String> userData = const {}})
       : super(identifier, userData: userData) {}
-  String key;
+  String? key;
 
   @override
   bool isValid() => key?.isNotEmpty ?? false;

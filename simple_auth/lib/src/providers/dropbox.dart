@@ -6,10 +6,10 @@ import "package:http/http.dart" as http;
 class DropboxApi extends OAuthApi {
   DropboxApi(String identifier, String clientId, String clientSecret,
       String redirectUrl,
-      {List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      {List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super.fromIdAndSecret(identifier, clientId, clientSecret,
             client: client,
             scopes: scopes,
@@ -23,7 +23,7 @@ class DropboxApi extends OAuthApi {
   }
 
   Authenticator getAuthenticator() => DropboxAuthenticator(identifier, clientId,
-      clientSecret, tokenUrl, authorizationUrl, redirectUrl, scopes);
+      clientSecret, tokenUrl, authorizationUrl, redirectUrl!, scopes);
 
   @override
   Future<OAuthAccount> getAccountFromAuthCode(
@@ -40,18 +40,18 @@ class DropboxApi extends OAuthApi {
 }
 
 class DropboxAuthenticator extends OAuthAuthenticator {
-  Uri redirectUri;
-  DropboxAuthenticator(String identifier, String clientId, String clientSecret,
-      String tokenUrl, String baseUrl, String redirectUrl, List<String> scopes)
+  late Uri redirectUri;
+  DropboxAuthenticator(String? identifier, String? clientId, String? clientSecret,
+      String? tokenUrl, String? baseUrl, String redirectUrl, List<String>? scopes)
       : super(identifier, clientId, clientSecret, tokenUrl, baseUrl,
             redirectUrl) {
     authCodeKey = "access_token";
     redirectUri = Uri.parse(redirectUrl);
   }
-  String token;
-  String tokenType;
-  String state;
-  String uid;
+  String? token;
+  String? tokenType;
+  String? state;
+  String? uid;
   bool checkUrl(Uri url) {
     try {
       /*
@@ -63,8 +63,8 @@ class DropboxAuthenticator extends OAuthAuthenticator {
         url = url.replace(query: url.fragment);
       }
 
-      if (url?.host != redirectUri.host) return false;
-      if (url?.query?.isEmpty ?? true) return false;
+      if (url.host != redirectUri.host) return false;
+      if (url.query.isEmpty) return false;
       if (!url.queryParameters.containsKey(authCodeKey)) return false;
       var code = url.queryParameters[authCodeKey];
       if (code?.isEmpty ?? true) return false;

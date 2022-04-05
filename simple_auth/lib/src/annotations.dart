@@ -42,7 +42,7 @@ class OAuthApiKeyApiDeclaration extends ApiDeclaration {
   final String tokenUrl;
   final String authorizationUrl;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const OAuthApiKeyApiDeclaration(
       String name,
       this.apiKey,
@@ -65,7 +65,7 @@ class OAuthApiDeclaration extends ApiDeclaration {
   final String tokenUrl;
   final String authorizationUrl;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const OAuthApiDeclaration(String name, this.clientId, this.clientSecret,
       this.tokenUrl, this.authorizationUrl, this.redirectUrl,
       {String baseUrl = "/", this.scopes})
@@ -77,7 +77,7 @@ class AmazonApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const AmazonApiDeclaration(
     String name,
     this.clientId,
@@ -93,7 +93,7 @@ class DropboxApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const DropboxApiDeclaration(
     String name,
     this.clientId,
@@ -109,7 +109,7 @@ class FacebookApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const FacebookApiDeclaration(
     String name,
     this.clientId,
@@ -125,7 +125,7 @@ class GithubApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const GithubApiDeclaration(
     String name,
     this.clientId,
@@ -141,7 +141,7 @@ class InstagramApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const InstagramApiDeclaration(
     String name,
     this.clientId,
@@ -157,7 +157,7 @@ class LinkedInApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const LinkedInApiDeclaration(
     String name,
     this.clientId,
@@ -173,7 +173,7 @@ class MicrosoftLiveDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const MicrosoftLiveDeclaration(
       String name, this.clientId, this.clientSecret, this.redirectUrl,
       {String baseUrl: "/", this.scopes})
@@ -189,13 +189,13 @@ class AzureADApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const AzureADApiDeclaration(
       String name, this.clientId, this.resource, this.redirectUrl,
       {this.clientSecret = "native",
       String baseUrl: "/",
-      String authorizationUrl,
-      String tokenUrl,
+      String? authorizationUrl,
+      String? tokenUrl,
       this.azureTennant = "\$azureTennant",
       this.scopes})
       : authorizationUrl = authorizationUrl ??
@@ -213,12 +213,12 @@ class AzureADV2ApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const AzureADV2ApiDeclaration(String name, this.clientId, this.redirectUrl,
       {this.clientSecret = "native",
       String baseUrl: "/",
-      String authorizationUrl,
-      String tokenUrl,
+      String? authorizationUrl,
+      String? tokenUrl,
       this.azureTennant = "\$azureTennant",
       this.scopes})
       : authorizationUrl = authorizationUrl ??
@@ -234,7 +234,7 @@ class GoogleApiKeyApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const GoogleApiKeyApiDeclaration(
     String name,
     this.apiKey,
@@ -251,7 +251,7 @@ class GoogleApiDeclaration extends ApiDeclaration {
   final String clientId;
   final String clientSecret;
   final String redirectUrl;
-  final List<String> scopes;
+  final List<String>? scopes;
   const GoogleApiDeclaration(
     String name,
     this.clientId,
@@ -264,13 +264,13 @@ class GoogleApiDeclaration extends ApiDeclaration {
 
 @immutable
 class Path {
-  final String name;
+  final String? name;
   const Path({this.name});
 }
 
 @immutable
 class Query {
-  final String name;
+  final String? name;
   const Query({this.name});
 }
 
@@ -281,7 +281,7 @@ class Body {
 
 @immutable
 class Header {
-  final String name;
+  final String? name;
   const Header([this.name]);
 }
 

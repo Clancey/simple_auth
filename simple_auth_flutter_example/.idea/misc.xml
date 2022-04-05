@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <type id="android" />
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
@@ -25,5 +28,5 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Android API 10 Platform" project-jdk-type="Android SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Android API 30 Platform" project-jdk-type="Android SDK" />
 </project>

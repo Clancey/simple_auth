@@ -81,6 +81,7 @@ NSURL *controllerRedirectUrl;
             controller.delegate = self;
             controllerRedirectUrl = authenticator.redirectUrl;
             [viewController presentViewController:controller animated:true completion:nil];
+            [authenticator cancel];
             return;
         }
         BOOL opened = [UIApplication.sharedApplication openURL:authenticator.initialUrl];

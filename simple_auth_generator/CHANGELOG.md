@@ -1,3 +1,6 @@
+## [2.0.10] - 06-07-2021
+* Migrates to null-safety
+
 ## [2.0.3] - 02-28-2019
 * Added Azure A2D V2
 

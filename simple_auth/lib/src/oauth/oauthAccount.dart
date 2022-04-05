@@ -1,14 +1,14 @@
 import "package:simple_auth/simple_auth.dart";
 
 class OAuthAccount extends Account {
-  OAuthAccount(String identifier,
+  OAuthAccount(String? identifier,
       {this.idToken,
       this.token,
       this.tokenType,
       this.refreshToken,
       this.expiresIn,
       this.created,
-      List<String> scope,
+      List<String>? scope,
       Map<String, String> userData = const {}})
       : super(identifier, userData: userData) {
     if (scope != null) {
@@ -16,19 +16,19 @@ class OAuthAccount extends Account {
     }
   }
 
-  String tokenType = "Bearer";
-  String idToken;
-  String token;
-  String refreshToken;
-  int expiresIn;
-  DateTime created;
-  List<String> scope = List<String>();
+  String? tokenType = "Bearer";
+  String? idToken;
+  String? token;
+  String? refreshToken;
+  int? expiresIn;
+  DateTime? created;
+  List<String> scope = <String>[];
 
   @override
   bool isValid() {
     if (token?.isEmpty ?? true) return false;
-    if (expiresIn <= 0) return true;
-    var expiresTime = created.add(Duration(seconds: expiresIn));
+    if (expiresIn! <= 0) return true;
+    var expiresTime = created!.add(Duration(seconds: expiresIn!));
     return expiresTime.isAfter(DateTime.now().toUtc());
   }
 
@@ -56,7 +56,7 @@ class OAuthAccount extends Account {
         "userData": userData,
         "idToken": idToken,
         "token": token,
-        "created": created.toIso8601String(),
+        "created": created!.toIso8601String(),
         "expiresIn": expiresIn,
         "refreshToken": refreshToken,
         "scope": scope,

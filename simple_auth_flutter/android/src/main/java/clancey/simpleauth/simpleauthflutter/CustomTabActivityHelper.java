@@ -42,7 +42,7 @@ public class CustomTabActivityHelper implements ServiceConnectionCallback {
      * @param uri the Uri to be opened.
      * @param fallback a CustomTabFallback to be used if Custom Tabs is not available.
      */
-    public static void openCustomTab(Context activity,
+    public static void openCustomTab(Activity activity,
                                      CustomTabsIntent customTabsIntent,
                                      Uri uri,
                                      CustomTabFallback fallback) {

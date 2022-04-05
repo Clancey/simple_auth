@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -83,7 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
         "public_repo",
       ]);
 
-  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi("google",
+  final simpleAuth.GoogleApi googleApi = new simpleAuth.GoogleApi(
+      "google",
       "992461286651-k3tsbcreniknqptanrugsetiimt0lkvo.apps.googleusercontent.com",
       "redirecturl",
       clientSecret: "avrYAIxweNZwcHpsBlIzTp04",
@@ -94,8 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final simpleAuth.BasicAuthApi basicApi = new simpleAuth.BasicAuthApi(
       "github-basic", "https://api.github.com/user");
-  final simpleAuth.InstagramApi instagramApi = new simpleAuth.InstagramApi(
-      "instagram", "clientId", "clientSecret", "redirecturl");
 
   final simpleAuth.LinkedInApi linkedInApi = new simpleAuth.LinkedInApi(
       "linkedin", "clientId", "clientSecret", "redirecturl");
@@ -117,14 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
+        title: new Text(widget.title!),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
             title: Text(
               "AzureAD OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -144,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Google OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -169,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Youtube",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -186,19 +185,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             leading: Icon(Icons.launch),
-
             title: Text('Search for "Flutter"'),
             onTap: () async {
               try {
                 var user = await youtubeApi.search("flutter");
                 print(user.body);
-                showMessage(user.body.items.length.toString());
+                showMessage(user.body!.items.length.toString());
               } catch (e) {
                 showError(e);
               }
             },
           ),
-          ListTile( 
+          ListTile(
             leading: Icon(Icons.delete),
             title: Text('Logout'),
             onTap: () {
@@ -208,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Amazon OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -228,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Dropbox OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -248,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Facebook OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -268,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Github OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -288,7 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Github BasicAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -313,28 +311,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             title: Text(
-              "Instagram OAuth",
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.launch),
-            title: Text('Login'),
-            onTap: () {
-              login(instagramApi);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Logout'),
-            onTap: () {
-              logout(instagramApi);
-            },
-          ),
-          ListTile(
-            title: Text(
               "LinkedIn OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -354,7 +332,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text(
               "Microsoft Live OAuth",
-              style: Theme.of(context).textTheme.headline,
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
@@ -382,7 +360,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void showMessage(String text) {
     var alert = new AlertDialog(content: new Text(text), actions: <Widget>[
-      new FlatButton(
+      new TextButton(
           child: const Text("Ok"),
           onPressed: () {
             Navigator.pop(context);
