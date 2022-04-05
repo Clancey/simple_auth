@@ -5,13 +5,13 @@ import "package:http/http.dart" as http;
 import "dart:convert" as Convert;
 
 
-class KeycloakProvider extends OAuthApi {
+class KeycloakApi extends OAuthApi {
   String realm;
 
   // Keycloak base url E.G., https://auth.mydomain.com
   String baseUrl;
 
-  KeycloakProvider(String identifier,
+  KeycloakApi(String identifier,
       String clientId,
       String clientSecret,
       String redirectUrl,
@@ -52,7 +52,9 @@ class KeycloakProvider extends OAuthApi {
     if (account == null) throw new Exception("Invalid Account");
 
     var postData = await getRefreshTokenPostData(account);
-    var resp = await httpClient.post("${this.baseUrl}/auth/realms/${this.realm}/protocol/openid-connect/logout",
+    var resp = await httpClient.post(
+        Uri.parse(
+            "${this.baseUrl}/auth/realms/${this.realm}/protocol/openid-connect/logout"),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"

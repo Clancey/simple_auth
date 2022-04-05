@@ -14,8 +14,8 @@ class BasicAuthAuthenticator extends Authenticator {
       if (username?.isEmpty ?? true) throw new Exception("Invalid Username");
       if (password?.isEmpty ?? true) throw new Exception("Invalid Password");
       var key = base64.encode(utf8.encode("$username:$password"));
-      var req =
-          await http.get(loginUrl, headers: {"Authorization": "Basic $key"});
+      var req = await http
+          .get(Uri.parse(loginUrl), headers: {"Authorization": "Basic $key"});
       var success = req.statusCode >= 200 && req.statusCode < 300;
       if (!success) return false;
       foundAuthCode(key);

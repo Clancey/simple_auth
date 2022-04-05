@@ -25,7 +25,7 @@ class OAuthApi extends AuthenticatedApi {
       {this.scopes,
       http.Client client,
       Converter converter,
-      bool usePkce,
+      bool usePkce = false,
       AuthStorage authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
@@ -110,7 +110,7 @@ class OAuthApi extends AuthenticatedApi {
       WebAuthenticator authenticator) async {
     if (tokenUrl?.isEmpty ?? true) throw new Exception("Invalid tokenURL");
     var postData = await authenticator.getTokenPostData(clientSecret);
-    var resp = await httpClient.post(tokenUrl,
+    var resp = await httpClient.post(Uri.parse(tokenUrl),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
@@ -140,7 +140,7 @@ class OAuthApi extends AuthenticatedApi {
       if (account == null) throw new Exception("Invalid Account");
       var postData = await getRefreshTokenPostData(account);
 
-      var resp = await httpClient.post(tokenUrl,
+      var resp = await httpClient.post(Uri.parse(tokenUrl),
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded"
