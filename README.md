@@ -22,7 +22,6 @@ Android: [![Build status](https://build.appcenter.ms/v0.1/apps/339333fd-8d50-469
 - Facebook
 - Github
 - Google
-- Instagram
 - Linked In
 - Microsoft Live Connect
 - Keycloak
@@ -38,7 +37,7 @@ var api = new simpleAuth.GoogleApi(
         "https://www.googleapis.com/auth/userinfo.profile"
       ]);
 var request = new Request(HttpMethod.Get, "https://www.googleapis.com/oauth2/v1/userinfo?alt=json");
-var userInfo = await api.send<UserInfo>(request);
+var userInfo = await api.send<UserInfo, UserInfo>(request);
 ```
 
 That's it! If the user is not logged in, they will automatically be prompted. If their credentials are cached from a previous session, the api call proceeds! Expired tokens even automatically refresh.

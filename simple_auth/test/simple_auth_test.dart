@@ -11,8 +11,8 @@ void main() {
     final respStart2 = new Resource("id2", "foo from resource 1");
     var json = await convert.encode(new Request("get", "foo",
         body: new List.from([respStart, respStart2])));
-    var decoded = await convert.decode(
-        new Response(new http.Response(json.body, 200), null), Resource, true);
+    var decoded = await convert.decode<List<Resource>, Resource>(
+        new Response(new http.Response(json.body, 200), null));
     var newJson =
         await convert.encode(new Request("get", "foo", body: decoded.body));
     expect(json.body, newJson.body);
@@ -25,8 +25,8 @@ class Resource2 implements JsonSerializable {
         'id': id,
         'name': name,
       };
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   Resource2(this.id, this.name);
 
   @override
@@ -39,8 +39,8 @@ class Resource {
         'id': id,
         'name': name,
       };
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   Resource(this.id, this.name);
 
   factory Resource.fromJson(Map<String, dynamic> json) =>
@@ -49,19 +49,18 @@ class Resource {
 
 class ModelConverter extends JsonConverter {
   @override
-  Future<Response> decode(
-      Response response, Type responseType, bool responseIsList) async {
-    final d = await super.decode(response, responseType, responseIsList);
+  Future<Response<Value>> decode<Value, InnerType>(Response response) async {
+    final d = await super.decode(response);
     var body = d.body;
-
-    if (responseType == Resource) {
+    var responseIsList = Value != InnerType;
+    if (InnerType == Resource) {
       body = responseIsList && body is List
-          ? new List.from(
+          ? new List<InnerType>.from(
               body.map((f) => new Resource.fromJson(f as Map<String, dynamic>)))
           : new Resource.fromJson(d.body as Map<String, dynamic>);
-    } else if (responseType == Resource2) {
+    } else if (InnerType == Resource2) {
       body = new Resource2.fromJson(body as Map<String, dynamic>);
     }
-    return new Response(response.base, body);
+    return new Response(response.base, body as Value);
   }
 }

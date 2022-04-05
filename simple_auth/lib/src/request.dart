@@ -34,31 +34,31 @@ class Request {
   }
 
   Request replace(
-          {HttpMethod method,
-          String url,
-          Map<String, dynamic> parameters,
-          Map<String, String> headers,
-          Encoding encoding}) =>
-      new Request(method ?? this.method, url ?? this.url,
+          {HttpMethod? method,
+          String? url,
+          Map<String, dynamic>? parameters,
+          Map<String, String>? headers,
+          Encoding? encoding}) =>
+      new Request(method as String? ?? this.method, url ?? this.url,
           parameters: parameters ?? this.parameters,
           headers: headers ?? this.headers,
           body: this.body,
           authenticated: this.authenticated);
   Request replaceBody(dynamic body,
-          {HttpMethod method,
-          String url,
-          Map<String, dynamic> parameters,
-          Map<String, String> headers,
-          Encoding encoding}) =>
-      new Request(method ?? this.method, url ?? this.url,
+          {HttpMethod? method,
+          String? url,
+          Map<String, dynamic>? parameters,
+          Map<String, String>? headers,
+          Encoding? encoding}) =>
+      new Request(method as String? ?? this.method, url ?? this.url,
           body: body,
           parameters: parameters ?? this.parameters,
           headers: headers ?? this.headers,
           authenticated: this.authenticated);
 
-  http.BaseRequest toHttpRequest(String baseUrl) {
+  http.BaseRequest toHttpRequest(String? baseUrl) {
     var pathUrl = Uri.tryParse(url);
-    if (pathUrl?.scheme?.isEmpty ?? true) {
+    if (pathUrl?.scheme.isEmpty ?? true) {
       pathUrl = Uri.parse("$baseUrl/${url}");
     }
     var cleanedParams = parameters;
@@ -66,7 +66,7 @@ class Request {
         .where((key) => parameters[key] == null)
         .toList()
         .forEach(cleanedParams.remove);
-    final uri = pathUrl.replace(
+    final uri = pathUrl!.replace(
         queryParameters: cleanedParams.map((k, v) => new MapEntry(k, "$v")));
     final baseRequest = new http.Request(_getMethod(method), uri);
     baseRequest.headers.addAll(headers);

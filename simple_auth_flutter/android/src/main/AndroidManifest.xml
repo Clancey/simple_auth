@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="clancey.simpleauth.simpleauthflutter">
     <application>
+        <meta-data android:name="flutterEmbedding" android:value="2"/>
         <activity android:name="clancey.simpleauth.simpleauthflutter.WebAuthenticatorActivity"/>
         <service android:name="clancey.simpleauth.simpleauthflutter.KeepAliveService"/>
     </application>

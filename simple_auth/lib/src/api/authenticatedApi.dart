@@ -4,19 +4,19 @@ import 'package:http/http.dart' as http;
 import "dart:convert" as Convert;
 
 abstract class AuthenticatedApi extends Api {
-  AuthStorage _authStorage;
+  late AuthStorage _authStorage;
   AuthenticatedApi(String identifier,
-      {http.Client client, Converter converter, AuthStorage authStorage})
+      {http.Client? client, Converter? converter, AuthStorage? authStorage})
       : super(identifier: identifier, client: client, converter: converter) {
     _authStorage = authStorage ?? AuthStorage.shared;
   }
 
-  Account currentAccount;
+  Account? currentAccount;
 
-  Future<Account> _currentAuthCall;
+  Future<Account?>? _currentAuthCall;
 
   ///Call this method to get the Authenticated user.
-  Future<Account> authenticate() async {
+  Future<Account?> authenticate() async {
     if (_currentAuthCall == null) _currentAuthCall = performAuthenticate();
     try {
       var account = await _currentAuthCall;
@@ -29,7 +29,7 @@ abstract class AuthenticatedApi extends Api {
   }
 
   ///This method is for subclasses only. Call [authenticate()] instead.
-  Future<Account> performAuthenticate();
+  Future<Account?> performAuthenticate();
   Future refreshAccount(Account account);
 
   @override
@@ -68,7 +68,7 @@ abstract class AuthenticatedApi extends Api {
   }
 
   ///This should not be called, it is used to cache the account locally
-  Future<T> loadAccountFromCache<T extends Account>() async {
+  Future<T?> loadAccountFromCache<T extends Account>() async {
     var json = await _authStorage.read(key: identifier);
     if (json == null || json == '') return null;
     try {

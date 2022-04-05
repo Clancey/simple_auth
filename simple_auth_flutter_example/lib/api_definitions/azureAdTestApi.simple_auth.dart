@@ -16,10 +16,10 @@ class AzureAdTestApi extends AzureADApi implements AzureADDefinition {
       String resource: 'resource',
       String redirectUrl: 'redirecturl',
       String clientSecret: 'client_secret',
-      List<String> scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      List<String>? scopes,
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier, clientId, authorizationUrl, tokenUrl, resource,
             redirectUrl,
             clientSecret: clientSecret,

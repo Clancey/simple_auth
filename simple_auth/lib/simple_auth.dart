@@ -26,7 +26,6 @@ export 'src/providers/dropbox.dart';
 export 'src/providers/facebook.dart';
 export 'src/providers/github.dart';
 export 'src/providers/google.dart';
-export 'src/providers/instagram.dart';
 export 'src/providers/keycloak.dart';
 export 'src/providers/linkedInApi.dart';
 export 'src/providers/microsoftLive.dart';

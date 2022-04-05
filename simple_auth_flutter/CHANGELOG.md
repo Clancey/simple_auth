@@ -1,3 +1,6 @@
+## [2.0.10] - 06-07-2021
+* Migrates to null-safety
+
 ## [2.0.9] - 04-15-2021
 * Update KeyCloak error
 ## [2.0.8] - 03-11-2021

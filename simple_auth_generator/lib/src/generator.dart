@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:build/src/builder/build_step.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:simple_auth/simple_auth.dart' as simple_auth;
@@ -19,7 +18,7 @@ class SimpleAuthGenerator
     extends GeneratorForAnnotation<simple_auth.ApiDeclaration> {
   @override
   FutureOr<String> generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
+      Element element, ConstantReader annotation, BuildStep? buildStep) {
     if (element is! ClassElement) {
       final friendlyName = element.displayName;
       throw new InvalidGenerationSourceError(
@@ -35,9 +34,9 @@ class SimpleAuthGenerator
       ConstantReader annotation, ClassElement element) {
     final friendlyName = element.name;
     final builderName =
-        annotation?.peek("name")?.stringValue ?? "${friendlyName}Impl";
+        annotation.peek("name")?.stringValue ?? "${friendlyName}Impl";
     //var constructors = element.constructors.toList();
-    var jsonSearializables = new List<ClassElement>();
+    var jsonSearializables = <ClassElement>[];
     final baseClass = _getBaseClass(annotation);
 //    //List<ClassElement>()
     final classBuilder = new Class((c) {
@@ -51,7 +50,7 @@ class SimpleAuthGenerator
               m.isAbstract &&
               m.returnType.isDartAsyncFuture;
         }).map((MethodElement m) {
-          final method = _getMethodAnnotation(m);
+          final method = _getMethodAnnotation(m)!;
           final body = _getAnnotation(m, simple_auth.Body);
           final paths = _getAnnotations(m, simple_auth.Path);
           final queries = _getAnnotations(m, simple_auth.Query);
@@ -61,9 +60,9 @@ class SimpleAuthGenerator
           final baseResponsetype =
               _getResponseType(m.returnType, stripList: true) ?? responseType;
           if (baseResponsetype?.element is ClassElement) {
-            var ce = baseResponsetype.element as ClassElement;
+            var ce = baseResponsetype!.element as ClassElement;
             var json = ce.getNamedConstructor("fromJson");
-            var firstParam = json?.parameters?.first?.type?.toString();
+            var firstParam = json?.parameters.first.type.toString();
             if (json != null &&
                 json.parameters.length == 1 &&
                 firstParam == "Map<String, dynamic>" &&
@@ -71,22 +70,25 @@ class SimpleAuthGenerator
           }
           return new Method((b) {
             b.name = m.displayName;
-            b.returns = new Reference(m.returnType.displayName);
+            b.returns = new Reference(
+                m.returnType.getDisplayString(withNullability: true));
             b.requiredParameters.addAll(m.parameters
                 .where((p) => p.isNotOptional)
                 .map((p) => new Parameter((pb) => pb
                   ..name = p.name
                   ..named = true
-                  ..type = new Reference(p.type.displayName))));
+                  ..type = new Reference(
+                      p.type.getDisplayString(withNullability: true)))));
 
             b.optionalParameters.addAll(m.parameters
                 .where((p) => p.isOptionalPositional)
                 .map((p) => new Parameter((pb) {
                       pb
                         ..name = p.name
-                        ..type = new Reference(p.type.displayName);
+                        ..type = new Reference(
+                            p.type.getDisplayString(withNullability: true));
                       if (p.defaultValueCode != null)
-                        pb.defaultTo = new Code(p.defaultValueCode);
+                        pb.defaultTo = new Code(p.defaultValueCode!);
                     })));
 
             b.optionalParameters.addAll(m.parameters
@@ -94,10 +96,11 @@ class SimpleAuthGenerator
                 .map((p) => new Parameter((pb) => pb
                   ..named = true
                   ..name = p.name
-                  ..type = new Reference(p.type.displayName))));
+                  ..type = new Reference(
+                      p.type.getDisplayString(withNullability: true)))));
 
             final blocks = [
-              url.assignFinal(_urlVar).statement,
+              url.assignConst(_urlVar).statement,
             ];
 
             if (queries.isNotEmpty) {
@@ -115,15 +118,14 @@ class SimpleAuthGenerator
 
             final Map<String, Expression> namedArguments = {};
             final List<Reference> typeArguments = [];
-            if (responseType != null) {
-              namedArguments["responseType"] =
-                  new CodeExpression(refer(baseResponsetype.displayName).code);
-              typeArguments.add(refer(responseType.displayName));
-              if (baseResponsetype.displayName != responseType.displayName) {
-                namedArguments["responseIsList"] = literal(true);
-              }
-            }
-            blocks.add(refer("send")
+            final String responseTypeString =
+                responseType?.getDisplayString(withNullability: true) ??
+                    "dynamic";
+            final String baseTypeString =
+                baseResponsetype?.getDisplayString(withNullability: true) ??
+                    responseTypeString;
+
+            blocks.add(refer("send<$responseTypeString,$baseTypeString>")
                 .call([refer(_requestVar)], namedArguments, typeArguments)
                 .returned
                 .statement);
@@ -136,28 +138,23 @@ class SimpleAuthGenerator
         c.methods.add(new Method((b) {
           final List<Code> body = [
             new Code(
-                "var converted = await converter?.decode(response, responseType,responseIsList);"),
-            new Code("if(converted != null) return converted;"),
+                "var responseIsList = Value != InnerType; var converted = await converter?.decode(response);"),
+            new Code(
+                "if(converted?.body is Value){ return Response<Value>(converted!.base, converted.body as Value);}"),
           ];
           body.addAll(jsonSearializables.map((j) {
             return _generateJsonDeserialization(j);
           }));
           final errorMessage = r"'No converter found for type $Value'";
-          body.add(new Code("throw new Exception($errorMessage);"));
+          body.add(new Code("throw Exception($errorMessage);"));
           b.annotations.add(refer("override"));
           b.modifier = MethodModifier.async;
-          b.name = "decodeResponse<Value>";
+          b.name = "decodeResponse<Value,InnerType>";
           b.returns = new Reference("Future<Response<Value>>");
           b.requiredParameters.addAll([
             new Parameter((p) => p
               ..name = 'response'
-              ..type = new Reference("Response<String>")),
-            new Parameter((p) => p
-              ..name = 'responseType'
-              ..type = new Reference("Type")),
-            new Parameter((p) => p
-              ..name = 'responseIsList'
-              ..type = new Reference("bool")),
+              ..type = new Reference("Response<String?>"))
           ]);
           b.body = new Block.of(body);
         }));
@@ -165,12 +162,13 @@ class SimpleAuthGenerator
 
     final emitter = new DartEmitter();
 
-    //final unformattedCode = classBuilder.accept(emitter).toString();
+    // final unformattedCode = classBuilder.accept(emitter).toString();
     return new DartFormatter().format('${classBuilder.accept(emitter)}');
   }
 
   String _getBaseClass(ConstantReader annotation) {
-    final type = annotation.objectValue.type.name;
+    final type =
+        annotation.objectValue.type!.getDisplayString(withNullability: true);
     switch (type) {
       case BuiltInAnnotations.apiKeyDeclaration:
         return "${simple_auth.ApiKeyApi}";
@@ -209,16 +207,17 @@ class SimpleAuthGenerator
 
   Code _generateJsonDeserialization(ClassElement element) {
     return new Code(
-        "if(responseType == ${element.name}){ final d = await jsonConverter.decode(response,responseType,responseIsList); final body = responseIsList && d.body is List ?  new List.from((d.body as List).map((f) => new ${element.name}.fromJson(f as Map<String, dynamic>))) :  new ${element.name}.fromJson(d.body as Map<String, dynamic>); return new Response(d.base,body as Value);}");
+        "if(InnerType == ${element.name}){ final d = await jsonConverter.decode<Value,InnerType>(response); final body = responseIsList && d.body is List ?  List<InnerType>.from((d.body as List).map((f) => ${element.name}.fromJson(f as Map<String, dynamic>))) : ${element.name}.fromJson(d.body as Map<String, dynamic>); return Response(d.base,body as Value);}");
   }
 
   Constructor _getConstructor(ConstantReader annotation) {
-    final type = annotation.objectValue.type.name;
+    final type =
+        annotation.objectValue.type!.getDisplayString(withNullability: true);
     final scopes = annotation.peek("scopes")?.listValue;
-    final baseUrl = annotation.peek("baseUrl").stringValue;
+    final baseUrl = annotation.peek("baseUrl")!.stringValue;
     String body = "";
     if (baseUrl != "/") {
-      body = "this.baseUrl = '${baseUrl}'; ";
+      body = "baseUrl = '${baseUrl}'; ";
     }
     if (scopes != null && scopes.length > 0) {
       List<String> strings = [];
@@ -444,7 +443,6 @@ class SimpleAuthGenerator
       throw name;
     }
     final value = peekValue.stringValue;
-    if (value == null) return null;
     return new Parameter((b) => b
       ..name = name
       ..type = new Reference("${String}")
@@ -454,7 +452,7 @@ class SimpleAuthGenerator
 
   List<Parameter> _createParameters(
       ConstantReader annotation, List<String> parameterNames) {
-    var parameters = new List<Parameter>();
+    var parameters = <Parameter>[];
     for (String pstring in parameterNames) {
       switch (pstring) {
         case BuiltInParameters.identifier:
@@ -479,7 +477,6 @@ class SimpleAuthGenerator
             throw name;
           }
           final value = peekValue.stringValue;
-          if (value == null) return null;
           parameters.add(new Parameter((b) => b
             ..name = name
             ..type = new Reference("${simple_auth.AuthLocation}")
@@ -535,19 +532,19 @@ class SimpleAuthGenerator
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.client
             ..named
-            ..type = new Reference("http.Client")));
+            ..type = new Reference("http.Client?")));
           break;
         case BuiltInParameters.converter:
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.converter
             ..named
-            ..type = new Reference("${simple_auth.Converter}")));
+            ..type = new Reference("${simple_auth.Converter}?")));
           break;
         case BuiltInParameters.authStorage:
           parameters.add(new Parameter((b) => b
             ..name = BuiltInParameters.authStorage
             ..named
-            ..type = new Reference("${simple_auth.AuthStorage}")));
+            ..type = new Reference("${simple_auth.AuthStorage}?")));
           break;
         default:
           throw pstring;
@@ -556,9 +553,9 @@ class SimpleAuthGenerator
     return parameters;
   }
 
-  Map<String, ConstantReader> _getAnnotation(MethodElement m, Type type) {
+  Map<String?, ConstantReader> _getAnnotation(MethodElement m, Type type) {
     var annot;
-    String name;
+    String? name;
     for (final p in m.parameters) {
       final a = _typeChecker(type).firstAnnotationOf(p);
       if (annot != null && a != null) {
@@ -585,7 +582,7 @@ class SimpleAuthGenerator
 
   TypeChecker _typeChecker(Type type) => new TypeChecker.fromRuntime(type);
 
-  ConstantReader _getMethodAnnotation(MethodElement method) {
+  ConstantReader? _getMethodAnnotation(MethodElement method) {
     for (final type in _methodsAnnotations) {
       final annot = _typeChecker(type)
           .firstAnnotationOf(method, throwOnUnresolved: false);
@@ -603,13 +600,13 @@ class SimpleAuthGenerator
     simple_auth.Method
   ];
 
-  DartType _genericOf(DartType type) {
+  DartType? _genericOf(DartType type) {
     return type is InterfaceType && type.typeArguments.isNotEmpty
         ? type.typeArguments.first
         : null;
   }
 
-  DartType _getResponseType(DartType type, {bool stripList = false}) {
+  DartType? _getResponseType(DartType type, {bool stripList = false}) {
     final generic = _genericOf(type);
     if (generic == null ||
         (!stripList &&
@@ -634,17 +631,17 @@ class SimpleAuthGenerator
   }
 
   Expression _generateRequest(
-      ConstantReader method, Map<String, ConstantReader> body,
+      ConstantReader method, Map<String?, ConstantReader> body,
       {bool useQueries: false, bool useHeaders: false}) {
     final params = <Expression>[
-      literal(method.peek("method").stringValue),
+      literal(method.peek("method")!.stringValue),
       refer(_urlVar)
     ];
 
     final namedParams = <String, Expression>{};
 
     if (body.isNotEmpty) {
-      namedParams["body"] = refer(body.keys.first);
+      namedParams["body"] = refer(body.keys.first!);
     }
 
     if (useQueries) {
@@ -655,7 +652,7 @@ class SimpleAuthGenerator
       namedParams["headers"] = refer(_headersVar);
     }
     namedParams["authenticated"] =
-        literal(method.peek("authenticated").boolValue);
+        literal(method.peek("authenticated")!.boolValue);
     return refer("Request").newInstance(params, namedParams);
   }
 
@@ -669,7 +666,7 @@ class SimpleAuthGenerator
     return literalMap(map).assignFinal(_parametersVar).statement;
   }
 
-  Code _generateHeaders(MethodElement m, ConstantReader method) {
+  Code? _generateHeaders(MethodElement m, ConstantReader method) {
     final map = {};
 
     final annotations = _getAnnotations(m, simple_auth.Header);
@@ -679,10 +676,10 @@ class SimpleAuthGenerator
       map[literal(name)] = refer(key);
     });
 
-    final methodAnnotations = method.peek("headers").mapValue;
+    final methodAnnotations = method.peek("headers")!.mapValue;
 
     methodAnnotations.forEach((k, v) {
-      map[literal(k.toStringValue())] = literal(v.toStringValue());
+      map[literal(k!.toStringValue())] = literal(v!.toStringValue());
     });
 
     if (map.isEmpty) {
@@ -693,7 +690,7 @@ class SimpleAuthGenerator
   }
 }
 
-Builder simple_authGeneratorFactoryBuilder({String header}) =>
+Builder simple_authGeneratorFactoryBuilder({String? header}) =>
     new PartBuilder([new SimpleAuthGenerator()], ".simple_auth.dart",
         header: header);
 

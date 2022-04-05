@@ -7,26 +7,26 @@ import "dart:convert" as convert;
 typedef void ShowAuthenticator(WebAuthenticator authenticator);
 
 class OAuthApi extends AuthenticatedApi {
-  static ShowAuthenticator sharedShowAuthenticator;
-  ShowAuthenticator showAuthenticator;
+  static ShowAuthenticator? sharedShowAuthenticator;
+  ShowAuthenticator? showAuthenticator;
 
-  OAuthAuthenticator authenticator;
-  String clientId;
-  String clientSecret;
-  String tokenUrl;
-  String authorizationUrl;
-  String redirectUrl;
+  OAuthAuthenticator? authenticator;
+  String? clientId;
+  String? clientSecret;
+  String? tokenUrl;
+  String? authorizationUrl;
+  String? redirectUrl;
   bool scopesRequired = true;
-  List<String> scopes;
+  List<String>? scopes;
   bool forceRefresh = false;
 
   OAuthApi(identifier, this.clientId, this.clientSecret, this.tokenUrl,
       this.authorizationUrl, this.redirectUrl,
       {this.scopes,
-      http.Client client,
-      Converter converter,
+      http.Client? client,
+      Converter? converter,
       bool usePkce = false,
-      AuthStorage authStorage})
+      AuthStorage? authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
     authenticator = OAuthAuthenticator(identifier, clientId, clientSecret,
@@ -35,42 +35,42 @@ class OAuthApi extends AuthenticatedApi {
 
   OAuthApi.fromIdAndSecret(String identifier, this.clientId, this.clientSecret,
       {this.scopes,
-      http.Client client,
-      Converter converter,
-      AuthStorage authStorage})
+      http.Client? client,
+      Converter? converter,
+      AuthStorage? authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage);
 
   OAuthApi.fromAuthenticator(String identifier, this.authenticator,
-      {http.Client client, Converter converter, AuthStorage authStorage})
+      {http.Client? client, Converter? converter, AuthStorage? authStorage})
       : super(identifier,
             client: client, converter: converter, authStorage: authStorage) {
-    this.clientId = authenticator.clientId;
-    this.clientSecret = authenticator.clientSecret;
-    this.tokenUrl = authenticator.tokenUrl;
-    this.scopes = authenticator.scope;
+    this.clientId = authenticator!.clientId;
+    this.clientSecret = authenticator!.clientSecret;
+    this.tokenUrl = authenticator!.tokenUrl;
+    this.scopes = authenticator!.scope;
   }
 
-  OAuthAccount get currentOauthAccount => currentAccount as OAuthAccount;
+  OAuthAccount? get currentOauthAccount => currentAccount as OAuthAccount?;
 
   @override
-  Future<Account> performAuthenticate() async {
+  Future<Account?> performAuthenticate() async {
     if (scopesRequired && (scopes?.length ?? 0) == 0) {
       throw Exception("Scopes are required");
     }
-    OAuthAccount account =
+    OAuthAccount? account =
         currentOauthAccount ?? await loadAccountFromCache<OAuthAccount>();
     if (account != null &&
         ((account.refreshToken?.isNotEmpty ?? false) ||
-            (account.expiresIn != null && account.expiresIn <= 0))) {
+            (account.expiresIn != null && account.expiresIn! <= 0))) {
       var valid = account.isValid();
-      if (!valid || forceRefresh ?? false) {
+      if (!valid || forceRefresh) {
         //If there is no interent, give them the current expired account
-        if (!await pingUrl(tokenUrl)) {
+        if (!await pingUrl(tokenUrl!)) {
           return account;
         }
         if (await refreshAccount(account))
-          account = currentOauthAccount ?? loadAccountFromCache<OAuthAccount>();
+          account = currentOauthAccount ?? loadAccountFromCache<OAuthAccount>() as OAuthAccount;
       }
       if (account.isValid()) {
         saveAccountToCache(account);
@@ -79,17 +79,17 @@ class OAuthApi extends AuthenticatedApi {
       }
     }
 
-    var _authenticator = getAuthenticator();
+    var _authenticator = getAuthenticator()!;
     await _authenticator.resetAuthenticator();
     if (showAuthenticator != null)
-      showAuthenticator(_authenticator);
+      showAuthenticator!(_authenticator as WebAuthenticator);
     else if (sharedShowAuthenticator != null)
-      sharedShowAuthenticator(_authenticator);
+      sharedShowAuthenticator!(_authenticator as WebAuthenticator);
     else
       throw new Exception(
           "You are required to implement the 'showAuthenticator or sharedShowAuthenticator");
     var token = await _authenticator.getAuthCode();
-    if (token?.isEmpty ?? true) {
+    if (token.isEmpty) {
       throw new Exception("Null Token");
     }
     account = await getAccountFromAuthCode(_authenticator);
@@ -102,7 +102,7 @@ class OAuthApi extends AuthenticatedApi {
   Future<Request> authenticateRequest(Request request) async {
     Map<String, String> map = new Map.from(request.headers);
     map["Authorization"] =
-        "${currentOauthAccount.tokenType} ${currentOauthAccount.token}";
+        "${currentOauthAccount!.tokenType} ${currentOauthAccount!.token}";
     return request.replace(headers: map);
   }
 
@@ -110,7 +110,7 @@ class OAuthApi extends AuthenticatedApi {
       WebAuthenticator authenticator) async {
     if (tokenUrl?.isEmpty ?? true) throw new Exception("Invalid tokenURL");
     var postData = await authenticator.getTokenPostData(clientSecret);
-    var resp = await httpClient.post(Uri.parse(tokenUrl),
+    var resp = await httpClient.post(Uri.parse(tokenUrl!),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
@@ -129,18 +129,18 @@ class OAuthApi extends AuthenticatedApi {
     return account;
   }
 
-  Authenticator getAuthenticator() => authenticator;
+  Authenticator? getAuthenticator() => authenticator;
   @override
   getAccountFromMap<T extends Account>(Map<String, dynamic> data) =>
       OAuthAccount.fromJson(data);
   @override
   Future<bool> refreshAccount(Account _account) async {
     try {
-      var account = _account as OAuthAccount;
+      var account = _account as OAuthAccount?;
       if (account == null) throw new Exception("Invalid Account");
       var postData = await getRefreshTokenPostData(account);
 
-      var resp = await httpClient.post(Uri.parse(tokenUrl),
+      var resp = await httpClient.post(Uri.parse(tokenUrl!),
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded"
@@ -148,7 +148,7 @@ class OAuthApi extends AuthenticatedApi {
           body: postData);
       var map = convert.json.decode(resp.body);
       var result = OAuthResponse.fromJson(map);
-      if (result?.error?.isNotEmpty ?? false) {
+      if (result.error?.isNotEmpty ?? false) {
         if ((account.refreshToken?.isEmpty ?? true) ||
             result.error == "invalid_grant" ||
             (result.errorDescription?.contains("revoked") ?? false)) {
@@ -172,8 +172,8 @@ class OAuthApi extends AuthenticatedApi {
     return false;
   }
 
-  Future<Map<String, String>> getRefreshTokenPostData(Account account) async {
-    var oaccount = account as OAuthAccount;
+  Future<Map<String, String?>> getRefreshTokenPostData(Account account) async {
+    var oaccount = account as OAuthAccount?;
     if (oaccount == null) throw new Exception("Invalid Account");
     return {
       "grant_type": "refresh_token",
