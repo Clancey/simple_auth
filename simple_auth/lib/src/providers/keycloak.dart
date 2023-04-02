@@ -1,17 +1,17 @@
 import 'dart:async';
+import "dart:convert" as Convert;
 
 import 'package:simple_auth/simple_auth.dart';
 import "package:http/http.dart" as http;
-import "dart:convert" as Convert;
 
 
 class KeycloakApi extends OAuthApi {
   String? realm;
+  String? baseUrl;  // E.G., https://auth.mydomain.com
+  bool useSSO = true;
 
-  // Keycloak base url E.G., https://auth.mydomain.com
-  String? baseUrl;
-
-  KeycloakApi(String identifier,
+  KeycloakApi(
+      String identifier,
       String clientId,
       String clientSecret,
       String redirectUrl,
@@ -21,7 +21,8 @@ class KeycloakApi extends OAuthApi {
         List<String> scopes = const ["email", "profile"],
         http.Client? client,
         Converter? converter,
-        AuthStorage? authStorage
+        AuthStorage? authStorage,
+        bool useSSO = true,
       }) : super(
       identifier,
       clientId,
@@ -74,19 +75,42 @@ class KeycloakApi extends OAuthApi {
   }
 
   @override
-  Authenticator getAuthenticator() => KeycloakAuthenticator(identifier, clientId,
-      clientSecret, tokenUrl, authorizationUrl, redirectUrl, scopes);
+  Authenticator getAuthenticator() => KeycloakAuthenticator(
+      identifier,
+      clientId,
+      clientSecret,
+      tokenUrl,
+      authorizationUrl,
+      redirectUrl,
+      scopes,
+      useSSO
+  );
 
 }
 
-/// Extend OAuthAuthenticator to disable SSO by default
+/// Extend OAuthAuthenticator control useSSO
 class KeycloakAuthenticator extends OAuthAuthenticator {
-  KeycloakAuthenticator(String? identifier, String? clientId, String? clientSecret, String? tokenUrl, String? baseUrl, String? redirectUrl, List<String>? scopes)
-      : super(identifier, clientId, clientSecret, tokenUrl, baseUrl, redirectUrl) {
+  KeycloakAuthenticator(
+      String? identifier,
+      String? clientId,
+      String? clientSecret,
+      String? tokenUrl,
+      String? baseUrl,
+      String? redirectUrl,
+      List<String>? scopes,
+      bool useSSO,
+      ) : super(
+      identifier,
+      clientId,
+      clientSecret,
+      tokenUrl,
+      baseUrl,
+      redirectUrl
+  ) {
     this.scope = scopes;
     useEmbeddedBrowser = false;
-    // Disable SSO to remove Apples user consent dialog
-    useSSO = false;
+    // Control over Apples invasive user consent dialog
+    this.useSSO = useSSO;
   }
 }
 
