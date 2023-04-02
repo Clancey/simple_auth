@@ -53,6 +53,7 @@
 
 SFAuthenticationSession *session;
 SFSafariViewController *controller;
+NSURL *controllerRedirectUrl;
 -(void) beginAuthentication:(WebAuthenticator *)authenticator viewController:(UIViewController *)viewController{
     @try{
         NSString *scheme = authenticator.redirectUrl.scheme;
@@ -78,6 +79,7 @@ SFSafariViewController *controller;
         if(@available(iOS 9.0, *)) {
             controller = [[SFSafariViewController alloc] initWithURL:authenticator.initialUrl];
             controller.delegate = self;
+            controllerRedirectUrl = authenticator.redirectUrl;
             [viewController presentViewController:controller animated:true completion:nil];
             [authenticator cancel];
             return;
@@ -94,12 +96,19 @@ SFSafariViewController *controller;
     }
 }
 
+-(void)safariViewControllerDidFinish:(SFSafariViewController *)ctrl {
+    if (controller != ctrl)
+        return;
+    [self resumeAuth: controllerRedirectUrl];
+}
+
 -(void) dismisController
 {
     if(controller != nil){
         [controller dismissViewControllerAnimated:true completion:nil];
     }
     controller = nil;
+    controllerRedirectUrl = nil;
     
 }
 -(BOOL)resumeAuth:(NSURL *)url{
